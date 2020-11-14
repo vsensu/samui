@@ -1,0 +1,79 @@
+#
+#   Common
+#
+
+.vscode
+tags
+.idea
+
+*.temp
+
+open-builder/
+OpenBuilder/
+*.zip
+
+texture_packs/ElijahHyper
+
+*.srctrlprj
+*.srctrldb
+*.srctrlbm
+
+
+#
+#   Linux
+#
+
+build/
+bin/
+custom_run.sh
+zcustom_run.sh
+ybuild.sh
+
+#
+#   Windows
+#
+
+*.dll
+CMakeFiles/
+CMakeCache.txt
+*.exe
+
+# Visual Studio
+*.sln
+*.vcxproj
+*.filters
+*.user
+*.vs
+
+Debug/
+Release/
+UnitTests/
+open-builder-unit-tests/
+
+# Experimental 
+
+experimental/
+
+# CMake
+cmake-build-*/
+
+# File-based project format
+*.iws
+
+# IntelliJ
+out/
+
+# mpeltonen/sbt-idea plugin
+.idea_modules/
+
+# JIRA plugin
+atlassian-ide-plugin.xml
+
+# Crashlytics plugin (for Android Studio and IntelliJ)
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
+
+build_debug/
+build_release/
