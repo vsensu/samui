@@ -1,0 +1,51 @@
+[
+{
+  "directory": "D:\\repo\\samui",
+  "arguments": ["C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.27.29110\\bin\\HostX86\\x86\\cl.exe", "-c", "-nologo", "-FS", "-Zi", "-Fdbuild\\windows\\x86\\debug\\compile.test_asio.pdb", "-Od", "-std:c++latest", "-IC:\\Users\\reili.TENCENT\\.conan\\data\\asio\\1.18.0\\_\\_\\package\\5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9\\include", "-DASIO_STANDALONE", "-Fobuild\\.objs\\test_asio\\windows\\x86\\debug\\src\\test\\network\\test_asio.cpp.obj", "src\\test\\network\\test_asio.cpp"],
+  "file": "src\\test\\network\\test_asio.cpp"
+},
+{
+  "directory": "D:\\repo\\samui",
+  "arguments": ["C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.27.29110\\bin\\HostX86\\x86\\cl.exe", "-c", "-nologo", "-FS", "-Zi", "-Fdbuild\\windows\\x86\\debug\\compile.demo_snake.pdb", "-Od", "-std:c++latest", "-Fobuild\\.objs\\demo_snake\\windows\\x86\\debug\\src\\demo\\snake\\main.cpp.obj", "src\\demo\\snake\\main.cpp"],
+  "file": "src\\demo\\snake\\main.cpp"
+},
+{
+  "directory": "D:\\repo\\samui",
+  "arguments": ["C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.27.29110\\bin\\HostX86\\x86\\cl.exe", "-c", "-nologo", "-FS", "-Zi", "-Fdbuild\\windows\\x86\\debug\\compile.engine.pdb", "-Od", "-TP", "-ID:\\repo\\samui\\deps\\glad\\include", "-ID:\\repo\\samui\\deps\\imgui\\platforms\\include", "-DENGINE", "-IC:\\Users\\reili.TENCENT\\.conan\\data\\glfw\\3.3.2\\_\\_\\package\\a3201b73a595fa6432e755740ce6fc4b697cbeee\\include", "-IC:\\Users\\reili.TENCENT\\.conan\\data\\glm\\0.9.9.8\\_\\_\\package\\5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9\\include", "-IC:\\Users\\reili.TENCENT\\.conan\\data\\imgui\\1.78\\_\\_\\package\\d4bb31912cc39810f01c804d7ba2f80b8bd35a3a\\include", "-IC:\\Users\\reili.TENCENT\\.conan\\data\\asio\\1.18.0\\_\\_\\package\\5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9\\include", "-DASIO_STANDALONE", "-Fobuild\\.objs\\engine\\windows\\x86\\debug\\deps\\glad\\src\\glad.c.obj", "deps\\glad\\src\\glad.c"],
+  "file": "deps\\glad\\src\\glad.c"
+},
+{
+  "directory": "D:\\repo\\samui",
+  "arguments": ["C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.27.29110\\bin\\HostX86\\x86\\cl.exe", "-c", "-nologo", "-FS", "-Zi", "-Fdbuild\\windows\\x86\\debug\\compile.engine.pdb", "-Od", "-std:c++latest", "-ID:\\repo\\samui\\deps\\glad\\include", "-ID:\\repo\\samui\\deps\\imgui\\platforms\\include", "-DENGINE", "-IC:\\Users\\reili.TENCENT\\.conan\\data\\glfw\\3.3.2\\_\\_\\package\\a3201b73a595fa6432e755740ce6fc4b697cbeee\\include", "-IC:\\Users\\reili.TENCENT\\.conan\\data\\glm\\0.9.9.8\\_\\_\\package\\5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9\\include", "-IC:\\Users\\reili.TENCENT\\.conan\\data\\imgui\\1.78\\_\\_\\package\\d4bb31912cc39810f01c804d7ba2f80b8bd35a3a\\include", "-IC:\\Users\\reili.TENCENT\\.conan\\data\\asio\\1.18.0\\_\\_\\package\\5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9\\include", "-DASIO_STANDALONE", "-Fobuild\\.objs\\engine\\windows\\x86\\debug\\deps\\imgui\\platforms\\src\\imgui_impl_glfw.cpp.obj", "deps\\imgui\\platforms\\src\\imgui_impl_glfw.cpp"],
+  "file": "deps\\imgui\\platforms\\src\\imgui_impl_glfw.cpp"
+},
+{
+  "directory": "D:\\repo\\samui",
+  "arguments": ["C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.27.29110\\bin\\HostX86\\x86\\cl.exe", "-c", "-nologo", "-FS", "-Zi", "-Fdbuild\\windows\\x86\\debug\\compile.engine.pdb", "-Od", "-std:c++latest", "-ID:\\repo\\samui\\deps\\glad\\include", "-ID:\\repo\\samui\\deps\\imgui\\platforms\\include", "-DENGINE", "-IC:\\Users\\reili.TENCENT\\.conan\\data\\glfw\\3.3.2\\_\\_\\package\\a3201b73a595fa6432e755740ce6fc4b697cbeee\\include", "-IC:\\Users\\reili.TENCENT\\.conan\\data\\glm\\0.9.9.8\\_\\_\\package\\5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9\\include", "-IC:\\Users\\reili.TENCENT\\.conan\\data\\imgui\\1.78\\_\\_\\package\\d4bb31912cc39810f01c804d7ba2f80b8bd35a3a\\include", "-IC:\\Users\\reili.TENCENT\\.conan\\data\\asio\\1.18.0\\_\\_\\package\\5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9\\include", "-DASIO_STANDALONE", "-Fobuild\\.objs\\engine\\windows\\x86\\debug\\deps\\imgui\\platforms\\src\\imgui_impl_opengl3.cpp.obj", "deps\\imgui\\platforms\\src\\imgui_impl_opengl3.cpp"],
+  "file": "deps\\imgui\\platforms\\src\\imgui_impl_opengl3.cpp"
+},
+{
+  "directory": "D:\\repo\\samui",
+  "arguments": ["C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.27.29110\\bin\\HostX86\\x86\\cl.exe", "-c", "-nologo", "-FS", "-Zi", "-Fdbuild\\windows\\x86\\debug\\compile.engine.pdb", "-Od", "-std:c++latest", "-ID:\\repo\\samui\\deps\\glad\\include", "-ID:\\repo\\samui\\deps\\imgui\\platforms\\include", "-DENGINE", "-IC:\\Users\\reili.TENCENT\\.conan\\data\\glfw\\3.3.2\\_\\_\\package\\a3201b73a595fa6432e755740ce6fc4b697cbeee\\include", "-IC:\\Users\\reili.TENCENT\\.conan\\data\\glm\\0.9.9.8\\_\\_\\package\\5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9\\include", "-IC:\\Users\\reili.TENCENT\\.conan\\data\\imgui\\1.78\\_\\_\\package\\d4bb31912cc39810f01c804d7ba2f80b8bd35a3a\\include", "-IC:\\Users\\reili.TENCENT\\.conan\\data\\asio\\1.18.0\\_\\_\\package\\5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9\\include", "-DASIO_STANDALONE", "-Fobuild\\.objs\\engine\\windows\\x86\\debug\\deps\\stb_image\\stb_image.cpp.obj", "deps\\stb_image\\stb_image.cpp"],
+  "file": "deps\\stb_image\\stb_image.cpp"
+},
+{
+  "directory": "D:\\repo\\samui",
+  "arguments": ["C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.27.29110\\bin\\HostX86\\x86\\cl.exe", "-c", "-nologo", "-FS", "-Zi", "-Fdbuild\\windows\\x86\\debug\\compile.engine.pdb", "-Od", "-std:c++latest", "-ID:\\repo\\samui\\deps\\glad\\include", "-ID:\\repo\\samui\\deps\\imgui\\platforms\\include", "-DENGINE", "-IC:\\Users\\reili.TENCENT\\.conan\\data\\glfw\\3.3.2\\_\\_\\package\\a3201b73a595fa6432e755740ce6fc4b697cbeee\\include", "-IC:\\Users\\reili.TENCENT\\.conan\\data\\glm\\0.9.9.8\\_\\_\\package\\5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9\\include", "-IC:\\Users\\reili.TENCENT\\.conan\\data\\imgui\\1.78\\_\\_\\package\\d4bb31912cc39810f01c804d7ba2f80b8bd35a3a\\include", "-IC:\\Users\\reili.TENCENT\\.conan\\data\\asio\\1.18.0\\_\\_\\package\\5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9\\include", "-DASIO_STANDALONE", "-Fobuild\\.objs\\engine\\windows\\x86\\debug\\src\\engine\\common\\Application.cpp.obj", "src\\engine\\common\\Application.cpp"],
+  "file": "src\\engine\\common\\Application.cpp"
+},
+{
+  "directory": "D:\\repo\\samui",
+  "arguments": ["C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.27.29110\\bin\\HostX86\\x86\\cl.exe", "-c", "-nologo", "-FS", "-Zi", "-Fdbuild\\windows\\x86\\debug\\compile.engine.pdb", "-Od", "-std:c++latest", "-ID:\\repo\\samui\\deps\\glad\\include", "-ID:\\repo\\samui\\deps\\imgui\\platforms\\include", "-DENGINE", "-IC:\\Users\\reili.TENCENT\\.conan\\data\\glfw\\3.3.2\\_\\_\\package\\a3201b73a595fa6432e755740ce6fc4b697cbeee\\include", "-IC:\\Users\\reili.TENCENT\\.conan\\data\\glm\\0.9.9.8\\_\\_\\package\\5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9\\include", "-IC:\\Users\\reili.TENCENT\\.conan\\data\\imgui\\1.78\\_\\_\\package\\d4bb31912cc39810f01c804d7ba2f80b8bd35a3a\\include", "-IC:\\Users\\reili.TENCENT\\.conan\\data\\asio\\1.18.0\\_\\_\\package\\5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9\\include", "-DASIO_STANDALONE", "-Fobuild\\.objs\\engine\\windows\\x86\\debug\\src\\engine\\common\\Camera.cpp.obj", "src\\engine\\common\\Camera.cpp"],
+  "file": "src\\engine\\common\\Camera.cpp"
+},
+{
+  "directory": "D:\\repo\\samui",
+  "arguments": ["C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.27.29110\\bin\\HostX86\\x86\\cl.exe", "-c", "-nologo", "-FS", "-Zi", "-Fdbuild\\windows\\x86\\debug\\compile.engine.pdb", "-Od", "-std:c++latest", "-ID:\\repo\\samui\\deps\\glad\\include", "-ID:\\repo\\samui\\deps\\imgui\\platforms\\include", "-DENGINE", "-IC:\\Users\\reili.TENCENT\\.conan\\data\\glfw\\3.3.2\\_\\_\\package\\a3201b73a595fa6432e755740ce6fc4b697cbeee\\include", "-IC:\\Users\\reili.TENCENT\\.conan\\data\\glm\\0.9.9.8\\_\\_\\package\\5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9\\include", "-IC:\\Users\\reili.TENCENT\\.conan\\data\\imgui\\1.78\\_\\_\\package\\d4bb31912cc39810f01c804d7ba2f80b8bd35a3a\\include", "-IC:\\Users\\reili.TENCENT\\.conan\\data\\asio\\1.18.0\\_\\_\\package\\5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9\\include", "-DASIO_STANDALONE", "-Fobuild\\.objs\\engine\\windows\\x86\\debug\\src\\engine\\common\\gl_errors.cpp.obj", "src\\engine\\common\\gl_errors.cpp"],
+  "file": "src\\engine\\common\\gl_errors.cpp"
+},
+{
+  "directory": "D:\\repo\\samui",
+  "arguments": ["C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.27.29110\\bin\\HostX86\\x86\\cl.exe", "-c", "-nologo", "-FS", "-Zi", "-Fdbuild\\windows\\x86\\debug\\compile.engine.pdb", "-Od", "-std:c++latest", "-ID:\\repo\\samui\\deps\\glad\\include", "-ID:\\repo\\samui\\deps\\imgui\\platforms\\include", "-DENGINE", "-IC:\\Users\\reili.TENCENT\\.conan\\data\\glfw\\3.3.2\\_\\_\\package\\a3201b73a595fa6432e755740ce6fc4b697cbeee\\include", "-IC:\\Users\\reili.TENCENT\\.conan\\data\\glm\\0.9.9.8\\_\\_\\package\\5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9\\include", "-IC:\\Users\\reili.TENCENT\\.conan\\data\\imgui\\1.78\\_\\_\\package\\d4bb31912cc39810f01c804d7ba2f80b8bd35a3a\\include", "-IC:\\Users\\reili.TENCENT\\.conan\\data\\asio\\1.18.0\\_\\_\\package\\5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9\\include", "-DASIO_STANDALONE", "-Fobuild\\.objs\\engine\\windows\\x86\\debug\\src\\engine\\main.cpp.obj", "src\\engine\\main.cpp"],
+  "file": "src\\engine\\main.cpp"
+}]
