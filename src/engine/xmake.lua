@@ -1,5 +1,6 @@
 add_defines("ENGINE")
 
+add_requires("conan::entt/3.5.2", {alias = "entt"})
 add_requires("conan::glfw/3.3.2", {alias = "glfw"})
 add_requires("conan::glm/0.9.9.8", {alias = "glm"})
 add_requires("conan::imgui/1.78", {alias = "imgui"})
@@ -17,4 +18,4 @@ target("engine")
         add_ldflags("-subsystem:windows", "-entry:mainCRTStartup", {force = true}) 
         add_links("user32", "gdi32", "shell32")
     end
-    add_packages("glfw", "glm", "imgui", "asio")
+    add_packages("entt", "glfw", "glm", "imgui", "asio")
