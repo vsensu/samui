@@ -4,3 +4,8 @@ target("test_asio")
     set_kind("binary")
     add_files("test_asio.cpp")
     add_packages("asio")
+
+target("test_msg")
+    set_kind("binary")
+    add_includedirs("$(projectdir)/src")
+    add_files("test_msg.cpp")
