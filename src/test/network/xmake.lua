@@ -9,3 +9,8 @@ target("test_msg")
     set_kind("binary")
     add_includedirs("$(projectdir)/src")
     add_files("test_msg.cpp")
+
+target("test_tsqueue")
+    set_kind("binary")
+    add_includedirs("$(projectdir)/src")
+    add_files("test_tsqueue.cpp")
