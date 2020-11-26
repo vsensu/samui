@@ -5,6 +5,8 @@ add_requires("conan::glfw/3.3.2", {alias = "glfw"})
 add_requires("conan::glm/0.9.9.8", {alias = "glm"})
 add_requires("conan::imgui/1.78", {alias = "imgui"})
 
+includes("network")
+
 target("engine")
     set_kind("binary")
     add_includedirs("$(projectdir)/deps/glad/include")
@@ -18,4 +20,3 @@ target("engine")
         add_links("user32", "gdi32", "shell32")
     end
     add_packages("entt", "glfw", "glm", "imgui")
-    includes("network")
