@@ -122,8 +122,10 @@ namespace samui
                 }
             }
 
-            void update(size_t nMaxMessages = -1)
+            void update(size_t nMaxMessages = -1, bool bWait = false)
             {
+                if(bWait) m_qMessagesIn.wait();
+
                 size_t nMessageCount = 0;
                 while(nMessageCount < nMaxMessages && !m_qMessagesIn.empty())
                 {
