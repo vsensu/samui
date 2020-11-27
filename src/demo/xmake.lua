@@ -1,1 +1,1 @@
-includes("snake")
+includes("snake", "chat_room")

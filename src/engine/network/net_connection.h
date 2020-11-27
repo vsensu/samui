@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 #include "net_inc.h"
 #include "net_message.h"
 #include "net_tsqueue.h"
