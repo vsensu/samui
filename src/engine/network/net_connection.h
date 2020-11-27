@@ -9,6 +9,9 @@ namespace samui
     namespace net
     {
         template <typename T>
+        class server_interface;
+
+        template <typename T>
         class connection : public std::enable_shared_from_this<connection<T>>
         {
         public:
@@ -22,6 +25,18 @@ namespace samui
                 : m_asioContext(asioContext), m_socket(std::move(socket)), m_qMessagesIn(qIn)
             {
                 m_nOwnerType = parent;
+
+                if(m_nOwnerType == owner::server)
+                {
+                    m_nHandshakeOut = uint64_t(std::chrono::system_clock::now().time_since_epoch().count());
+
+                    m_nHandshakeCheck = scramble(m_nHandshakeOut);
+                }
+                else
+                {
+                    m_nHandshakeIn = 0;
+                    m_nHandshakeOut = 0;
+                }
             }
 
             virtual ~connection() {}
@@ -29,14 +44,15 @@ namespace samui
             uint32_t GetID() const { return id; }
 
         public:
-            void connect_to_client(uint32_t uid = 0)
+            void connect_to_client(samui::net::server_interface<T> *server, uint32_t uid = 0)
             {
                 if (m_nOwnerType == owner::server)
                 {
                     if (m_socket.is_open())
                     {
                         id = uid;
-                        read_header();
+                        write_validation();
+                        read_validation(server);
                     }
                 }
             }
@@ -50,7 +66,7 @@ namespace samui
                     {
                         if(!ec)
                         {
-                            read_header();
+                            read_validation();
                         }
                     }
                     );
@@ -193,6 +209,71 @@ namespace samui
                 read_header();
             }
 
+            uint64_t scramble(uint64_t nInput)
+            {
+                uint64_t out = nInput ^ 0xDEADBEEFC0DECAFE;
+                out = (out & 0xF0F0F0F0F0F0F0) >> 4 | (out & 0x0F0F0F0F0F0F0F) << 4;
+                return out ^ 0xC0DEFACE12345678;
+            }
+
+            void write_validation()
+            {
+                asio::async_write(m_socket, asio::buffer(&m_nHandshakeOut, sizeof(uint64_t)),
+                    [this](std::error_code ec, std::size_t length) {
+                        if(!ec)
+                        {
+                            if(m_nOwnerType == owner::client)
+                            {
+                                read_header();
+                            }
+                        }
+                        else
+                        {
+                            m_socket.close();
+                        }
+                    }
+                );
+            }
+
+            void read_validation(samui::net::server_interface<T> *server = nullptr)
+            {
+                asio::async_read(m_socket, asio::buffer(&m_nHandshakeIn, sizeof(uint64_t)), 
+                    [this, server](std::error_code ec, std::size_t length)
+                    {
+                        if(!ec)
+                        {
+                            if(m_nOwnerType == owner::server)
+                            {
+                                if(m_nHandshakeIn == m_nHandshakeCheck)
+                                {
+                                    std::cout << "Client Validated\n";
+                                    server->on_client_validated(this->shared_from_this());
+                                    read_header();
+                                }
+                                else
+                                {
+                                    std::cout << "Client Disconnected (Fail Validation)\n";
+                                    m_socket.close();
+                                }
+                            }
+                            else
+                            {
+                                m_nHandshakeOut = scramble(m_nHandshakeIn);
+
+                                write_validation();
+                            }
+                            
+                        }
+                        else
+                        {
+                            std::cout << "Client Disconnected (ReadValidation)\n";
+                            m_socket.close();
+                        }
+                        
+                    }
+                );
+            }
+
         protected:
             asio::ip::tcp::socket m_socket;
             asio::io_context &m_asioContext;
@@ -201,6 +282,8 @@ namespace samui
             message<T> m_msgTempIn;
             owner m_nOwnerType = owner::server;
             uint32_t id = 0;
+
+            uint64_t m_nHandshakeIn, m_nHandshakeOut, m_nHandshakeCheck;
         };
     } // namespace net
 } // namespace samui

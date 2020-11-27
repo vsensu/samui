@@ -64,7 +64,7 @@ namespace samui
                             if(on_client_connect(newconn))
                             {
                                 m_deqConnections.push_back(std::move(newconn));
-                                m_deqConnections.back()->connect_to_client(nIDCounter++);
+                                m_deqConnections.back()->connect_to_client(this, nIDCounter++);
                                 std::cout << "[" << m_deqConnections.back()->GetID() << "] Connection Approved\n"; 
                             }
                             else
@@ -149,6 +149,11 @@ namespace samui
             virtual void on_message(std::shared_ptr<connection<T>> client, message<T> &msg)
             {
 
+            }
+
+        public:
+            virtual void on_client_validated(std::shared_ptr<connection<T>> client)
+            {
             }
 
         protected:

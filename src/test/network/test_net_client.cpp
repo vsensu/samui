@@ -30,7 +30,7 @@ int main()
 {
     CustomClient c;
     c.connect("127.0.0.1", 60000);
-    c.ping();
+    // c.ping(); // send after validation
 
     bool bQuit = false;
     while (!bQuit)
