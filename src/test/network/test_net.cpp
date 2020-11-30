@@ -16,6 +16,7 @@ public:
         msg.header.id = CustomMsgTypes::FireBullet;
         msg << x << y;
         send(msg);
+        return true;
     }
 };
 
