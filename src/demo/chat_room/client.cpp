@@ -1,11 +1,14 @@
 #include <iostream>
 #include <string>
 
+#include <engine/common/Application.h>
 #include <engine/network/net.h>
+
+#include "protocol.h"
 
 int main()
 {
-    samui::net::init_net();
+    samui::net::init_enet();
 
     ENetHost *client = enet_host_create(NULL /* create a client host */,
                                         1 /* only allow 1 outgoing connection */,
@@ -51,9 +54,13 @@ int main()
         return EXIT_FAILURE;
     }
 
-    sf::Packet packet;
-    packet << 3;
-    samui::net::send(peer, packet, 0, 0);
+    samui::net::Packet packet;
+    Request<MessageType::BroadCastUserMessage> req;
+    packet << req.id;
+    std::string context = "hello world";
+    std::memcpy(req.data.content, context.data(), context.size()+1);
+    packet << req.data;
+    samui::net::enet_send_packet(peer, packet, 0, 0);
 
     ENetEvent event;
     while (true)
@@ -62,14 +69,6 @@ int main()
         {
             switch (event.type)
             {
-            case ENET_EVENT_TYPE_CONNECT:
-            {
-                std::cout << "A new client connected from " << event.peer->address.host << ":" << event.peer->address.port << "\n";
-                sf::Packet packet;
-                packet << "hello";
-                samui::net::send(event.peer, packet, 0, 0);
-            }
-            break;
             case ENET_EVENT_TYPE_RECEIVE:
             {
                 std::cout << "A packet of length "
@@ -83,11 +82,11 @@ int main()
                           << " on channel "
                           << event.channelID
                           << ".\n";
-                sf::Packet packet;
-                packet.append(event.packet->data, event.packet->dataLength);
-                std::string text;
-                packet >> text;
-                std::cout << text << "\n";
+                // sf::Packet packet;
+                // packet.append(event.packet->data, event.packet->dataLength);
+                // std::string text;
+                // packet >> text;
+                // std::cout << text << "\n";
                 /* Clean up the packet now that we're done using it. */
                 enet_packet_destroy(event.packet);
             }

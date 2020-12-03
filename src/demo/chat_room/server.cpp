@@ -3,9 +3,11 @@
 
 #include <engine/network/net.h>
 
+#include "protocol.h"
+
 int main()
 {
-    samui::net::init_net();
+    samui::net::init_enet();
 
     ENetAddress address;
     /* Bind the server to the default localhost.     */
@@ -38,7 +40,7 @@ int main()
                 std::cout << "A new client connected from " << event.peer->address.host << ":" << event.peer->address.port << "\n";
                 sf::Packet packet;
                 packet << "hello";
-                samui::net::send(event.peer, packet, 0, 0);
+                samui::net::enet_send_sf_packet(event.peer, packet, 0, 0);
             }
             break;
             case ENET_EVENT_TYPE_RECEIVE:
@@ -54,10 +56,24 @@ int main()
                           << " on channel "
                           << event.channelID
                           << ".\n";
-                sf::Packet packet = samui::net::enet_to_sf_packet(*event.packet);
-                int i;
-                packet >> i;
-                std::cout << i << "\n";
+                samui::net::Packet packet(*event.packet);
+                MessageType msg_type;
+                packet >> msg_type;
+                switch (msg_type)
+                {
+                case MessageType::BroadCastUserMessage:
+                {
+                    std::cout << "broadcast:";
+                    ReqData<MessageType::BroadCastUserMessage> data;
+                    packet >> data;
+                    std::cout << data.content << "\n";
+                }
+                break;
+                
+                default:
+                    std::cout << (int)msg_type << "\n";
+                    break;
+                }
                 /* Clean up the packet now that we're done using it. */
                 enet_packet_destroy(event.packet);
             }

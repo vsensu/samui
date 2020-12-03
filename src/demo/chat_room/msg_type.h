@@ -1,6 +1,6 @@
 #pragma once
 
-enum class Message
+enum class MessageType : uint16_t
 {
     ServerAccept,
     BroadCastUserMessage,
