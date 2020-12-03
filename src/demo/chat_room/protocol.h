@@ -41,3 +41,9 @@ struct RspData<MessageType::BroadCastUserMessage>
     char user_name[16];
     char content[1024];
 };
+
+template <>
+struct RspData<MessageType::ServerAccept>
+{
+    uint64_t uid;
+};

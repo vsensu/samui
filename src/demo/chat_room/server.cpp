@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <map>
 
 #include <engine/network/net.h>
 
@@ -27,6 +28,9 @@ int main()
         exit(EXIT_FAILURE);
     }
 
+    // std::map<uint64_t, std::tuple<uint32_t, uint16_t>> uid_address;
+    std::map<std::tuple<uint32_t, uint16_t>, ENetPeer*> address_peer;
+
     ENetEvent event;
     while (true)
     {
@@ -38,9 +42,17 @@ int main()
             case ENET_EVENT_TYPE_CONNECT:
             {
                 std::cout << "A new client connected from " << event.peer->address.host << ":" << event.peer->address.port << "\n";
-                sf::Packet packet;
-                packet << "hello";
-                samui::net::enet_send_sf_packet(event.peer, packet, 0, 0);
+                samui::net::Packet packet;
+                Response<MessageType::ServerAccept> rsp;
+                static uint64_t uid = 0;
+                uid += 1;
+
+                address_peer[std::make_tuple(event.peer->address.host, event.peer->address.port)] = event.peer;
+
+                rsp.data.uid = uid;
+                packet << rsp.id;
+                packet << rsp.data;
+                samui::net::enet_send_packet(event.peer, packet, 0, 0);
             }
             break;
             case ENET_EVENT_TYPE_RECEIVE:
@@ -67,9 +79,22 @@ int main()
                     ReqData<MessageType::BroadCastUserMessage> data;
                     packet >> data;
                     std::cout << data.content << "\n";
+
+                    for (const auto &peer : address_peer)
+                    {
+                        if (peer.second != nullptr && !(peer.second->address.host == event.peer->address.host && peer.second->address.port == event.peer->address.port))
+                        {
+                            samui::net::Packet packet;
+                            Response<MessageType::BroadCastUserMessage> rsp;
+                            rsp.data.uid = peer.second->address.port;
+                            std::memcpy(rsp.data.content, data.content, 1024);
+                            packet << rsp.id << rsp.data;
+                            samui::net::enet_send_packet(peer.second, packet, 0, 0);
+                        }
+                    }
                 }
                 break;
-                
+
                 default:
                     std::cout << (int)msg_type << "\n";
                     break;
@@ -82,6 +107,7 @@ int main()
             {
                 std::cout << event.peer->address.host << ":" << event.peer->address.port << " disconnected.\n";
                 /* Reset the peer's client information. */
+                address_peer[std::make_tuple(event.peer->address.host, event.peer->address.port)] = nullptr;
                 event.peer->data = NULL;
             }
             break;
