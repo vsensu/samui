@@ -38,3 +38,15 @@ struct RspData<action>                  \
 {                                       
 
 #define END_RSP_DATA    };}
+
+#define SEND_REQ(peer, req)                                                     \
+    samui::net::Packet packet;                                                  \
+    packet << req.id; /* id is constexpr static, so must send by yourself */    \
+    packet << req.data;                                                         \
+    samui::net::enet_send_packet(peer, packet, 0, 0);
+
+#define SEND_RSP(peer, rsp)                                                     \
+    samui::net::Packet packet;                                                  \
+    packet << rsp.id; /* id is constexpr static, so must send by yourself */    \
+    packet << rsp.data;                                                         \
+    samui::net::enet_send_packet(peer, packet, 0, 0);

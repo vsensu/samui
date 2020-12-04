@@ -127,12 +127,9 @@ private:
         ImGui::Text(text);
         if (ImGui::Button("Send"))
         {
-            samui::net::Packet packet;
             samui::net::Request<ActionType::BroadCastUserMessage> req;
-            packet << req.id;
             std::memcpy(req.data.content, text, 1024);
-            packet << req.data;
-            samui::net::enet_send_packet(peer, packet, 0, 0);
+            SEND_REQ(peer, req);
             std::memset(text, 0, 1024);
         }
         ImGui::End();

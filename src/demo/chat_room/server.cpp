@@ -42,7 +42,6 @@ int main()
             case ENET_EVENT_TYPE_CONNECT:
             {
                 std::cout << "A new client connected from " << event.peer->address.host << ":" << event.peer->address.port << "\n";
-                samui::net::Packet packet;
                 samui::net::Response<ActionType::Login> rsp;
                 static uint64_t uid = 0;
                 uid += 1;
@@ -50,9 +49,7 @@ int main()
                 address_peer[std::make_tuple(event.peer->address.host, event.peer->address.port)] = event.peer;
 
                 rsp.data.uid = uid;
-                packet << rsp.id;
-                packet << rsp.data;
-                samui::net::enet_send_packet(event.peer, packet, 0, 0);
+                SEND_RSP(event.peer, rsp);
             }
             break;
             case ENET_EVENT_TYPE_RECEIVE:
@@ -84,12 +81,10 @@ int main()
                     {
                         if (peer.second != nullptr && !(peer.second->address.host == event.peer->address.host && peer.second->address.port == event.peer->address.port))
                         {
-                            samui::net::Packet packet;
                             samui::net::Response<ActionType::BroadCastUserMessage> rsp;
                             rsp.data.uid = peer.second->address.port;
                             std::memcpy(rsp.data.content, data.content, 1024);
-                            packet << rsp.id << rsp.data;
-                            samui::net::enet_send_packet(peer.second, packet, 0, 0);
+                            SEND_RSP(peer.second, rsp);
                         }
                     }
                 }
