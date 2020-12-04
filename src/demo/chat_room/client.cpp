@@ -84,20 +84,20 @@ private:
                           << ".\n";
 
                 samui::net::Packet packet(*event.packet);
-                MessageType msg_type;
+                ActionType msg_type;
                 packet >> msg_type;
                 switch (msg_type)
                 {
-                case MessageType::ServerAccept:
+                case ActionType::Login:
                 {
-                    RspData<MessageType::ServerAccept> data;
+                    samui::net::RspData<ActionType::Login> data;
                     packet >> data;
                     uid = data.uid;
                 }
                 break;
-                case MessageType::BroadCastUserMessage:
+                case ActionType::BroadCastUserMessage:
                 {
-                    RspData<MessageType::BroadCastUserMessage> data;
+                    samui::net::RspData<ActionType::BroadCastUserMessage> data;
                     packet >> data;
                     content_recv += data.content;
                     content_recv += "\n";
@@ -128,7 +128,7 @@ private:
         if (ImGui::Button("Send"))
         {
             samui::net::Packet packet;
-            Request<MessageType::BroadCastUserMessage> req;
+            samui::net::Request<ActionType::BroadCastUserMessage> req;
             packet << req.id;
             std::memcpy(req.data.content, text, 1024);
             packet << req.data;

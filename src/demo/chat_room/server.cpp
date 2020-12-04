@@ -43,7 +43,7 @@ int main()
             {
                 std::cout << "A new client connected from " << event.peer->address.host << ":" << event.peer->address.port << "\n";
                 samui::net::Packet packet;
-                Response<MessageType::ServerAccept> rsp;
+                samui::net::Response<ActionType::Login> rsp;
                 static uint64_t uid = 0;
                 uid += 1;
 
@@ -69,14 +69,14 @@ int main()
                           << event.channelID
                           << ".\n";
                 samui::net::Packet packet(*event.packet);
-                MessageType msg_type;
+                ActionType msg_type;
                 packet >> msg_type;
                 switch (msg_type)
                 {
-                case MessageType::BroadCastUserMessage:
+                case ActionType::BroadCastUserMessage:
                 {
                     std::cout << "broadcast:";
-                    ReqData<MessageType::BroadCastUserMessage> data;
+                    samui::net::ReqData<ActionType::BroadCastUserMessage> data;
                     packet >> data;
                     std::cout << data.content << "\n";
 
@@ -85,7 +85,7 @@ int main()
                         if (peer.second != nullptr && !(peer.second->address.host == event.peer->address.host && peer.second->address.port == event.peer->address.port))
                         {
                             samui::net::Packet packet;
-                            Response<MessageType::BroadCastUserMessage> rsp;
+                            samui::net::Response<ActionType::BroadCastUserMessage> rsp;
                             rsp.data.uid = peer.second->address.port;
                             std::memcpy(rsp.data.content, data.content, 1024);
                             packet << rsp.id << rsp.data;
