@@ -90,16 +90,16 @@ private:
                 {
                 case ActionType::Login:
                 {
-                    samui::net::RspData<ActionType::Login> data;
-                    packet >> data;
-                    uid = data.uid;
+                    samui::net::Response<ActionType::Login> rsp;
+                    packet >> rsp.data;
+                    uid = rsp.data.uid;
                 }
                 break;
                 case ActionType::BroadCastUserMessage:
                 {
-                    samui::net::RspData<ActionType::BroadCastUserMessage> data;
-                    packet >> data;
-                    content_recv += data.content;
+                    samui::net::Response<ActionType::BroadCastUserMessage> rsp;
+                    packet >> rsp.data;
+                    content_recv += rsp.data.content;
                     content_recv += "\n";
                 }
                 break;
@@ -129,7 +129,8 @@ private:
         {
             samui::net::Request<ActionType::BroadCastUserMessage> req;
             std::memcpy(req.data.content, text, 1024);
-            SEND_REQ(peer, req);
+            // SEND_REQ(peer, req);
+            samui::net::send(peer, req);
             std::memset(text, 0, 1024);
         }
         ImGui::End();

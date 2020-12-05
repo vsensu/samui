@@ -49,7 +49,7 @@ int main()
                 address_peer[std::make_tuple(event.peer->address.host, event.peer->address.port)] = event.peer;
 
                 rsp.data.uid = uid;
-                SEND_RSP(event.peer, rsp);
+                samui::net::send(event.peer, rsp);
             }
             break;
             case ENET_EVENT_TYPE_RECEIVE:
@@ -73,9 +73,10 @@ int main()
                 case ActionType::BroadCastUserMessage:
                 {
                     std::cout << "broadcast:";
-                    samui::net::ReqData<ActionType::BroadCastUserMessage> data;
-                    packet >> data;
-                    std::cout << data.content << "\n";
+                    samui::net::Request<ActionType::BroadCastUserMessage> req;
+                    packet >> req.data;
+
+                    std::cout << req.data.content << "\n";
 
                     for (const auto &peer : address_peer)
                     {
@@ -83,8 +84,8 @@ int main()
                         {
                             samui::net::Response<ActionType::BroadCastUserMessage> rsp;
                             rsp.data.uid = peer.second->address.port;
-                            std::memcpy(rsp.data.content, data.content, 1024);
-                            SEND_RSP(peer.second, rsp);
+                            std::memcpy(rsp.data.content, req.data.content, 1024);
+                            samui::net::send(peer.second, rsp);
                         }
                     }
                 }

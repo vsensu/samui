@@ -12,7 +12,7 @@ namespace samui
         template <typename T>
         concept trivially_copyable_t = std::is_trivially_copyable_v<T>;
 
-        struct Packet
+        class Packet final
         {
         private:
             std::vector<uint8_t> body;

@@ -8,24 +8,25 @@ enum class ActionType : uint16_t
     BroadCastUserMessage,
 };
 
-DEFINE_ACTION_TYPE(ActionType);
+namespace samui::net
+{
+    template <>
+    struct ResponseData<ActionType::Login>
+    {
+        uint64_t uid;
+    };
 
-BEGIN_REQ_DATA(ActionType::BroadCastUserMessage)
-    char content[1024];
-END_REQ_DATA
+    template <>
+    struct RequestData<ActionType::BroadCastUserMessage>
+    {
+        char content[1024];
+    };
 
-BEGIN_RSP_DATA(ActionType::BroadCastUserMessage)
-    uint64_t uid;
-    char user_name[16];
-    char content[1024];
-END_REQ_DATA
-
-BEGIN_RSP_DATA(ActionType::Login)
-    uint64_t uid;
-END_REQ_DATA
-
-// template <>
-// struct RspData<ActionType::Login>
-// {
-//     uint64_t uid;
-// };
+    template <>
+    struct ResponseData<ActionType::BroadCastUserMessage>
+    {
+        uint64_t uid;
+        char user_name[16];
+        char content[1024];
+    };
+} // namespace samui::net

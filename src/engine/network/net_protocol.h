@@ -1,32 +1,47 @@
 #pragma once
 
-#define DEFINE_ACTION_TYPE(Action)      \
-namespace samui::net {                  \
-template <Action msg>                   \
-struct ReqData                          \
-{                                       \
-};                                      \
-template <Action msg>                   \
-struct RspData                          \
-{                                       \
-};                                      \
-template <Action msg>                   \
-struct Request                          \
-{                                       \
-    constexpr static Action id = msg;   \
-    ReqData<msg> data;                  \
-};                                      \
-template <Action msg>                   \
-struct Response                         \
-{                                       \
-    constexpr static Action id = msg;   \
-    RspData<msg> data;                  \
-};}                                      
+#include <string>
+
+namespace samui::net
+{
+    template <auto action>
+    struct RequestData
+    {
+    };
+
+    template <auto action>
+    struct ResponseData
+    {
+    };
+
+    template <auto action>
+    struct Request
+    {
+        constexpr static auto id = action;
+        RequestData<action> data;
+    };
+
+    template <auto action>
+    struct Response
+    {
+        constexpr static auto id = action;
+        ResponseData<action> data;
+    };
+
+    template <typename T, typename U>
+    void send(T *peer, const U &data)
+    {
+        Packet packet;
+        packet << data.id; /* id is constexpr static, so must send by yourself */
+        packet << data.data;
+        enet_send_packet(peer, packet, 0, 0);
+    }
+} // namespace samui::net
 
 #define BEGIN_REQ_DATA(action)          \
 namespace samui::net {                  \
 template <>                             \
-struct ReqData<action>                  \
+struct RequestData<action>                  \
 {                                       
 
 #define END_REQ_DATA    };}
@@ -34,19 +49,7 @@ struct ReqData<action>                  \
 #define BEGIN_RSP_DATA(action)          \
 namespace samui::net {                  \
 template <>                             \
-struct RspData<action>                  \
+struct ResponseData<action>                  \
 {                                       
 
 #define END_RSP_DATA    };}
-
-#define SEND_REQ(peer, req)                                                     \
-    samui::net::Packet packet;                                                  \
-    packet << req.id; /* id is constexpr static, so must send by yourself */    \
-    packet << req.data;                                                         \
-    samui::net::enet_send_packet(peer, packet, 0, 0);
-
-#define SEND_RSP(peer, rsp)                                                     \
-    samui::net::Packet packet;                                                  \
-    packet << rsp.id; /* id is constexpr static, so must send by yourself */    \
-    packet << rsp.data;                                                         \
-    samui::net::enet_send_packet(peer, packet, 0, 0);
