@@ -1,4 +1,4 @@
-add_requires("conan::asio/1.18.0", {alias = "asio"})
+add_requires("conan::asio/1.18.0")
 add_requires("sfml 2.5.1")
 
 target("test_asio")

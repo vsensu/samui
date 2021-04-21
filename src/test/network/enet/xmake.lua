@@ -1,4 +1,4 @@
-add_requires("conan::enet/1.3.17", {alias = "enet"})
+add_requires("conan::enet/1.3.17")
 
 target("test_enet_env")
     set_kind("binary")

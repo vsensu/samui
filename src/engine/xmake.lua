@@ -1,11 +1,11 @@
 add_defines("ENGINE")
 
-add_requires("conan::entt/3.5.2", {alias = "entt"})
-add_requires("conan::glfw/3.3.2", {alias = "glfw"})
-add_requires("conan::glm/0.9.9.8", {alias = "glm"})
-add_requires("conan::imgui/1.78", {alias = "imgui"})
+add_requires("entt 3.7.0")
+add_requires("glfw 3.3.2")
+add_requires("glm 0.9.9+8")
+add_requires("imgui 1.82")
 
-includes("network")
+-- includes("network")
 
 target("engine")
     set_kind("binary")
