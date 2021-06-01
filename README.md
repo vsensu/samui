@@ -5,10 +5,16 @@ xmake f -p [windows|linux|macosx|android|iphoneos ..] -a [x86|arm64 ..] -m [debu
 ## Build
 xmake
 
+## Demo
+xmake run demo
+
+## Test
+xmake run test
+
 ## vscode compile_commands.json
 xmake project -k compile_commands
 
-ctrl+shift+P打开Command Palette,运行 C/C++: Edit Configurations (JSON) 生成c_cpp_properties.json：
+C/C++: Edit Configurations (JSON) 
 
 "configurations": [
     {
