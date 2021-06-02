@@ -12,4 +12,47 @@ function main(...)
     print("move file...")
     os.tryrm(".vscode/compile_commands.json")
     os.trymv("compile_commands.json", ".vscode/compile_commands.json")
+
+    local ccpp_props = format(
+[[
+{
+    "configurations": [
+        {
+            "name": "windows_engine_debug",
+            "defines": [
+                "SAMUI_DEBUG",
+                "SAMUI_PLATFORM_WINDOWS",
+                "SAMUI_BUILD_DLL"
+            ],
+            "compileCommands": "${workspaceFolder}/.vscode/compile_commands.json"
+        },
+        {
+            "name": "windows_engine_release",
+            "defines": [
+                "SAMUI_RELEASE",
+                "SAMUI_PLATFORM_WINDOWS",
+                "SAMUI_BUILD_DLL"
+            ],
+            "compileCommands": "${workspaceFolder}/.vscode/compile_commands.json"
+        },
+        {
+            "name": "windows_game_debug",
+            "defines": [
+                "SAMUI_DEBUG",
+                "SAMUI_PLATFORM_WINDOWS"
+            ],
+            "compileCommands": "${workspaceFolder}/.vscode/compile_commands.json"
+        },
+        {
+            "name": "windows_game_release",
+            "defines": [
+                "SAMUI_RELEASE",
+                "SAMUI_PLATFORM_WINDOWS"
+            ],
+            "compileCommands": "${workspaceFolder}/.vscode/compile_commands.json"
+        }
+    ]
+}
+]])
+    io.writefile(".vscode/c_cpp_properties.json", ccpp_props)
 end
