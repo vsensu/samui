@@ -1,8 +1,8 @@
 #include <iostream>
-#include "core.h"
+#include <samui.h>
 
-int main() {
-  core::say("hello demo\n");
-  std::cout << core::add(1, 2) << '\n';
-  core::hello();
+samui::Application* samui::create_application()
+{
+  std::cout << "Hello samui\n";
+  return new samui::Application();
 }

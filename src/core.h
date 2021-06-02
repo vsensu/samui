@@ -1,20 +1,14 @@
-#ifndef CORE_H_
-#define CORE_H_
+#ifndef SAMUI_CORE_H_
+#define SAMUI_CORE_H_
 
-#include "math/math.h"
-#include "src_example/src_example.h"
-
-namespace core {
-
-void say(const char* str);
-
-template <typename T1, typename T2>
-auto add(const T1& lhs, const T2& rhs) {
-  return math::add(lhs, rhs);
-}
-
-void hello();
-
-}  // namespace core
+#ifdef SAMUI_PLATFORM_WINDOWS
+  #ifdef SAMUI_BUILD_DLL
+    #define SAMUI_API __declspec(dllexport)
+  #else
+    #define SAMUI_API __declspec(dllimport)
+  #endif
+#else
+  #error samui only support windows!
+#endif
 
 #endif
