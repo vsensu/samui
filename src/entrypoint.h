@@ -7,6 +7,7 @@ extern samui::Application* samui::create_application();
 
 int main(int argc, char **argv)
 {
+    samui::Log::Init();
     auto *app = samui::create_application();
     app->Run();
     delete app;
