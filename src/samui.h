@@ -3,7 +3,7 @@
 
 #include "core.h"
 
-#include "log.h"
+#include "log/log.h"
 #include "application.h"
 
 #include "entrypoint.h"
