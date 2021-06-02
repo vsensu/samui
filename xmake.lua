@@ -39,3 +39,11 @@ task("reset")
         description = "reset xmake env",
         options = {}
     }
+
+task("vsc")
+    on_run("scripts/tasks/vsc_cc")
+    set_menu {
+        usage = "xmake vsc",
+        description = "generate compile_commands.json for vscode",
+        options = {}
+    }
