@@ -12,7 +12,7 @@ class SAMUI_API Application {
   Application(/* args */);
   virtual ~Application();
   virtual void Run();
-}; 
+};
 
 Application* create_application();
 

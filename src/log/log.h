@@ -2,6 +2,7 @@
 #define SAMUI_LOG_H_H
 
 #include <spdlog/spdlog.h>
+
 #include <memory>
 
 #include "core.h"
@@ -9,7 +10,6 @@
 namespace samui {
 
 class SAMUI_API Log {
-  // spdlog::
  public:
   static void Init();
 
@@ -23,6 +23,7 @@ class SAMUI_API Log {
 
 }  // namespace samui
 
+// clang-format off
 #define SAMUI_ENGINE_TRACE(...)     samui::Log::GetEngineLogger()->trace(__VA_ARGS__)
 #define SAMUI_ENGINE_INFO(...)      samui::Log::GetEngineLogger()->info(__VA_ARGS__)
 #define SAMUI_ENGINE_WARN(...)      samui::Log::GetEngineLogger()->warn(__VA_ARGS__)
@@ -34,5 +35,6 @@ class SAMUI_API Log {
 #define SAMUI_WARN(...)      samui::Log::GetGameLogger()->warn(__VA_ARGS__)
 #define SAMUI_ERROR(...)     samui::Log::GetGameLogger()->error(__VA_ARGS__)
 #define SAMUI_FATAL(...)     samui::Log::GetGameLogger()->critical(__VA_ARGS__)
+// clang-format on
 
 #endif

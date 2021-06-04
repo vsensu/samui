@@ -21,3 +21,14 @@ C/C++: Edit Configurations (JSON)
       "compileCommands": "${workspaceFolder}/.vscode/compile_commands.json"
     }
   ],
+
+## clang-format
+clang-format -style=Google -dump-config > .clang-format
+
+**turn off**
+
+``` c++
+// clang-format off
+    void    unformatted_code  ;
+// clang-format on
+```

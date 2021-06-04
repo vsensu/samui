@@ -19,8 +19,6 @@ std::shared_ptr<spdlog::logger>& Log::GetEngineLogger() {
   return engine_logger_;
 }
 
-std::shared_ptr<spdlog::logger>& Log::GetGameLogger() {
-  return game_logger_;
-}
+std::shared_ptr<spdlog::logger>& Log::GetGameLogger() { return game_logger_; }
 
 }  // namespace samui
