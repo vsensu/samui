@@ -1,0 +1,38 @@
+{
+    "configurations": [
+        {
+            "name": "windows_engine_debug",
+            "defines": [
+                "SAMUI_DEBUG",
+                "SAMUI_PLATFORM_WINDOWS",
+                "SAMUI_BUILD_DLL"
+            ],
+            "compileCommands": "${workspaceFolder}/.vscode/compile_commands.json"
+        },
+        {
+            "name": "windows_engine_release",
+            "defines": [
+                "SAMUI_RELEASE",
+                "SAMUI_PLATFORM_WINDOWS",
+                "SAMUI_BUILD_DLL"
+            ],
+            "compileCommands": "${workspaceFolder}/.vscode/compile_commands.json"
+        },
+        {
+            "name": "windows_game_debug",
+            "defines": [
+                "SAMUI_DEBUG",
+                "SAMUI_PLATFORM_WINDOWS"
+            ],
+            "compileCommands": "${workspaceFolder}/.vscode/compile_commands.json"
+        },
+        {
+            "name": "windows_game_release",
+            "defines": [
+                "SAMUI_RELEASE",
+                "SAMUI_PLATFORM_WINDOWS"
+            ],
+            "compileCommands": "${workspaceFolder}/.vscode/compile_commands.json"
+        }
+    ]
+}
