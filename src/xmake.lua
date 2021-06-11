@@ -4,6 +4,7 @@ includes("log")
 
 target("engine")
     set_kind("shared")
+    set_pcxxheader("pch.h")
     add_includedirs("$(projectdir)/deps/headeronly", "$(projectdir)/deps/libs", "$(projectdir)/deps/src")
     add_linkdirs("$(projectdir)/deps/libs/lib_example")
     add_files("*.cpp")

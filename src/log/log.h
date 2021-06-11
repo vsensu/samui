@@ -3,8 +3,6 @@
 
 #include <spdlog/spdlog.h>
 
-#include <memory>
-
 #include "core.h"
 
 namespace samui {
