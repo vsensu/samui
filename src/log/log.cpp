@@ -13,6 +13,8 @@ void Log::Init() {
 
   game_logger_ = spdlog::stdout_color_mt("GAME");
   game_logger_->set_level(spdlog::level::trace);
+
+  SAMUI_ENGINE_INFO("Initialized Log!");
 }
 
 std::shared_ptr<spdlog::logger>& Log::GetEngineLogger() {

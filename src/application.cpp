@@ -2,12 +2,13 @@
 
 namespace samui {
 
-Application::Application(/* args */) {}
+Application::Application(/* args */) { window_ = Window::Create(); }
 
 Application::~Application() {}
 
 void Application::Run() {
-  while (true) {
+  while (running_) {
+    window_->OnUpdate();
   }
 }
 

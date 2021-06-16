@@ -2,8 +2,6 @@
 #include <iostream>
 
 samui::Application* samui::create_application() {
-  std::cout << "Hello samui\n";
-
   SAMUI_ENGINE_TRACE("engine trace");
   SAMUI_ENGINE_INFO("engine info");
   SAMUI_ENGINE_WARN("engine warn");
