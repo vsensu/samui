@@ -3,6 +3,7 @@
 
 #include "Window.h"
 #include "core.h"
+#include "events/application_event.h"
 
 namespace samui {
 
@@ -13,6 +14,10 @@ class SAMUI_API Application {
   Application(/* args */);
   virtual ~Application();
   virtual void Run();
+
+ private:
+  void OnEvent(Event& e);
+  bool OnWindowClose(WindowCloseEvent& event);
 
  private:
   std::unique_ptr<Window> window_;
