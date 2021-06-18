@@ -16,14 +16,27 @@ Application::~Application() {}
 
 void Application::Run() {
   while (running_) {
+    for (Layer* layer : layer_stack_) {
+      layer->OnUpdate();
+    }
     window_->OnUpdate();
   }
 }
 
+void Application::PushLayer(Layer* layer) { layer_stack_.PushLayer(layer); }
+
+void Application::PushOverlay(Layer* layer) { layer_stack_.PushOverlay(layer); }
+
 void Application::OnEvent(Event& e) {
   EventDispatcher dispatcher(e);
   dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FUNC(OnWindowClose));
-  SAMUI_ENGINE_TRACE("{0}", e.ToString());
+
+  for (auto it = layer_stack_.end(); it != layer_stack_.begin();) {
+    (*--it)->OnEvent(e);
+    if (e.handled_) {
+      break;
+    }
+  }
 }
 
 bool Application::OnWindowClose(WindowCloseEvent& event) {

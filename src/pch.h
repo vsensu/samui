@@ -5,6 +5,7 @@
 #include <functional>
 #include <string>
 #include <sstream>
+#include <vector>
 
 #ifdef SAMUI_PLATFORM_WINDOWS
 #include <Windows.h>

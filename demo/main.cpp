@@ -1,5 +1,20 @@
 #include <samui.h>
+
 #include <iostream>
+
+class ExampleLayer : public samui::Layer {
+ public:
+  ExampleLayer() : Layer("Example") {}
+  void OnUpdate() override { SAMUI_INFO("ExampleLayer::Update"); }
+  void OnEvent(samui::Event& event) override {
+    SAMUI_TRACE("{0}", event.ToString());
+  }
+};
+
+class Demo : public samui::Application {
+ public:
+  Demo() : Application() { PushLayer(new ExampleLayer()); }
+};
 
 samui::Application* samui::create_application() {
   SAMUI_ENGINE_TRACE("engine trace");
@@ -14,5 +29,5 @@ samui::Application* samui::create_application() {
   SAMUI_ERROR("game error");
   SAMUI_FATAL("game fatal");
 
-  return new samui::Application();
+  return new Demo();
 }
