@@ -3,11 +3,13 @@
 #include "log/log.h"
 
 namespace samui {
-
 #define BIND_EVENT_FUNC(x) \
   std::bind(&Application::x, this, std::placeholders::_1)
 
+Application* Application::instance_ = nullptr;
+
 Application::Application(/* args */) {
+  instance_ = this;
   window_ = Window::Create();
   window_->SetEventCallback(BIND_EVENT_FUNC(OnEvent));
 }
@@ -23,9 +25,15 @@ void Application::Run() {
   }
 }
 
-void Application::PushLayer(Layer* layer) { layer_stack_.PushLayer(layer); }
+void Application::PushLayer(Layer* layer) {
+  layer_stack_.PushLayer(layer);
+  layer->OnAttach();
+}
 
-void Application::PushOverlay(Layer* layer) { layer_stack_.PushOverlay(layer); }
+void Application::PushOverlay(Layer* layer) {
+  layer_stack_.PushOverlay(layer);
+  layer->OnAttach();
+}
 
 void Application::OnEvent(Event& e) {
   EventDispatcher dispatcher(e);

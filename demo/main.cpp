@@ -13,7 +13,10 @@ class ExampleLayer : public samui::Layer {
 
 class Demo : public samui::Application {
  public:
-  Demo() : Application() { PushLayer(new ExampleLayer()); }
+  Demo() : Application() {
+    PushLayer(new ExampleLayer());
+    PushLayer(new samui::ImGuiLayer());
+  }
 };
 
 samui::Application* samui::create_application() {

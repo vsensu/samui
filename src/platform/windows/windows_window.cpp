@@ -37,6 +37,10 @@ void WindowsWindow::Init(const WindowProps& props) {
     return;
   }
 
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
   window_ = glfwCreateWindow((int)props.Width, (int)props.Height,
                              data_.Title.c_str(), nullptr, nullptr);
   if (window_ == nullptr) {

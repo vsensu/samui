@@ -16,8 +16,12 @@ class SAMUI_API Application {
   virtual ~Application();
   virtual void Run();
 
-  void PushLayer(Layer *layer);
-  void PushOverlay(Layer *layer);
+  void PushLayer(Layer* layer);
+  void PushOverlay(Layer* layer);
+
+  inline static Application& Get() { return *instance_; }
+  inline Window&             GetWindow() { return *window_; }
+
  private:
   void OnEvent(Event& e);
   bool OnWindowClose(WindowCloseEvent& event);
@@ -26,6 +30,7 @@ class SAMUI_API Application {
   std::unique_ptr<Window> window_;
   bool                    running_{true};
   LayerStack              layer_stack_;
+  static Application*     instance_;
 };
 
 Application* create_application();
