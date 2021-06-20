@@ -1,7 +1,7 @@
 #ifndef SAMUI_EVENT_H_
 #define SAMUI_EVENT_H_
 
-#include "core.h"
+#include "../core/core.h"
 
 namespace samui {
 

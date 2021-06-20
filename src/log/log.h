@@ -3,7 +3,7 @@
 
 #include <spdlog/spdlog.h>
 
-#include "core.h"
+#include "../core/core.h"
 
 namespace samui {
 

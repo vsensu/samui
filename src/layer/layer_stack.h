@@ -1,7 +1,7 @@
 #ifndef SAMUI_LAYER_STACK_H_
 #define SAMUI_LAYER_STACK_H_
 
-#include "core.h"
+#include "../core/core.h"
 #include "layer.h"
 
 namespace samui {

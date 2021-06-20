@@ -2,7 +2,7 @@
 #define SAMUI_WINDOW_H_
 
 #include "core.h"
-#include "events/event.h"
+#include "../events/event.h"
 
 namespace samui {
 struct WindowProps {
@@ -21,7 +21,9 @@ class SAMUI_API Window {
 
   using EventCallbackFunc = std::function<void(Event&)>;
 
+  virtual void BeforeUpdate() = 0;
   virtual void OnUpdate() = 0;
+  virtual void LateUpdate() = 0;
 
   virtual uint32_t GetWidth() const = 0;
   virtual uint32_t GetHeight() const = 0;

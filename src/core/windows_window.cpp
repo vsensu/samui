@@ -2,10 +2,10 @@
 
 #include <glad/glad.h>
 
-#include "events/application_event.h"
-#include "events/key_event.h"
-#include "events/mouse_event.h"
-#include "log/log.h"
+#include "../events/application_event.h"
+#include "../events/key_event.h"
+#include "../events/mouse_event.h"
+#include "../log/log.h"
 
 namespace samui {
 void glfw_error_callback(int error_code, const char* desc) {
@@ -133,12 +133,15 @@ void WindowsWindow::Init(const WindowProps& props) {
 
 void WindowsWindow::Shutdown() { glfwDestroyWindow(window_); }
 
-void WindowsWindow::OnUpdate() {
+void WindowsWindow::BeforeUpdate() {
+  glfwPollEvents();
   glClearColor(1, 0, 1, 1);
   glClear(GL_COLOR_BUFFER_BIT);
-  glfwPollEvents();
-  glfwSwapBuffers(window_);
 }
+
+void WindowsWindow::OnUpdate() {}
+
+void WindowsWindow::LateUpdate() { glfwSwapBuffers(window_); }
 
 void WindowsWindow::SetVSync(bool enabled) {
   if (enabled) {

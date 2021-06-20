@@ -1,8 +1,8 @@
 #ifndef SAMUI_LAYER_H_
 #define SAMUI_LAYER_H_
 
-#include "core.h"
-#include "events/event.h"
+#include "../core/core.h"
+#include "../events/event.h"
 
 namespace samui {
 

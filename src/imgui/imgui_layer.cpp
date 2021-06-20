@@ -4,7 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <imgui.h>
 
-#include "application.h"
+#include "../core/application.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
@@ -36,10 +36,10 @@ void ImGuiLayer::OnAttach() {
 void ImGuiLayer::OnDetach() {}
 
 void ImGuiLayer::OnUpdate() {
-  ImGuiIO&     io = ImGui::GetIO();
-  Application& app = Application::Get();
-  io.DisplaySize =
-      ImVec2(app.GetWindow().GetWidth(), app.GetWindow().GetHeight());
+  // ImGuiIO&     io = ImGui::GetIO();
+  // Application& app = Application::Get();
+  // io.DisplaySize =
+      // ImVec2(app.GetWindow().GetWidth(), app.GetWindow().GetHeight());
 
   // Start the Dear ImGui frame
   ImGui_ImplOpenGL3_NewFrame();

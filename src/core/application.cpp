@@ -1,6 +1,6 @@
 #include "application.h"
 
-#include "log/log.h"
+#include "../log/log.h"
 
 namespace samui {
 #define BIND_EVENT_FUNC(x) \
@@ -18,10 +18,12 @@ Application::~Application() {}
 
 void Application::Run() {
   while (running_) {
+    window_->BeforeUpdate();
     for (Layer* layer : layer_stack_) {
       layer->OnUpdate();
     }
     window_->OnUpdate();
+    window_->LateUpdate();
   }
 }
 

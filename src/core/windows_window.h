@@ -11,7 +11,9 @@ class SAMUI_API WindowsWindow : public Window {
   WindowsWindow(const WindowProps& props);
   virtual ~WindowsWindow();
 
+  void BeforeUpdate() override;
   void OnUpdate() override;
+  void LateUpdate() override;
 
   unsigned int GetWidth() const override { return data_.Width; }
   unsigned int GetHeight() const override { return data_.Height; }

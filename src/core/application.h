@@ -3,8 +3,8 @@
 
 #include "Window.h"
 #include "core.h"
-#include "events/application_event.h"
-#include "layer_stack.h"
+#include "../events/application_event.h"
+#include "../layer/layer_stack.h"
 
 namespace samui {
 
