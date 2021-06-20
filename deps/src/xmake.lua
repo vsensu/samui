@@ -1,3 +1,3 @@
 includes("src_example")
 
-includes("glad")
+includes("glad", "imgui-1.83")

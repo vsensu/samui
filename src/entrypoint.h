@@ -4,6 +4,7 @@
 #ifdef SAMUI_PLATFORM_WINDOWS
 
 extern samui::Application* samui::create_application();
+// extern void entry();
 
 int main(int argc, char** argv) {
   samui::Log::Init();
@@ -11,6 +12,7 @@ int main(int argc, char** argv) {
   app->Run();
   delete app;
   app = nullptr;
+  // entry();
   return 0;
 }
 

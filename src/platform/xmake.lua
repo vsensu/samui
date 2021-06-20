@@ -1,4 +1,4 @@
-add_requires("glfw 3.3.4")
+add_requires("glfw 3.3.2")
 
 target("platform")
     set_kind("shared")

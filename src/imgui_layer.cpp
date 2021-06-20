@@ -1,7 +1,7 @@
 #include "imgui_layer.h"
 
-#include <GLFW/glfw3.h>
 #include <glad/glad.h>
+#include <GLFW/glfw3.h>
 #include <imgui.h>
 
 #include "application.h"
@@ -18,6 +18,7 @@ void ImGuiLayer::OnAttach() {
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
   ImGuiIO& io = ImGui::GetIO();
+  (void)io;
   // io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable
   // Keyboard Controls io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; //
   // Enable Gamepad Controls
@@ -26,10 +27,10 @@ void ImGuiLayer::OnAttach() {
   ImGui::StyleColorsDark();
   // ImGui::StyleColorsClassic();
 
-  // Setup Platform/Renderer bindings
+  // Setup Platform/Renderer backends
   ImGui_ImplGlfw_InitForOpenGL(
       (GLFWwindow*)(Application::Get().GetWindow().GetNativeWindow()), true);
-  ImGui_ImplOpenGL3_Init("#version 330");
+  ImGui_ImplOpenGL3_Init("#version 130");
 }
 
 void ImGuiLayer::OnDetach() {}

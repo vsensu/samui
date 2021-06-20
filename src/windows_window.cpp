@@ -30,10 +30,10 @@ void WindowsWindow::Init(const WindowProps& props) {
   SAMUI_ENGINE_INFO("Creating window {0} ({1}, {2})", props.Title, props.Width,
                     props.Height);
 
+  glfwSetErrorCallback(&glfw_error_callback);
   if (glfwInit() != GLFW_TRUE) {
     SAMUI_ENGINE_FATAL("failed to initialize glfw");
     glfwTerminate();
-    glfwSetErrorCallback(&glfw_error_callback);
     return;
   }
 

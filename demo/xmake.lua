@@ -1,7 +1,1 @@
-target("demo")
-    set_kind("binary")
-    add_includedirs("$(projectdir)/deps/headeronly", "$(projectdir)/deps/src", "$(projectdir)/src")
-    add_files("*.cpp")
-    add_packages("spdlog")
-    add_deps("engine")
-    -- add_links("user32", "gdi32", "shell32")
+includes("game", "demo_imgui")
