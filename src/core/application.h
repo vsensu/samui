@@ -6,7 +6,10 @@
 #include "../events/application_event.h"
 #include "../layer/layer_stack.h"
 
+
 namespace samui {
+
+class ImGuiLayer;
 
 class SAMUI_API Application {
  private:
@@ -28,6 +31,7 @@ class SAMUI_API Application {
 
  private:
   std::unique_ptr<Window> window_;
+  ImGuiLayer *imgui_layer_;
   bool                    running_{true};
   LayerStack              layer_stack_;
   static Application*     instance_;

@@ -1,10 +1,7 @@
+#include <imgui.h>
 #include <samui.h>
 
 #include <iostream>
-// #if defined(_MSC_VER) && (_MSC_VER >= 1900) && \
-//     !defined(IMGUI_DISABLE_WIN32_FUNCTIONS)
-// #pragma comment(lib, "legacy_stdio_definitions")
-// #endif
 
 class ExampleLayer : public samui::Layer {
  public:
@@ -14,11 +11,17 @@ class ExampleLayer : public samui::Layer {
       SAMUI_TRACE("Tab is pressed!");
     }
   }
+
   void OnEvent(samui::Event& event) override {
     if (event.GetEventType() == samui::EventType::KeyPressed) {
-      auto &key_press_event = static_cast<samui::KeyPressedEvent&>(event);
+      auto& key_press_event = static_cast<samui::KeyPressedEvent&>(event);
       SAMUI_TRACE("Input:{0}", (char)key_press_event.GetKeyCode());
     }
+  }
+
+  void OnImGuiRender() override {
+    static bool show = true;
+    ImGui::ShowDemoWindow(&show);
   }
 };
 
@@ -26,7 +29,6 @@ class Demo : public samui::Application {
  public:
   Demo() : Application() {
     PushLayer(new ExampleLayer());
-    PushLayer(new samui::ImGuiLayer());
   }
 };
 

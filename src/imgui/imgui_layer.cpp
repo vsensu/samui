@@ -1,7 +1,7 @@
 #include "imgui_layer.h"
 
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glad/glad.h>
 #include <imgui.h>
 
 #include "../core/application.h"
@@ -33,30 +33,28 @@ void ImGuiLayer::OnAttach() {
   ImGui_ImplOpenGL3_Init("#version 130");
 }
 
-void ImGuiLayer::OnDetach() {}
+void ImGuiLayer::OnDetach() {
+  ImGui_ImplOpenGL3_Shutdown();
+  ImGui_ImplGlfw_Shutdown();
+  ImGui::DestroyContext();
+}
 
-void ImGuiLayer::OnUpdate() {
-  // ImGuiIO&     io = ImGui::GetIO();
-  // Application& app = Application::Get();
-  // io.DisplaySize =
-      // ImVec2(app.GetWindow().GetWidth(), app.GetWindow().GetHeight());
-
+void ImGuiLayer::Begin() {
   // Start the Dear ImGui frame
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
+}
 
-  // Finally Render UI
-  //   RenderUI();
-  static bool show = true;
-  ImGui::ShowDemoWindow(&show);
+void ImGuiLayer::End() {
+  ImGuiIO&     io = ImGui::GetIO();
+  Application& app = Application::Get();
+  io.DisplaySize =
+      ImVec2(app.GetWindow().GetWidth(), app.GetWindow().GetHeight());
 
   // Rendering
   ImGui::Render();
-
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
-
-void ImGuiLayer::OnEvent(Event& event) {}
 
 }  // namespace samui

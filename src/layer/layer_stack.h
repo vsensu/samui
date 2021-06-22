@@ -20,7 +20,7 @@ class SAMUI_API LayerStack {
 
  private:
   std::vector<Layer*>           layers_;
-  std::vector<Layer*>::iterator layer_insert_;
+  unsigned int layer_insert_index_ {0};
 };
 
 }  // namespace samui

@@ -1,5 +1,6 @@
 #include "application.h"
 
+#include "../imgui/imgui_layer.h"
 #include "../log/log.h"
 
 namespace samui {
@@ -12,6 +13,9 @@ Application::Application(/* args */) {
   instance_ = this;
   window_ = Window::Create();
   window_->SetEventCallback(BIND_EVENT_FUNC(OnEvent));
+
+  imgui_layer_ = new ImGuiLayer();
+  PushOverlay(imgui_layer_);
 }
 
 Application::~Application() {}
@@ -22,6 +26,13 @@ void Application::Run() {
     for (Layer* layer : layer_stack_) {
       layer->OnUpdate();
     }
+
+    imgui_layer_->Begin();
+    for (Layer* layer : layer_stack_) {
+      layer->OnImGuiRender();
+    }
+    imgui_layer_->End();
+
     window_->OnUpdate();
     window_->LateUpdate();
   }

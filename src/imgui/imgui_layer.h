@@ -13,8 +13,9 @@ class SAMUI_API ImGuiLayer : public Layer {
 
   void OnAttach() override;
   void OnDetach() override;
-  void OnUpdate() override;
-  void OnEvent(Event& event) override;
+
+  void Begin();
+  void End();
 };
 
 }  // namespace samui
