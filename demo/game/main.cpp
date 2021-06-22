@@ -9,9 +9,16 @@
 class ExampleLayer : public samui::Layer {
  public:
   ExampleLayer() : Layer("Example") {}
-  void OnUpdate() override { SAMUI_INFO("ExampleLayer::Update"); }
+  void OnUpdate() override {
+    if (samui::Input::IsKeyPressed(SAMUI_KEY_TAB)) {
+      SAMUI_TRACE("Tab is pressed!");
+    }
+  }
   void OnEvent(samui::Event& event) override {
-    SAMUI_TRACE("{0}", event.ToString());
+    if (event.GetEventType() == samui::EventType::KeyPressed) {
+      auto &key_press_event = static_cast<samui::KeyPressedEvent&>(event);
+      SAMUI_TRACE("Input:{0}", (char)key_press_event.GetKeyCode());
+    }
   }
 };
 

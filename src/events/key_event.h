@@ -13,7 +13,7 @@ class SAMUI_API KeyEvent : public Event {
   inline int GetKeyCode() const { return key_code_; }
 
  protected:
-  KeyEvent(int keycode) : key_code_(key_code_) {}
+  KeyEvent(int keycode) : key_code_(keycode) {}
   int key_code_;
 };
 
