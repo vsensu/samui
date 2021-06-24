@@ -1,10 +1,15 @@
+#ifdef SAMUI_PLATFORM_WINDOWS
+
 #include "windows_window.h"
 
 #include "../events/application_event.h"
 #include "../events/key_event.h"
 #include "../events/mouse_event.h"
 #include "../log/log.h"
+
+#ifdef SAMUI_RENDER_OPENGL
 #include "render/opengl_context.h"
+#endif
 
 namespace samui {
 void glfw_error_callback(int error_code, const char* desc) {
@@ -47,7 +52,12 @@ void WindowsWindow::Init(const WindowProps& props) {
     glfwTerminate();
     return;
   }
+
+#ifdef SAMUI_RENDER_OPENGL
   graphics_context_ = new OpenGLContext(window_);
+#else
+#error samui only support OpenGL
+#endif
   graphics_context_->Init();
 
   // glfwSetFramebufferSizeCallback(window_, framebuffer_size_callback);
@@ -126,15 +136,11 @@ void WindowsWindow::Init(const WindowProps& props) {
 
 void WindowsWindow::Shutdown() { glfwDestroyWindow(window_); }
 
-void WindowsWindow::BeforeUpdate() {
-  glfwPollEvents();
-}
+void WindowsWindow::BeforeUpdate() { glfwPollEvents(); }
 
 void WindowsWindow::OnUpdate() {}
 
-void WindowsWindow::LateUpdate() {
-  graphics_context_->SwapBuffers();
-}
+void WindowsWindow::LateUpdate() { graphics_context_->SwapBuffers(); }
 
 void WindowsWindow::SetVSync(bool enabled) {
   if (enabled) {
@@ -152,9 +158,12 @@ bool WindowsWindow::IsVSync() const { return data_.VSync; }
 // function executes
 // ---------------------------------------------------------------------------------------------
 // void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-//   // make sure the viewport matches the new window dimensions; note that width
-//   // and height will be significantly larger than specified on retina displays.
-//   glViewport(0, 0, width, height);
+//   // make sure the viewport matches the new window dimensions; note that
+//   width
+//   // and height will be significantly larger than specified on retina
+//   displays. glViewport(0, 0, width, height);
 // }
 
 }  // namespace samui
+
+#endif

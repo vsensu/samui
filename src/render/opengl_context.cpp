@@ -1,3 +1,5 @@
+#ifdef SAMUI_RENDER_OPENGL
+
 #include "opengl_context.h"
 
 #include <glad/glad.h>
@@ -28,3 +30,5 @@ void OpenGLContext::Init() {
 
 void OpenGLContext::SwapBuffers() { glfwSwapBuffers(window_); }
 }  // namespace samui
+
+#endif

@@ -1,6 +1,8 @@
 #ifndef SAMUI_WINDOWS_WINDOW_H_
 #define SAMUI_WINDOWS_WINDOW_H_
 
+#ifdef SAMUI_PLATFORM_WINDOWS
+
 #include <GLFW/glfw3.h>
 
 #include "window.h"
@@ -47,5 +49,7 @@ class SAMUI_API WindowsWindow : public Window {
   WindowData data_;
 };
 }  // namespace samui
+
+#endif
 
 #endif

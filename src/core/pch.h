@@ -1,6 +1,8 @@
 #ifndef SAMUI_PCH_H_
 #define SAMUI_PCH_H_
 
+#define SAMUI_RENDER_OPENGL
+
 #include <memory>
 #include <functional>
 #include <string>
