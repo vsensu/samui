@@ -19,6 +19,11 @@ void OpenGLContext::Init() {
     SAMUI_ENGINE_FATAL("Failed to initialize GLAD");
     return;
   }
+
+  SAMUI_ENGINE_INFO("OpenGL info:");
+  SAMUI_ENGINE_INFO("   Vendor: {0}", glGetString(GL_VENDOR));
+  SAMUI_ENGINE_INFO("   Renderer: {0}", glGetString(GL_RENDERER));
+  SAMUI_ENGINE_INFO("   Version: {0}", glGetString(GL_VERSION));
 }
 
 void OpenGLContext::SwapBuffers() { glfwSwapBuffers(window_); }
