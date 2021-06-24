@@ -1,18 +1,17 @@
 #include "windows_window.h"
 
-#include <glad/glad.h>
-
 #include "../events/application_event.h"
 #include "../events/key_event.h"
 #include "../events/mouse_event.h"
 #include "../log/log.h"
+#include "render/opengl_context.h"
 
 namespace samui {
 void glfw_error_callback(int error_code, const char* desc) {
   SAMUI_ENGINE_ERROR("GLFW Error ({0}): {1}", error_code, desc);
 }
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+// void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
 std::unique_ptr<Window> Window::Create(const WindowProps& props) {
   return std::make_unique<WindowsWindow>(props);
@@ -48,16 +47,10 @@ void WindowsWindow::Init(const WindowProps& props) {
     glfwTerminate();
     return;
   }
-  glfwMakeContextCurrent(window_);
-  glfwSetFramebufferSizeCallback(window_, framebuffer_size_callback);
+  graphics_context_ = new OpenGLContext(window_);
+  graphics_context_->Init();
 
-  // glad: load all OpenGL function pointers
-  // ---------------------------------------
-  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-    SAMUI_ENGINE_FATAL("Failed to initialize GLAD");
-    return;
-  }
-
+  // glfwSetFramebufferSizeCallback(window_, framebuffer_size_callback);
   glfwSetWindowUserPointer(window_, &data_);
   SetVSync(true);
 
@@ -135,13 +128,13 @@ void WindowsWindow::Shutdown() { glfwDestroyWindow(window_); }
 
 void WindowsWindow::BeforeUpdate() {
   glfwPollEvents();
-  glClearColor(1, 0, 1, 1);
-  glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void WindowsWindow::OnUpdate() {}
 
-void WindowsWindow::LateUpdate() { glfwSwapBuffers(window_); }
+void WindowsWindow::LateUpdate() {
+  graphics_context_->SwapBuffers();
+}
 
 void WindowsWindow::SetVSync(bool enabled) {
   if (enabled) {
@@ -158,10 +151,10 @@ bool WindowsWindow::IsVSync() const { return data_.VSync; }
 // glfw: whenever the window size changed (by OS or user resize) this callback
 // function executes
 // ---------------------------------------------------------------------------------------------
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-  // make sure the viewport matches the new window dimensions; note that width
-  // and height will be significantly larger than specified on retina displays.
-  glViewport(0, 0, width, height);
-}
+// void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+//   // make sure the viewport matches the new window dimensions; note that width
+//   // and height will be significantly larger than specified on retina displays.
+//   glViewport(0, 0, width, height);
+// }
 
 }  // namespace samui

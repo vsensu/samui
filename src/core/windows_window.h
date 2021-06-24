@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 
 #include "window.h"
+#include "render/graphics_context.h"
 
 namespace samui {
 class SAMUI_API WindowsWindow : public Window {
@@ -41,6 +42,7 @@ class SAMUI_API WindowsWindow : public Window {
   };
 
   GLFWwindow* window_;
+  GraphicsContext *graphics_context_;
   // std::unique_ptr<GraphicsContext> context_;
   WindowData data_;
 };
