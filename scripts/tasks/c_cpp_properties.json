@@ -5,7 +5,8 @@
             "defines": [
                 "SAMUI_DEBUG",
                 "SAMUI_PLATFORM_WINDOWS",
-                "SAMUI_BUILD_DLL"
+                "SAMUI_BUILD_DLL",
+                "SAMUI_RENDER_OPENGL"
             ],
             "compileCommands": "${workspaceFolder}/.vscode/compile_commands.json"
         },
@@ -14,7 +15,8 @@
             "defines": [
                 "SAMUI_RELEASE",
                 "SAMUI_PLATFORM_WINDOWS",
-                "SAMUI_BUILD_DLL"
+                "SAMUI_BUILD_DLL",
+                "SAMUI_RENDER_OPENGL"
             ],
             "compileCommands": "${workspaceFolder}/.vscode/compile_commands.json"
         },
@@ -22,7 +24,8 @@
             "name": "windows_game_debug",
             "defines": [
                 "SAMUI_DEBUG",
-                "SAMUI_PLATFORM_WINDOWS"
+                "SAMUI_PLATFORM_WINDOWS",
+                "SAMUI_RENDER_OPENGL"
             ],
             "compileCommands": "${workspaceFolder}/.vscode/compile_commands.json"
         },
@@ -30,7 +33,8 @@
             "name": "windows_game_release",
             "defines": [
                 "SAMUI_RELEASE",
-                "SAMUI_PLATFORM_WINDOWS"
+                "SAMUI_PLATFORM_WINDOWS",
+                "SAMUI_RENDER_OPENGL"
             ],
             "compileCommands": "${workspaceFolder}/.vscode/compile_commands.json"
         }

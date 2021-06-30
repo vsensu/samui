@@ -6,7 +6,7 @@ add_requires("glfw 3.3.2")
 
 target("engine")
     set_kind("shared")
-    add_defines("SAMUI_BUILD_DLL")
+    add_defines("SAMUI_BUILD_DLL", "SAMUI_RENDER_OPENGL")
     if is_mode("debug") then
         add_defines("SAMUI_DEBUG")
     elseif is_mode("release") then
