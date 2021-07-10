@@ -40,8 +40,6 @@ void ImGuiLayer::OnDetach() {
 }
 
 void ImGuiLayer::Begin() {
-  glClearColor(0, 0, 0, 1);
-  glClear(GL_COLOR_BUFFER_BIT);
   // Start the Dear ImGui frame
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();

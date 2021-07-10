@@ -1,5 +1,7 @@
 #include "application.h"
 
+#include <glad/glad.h>
+
 #include "../imgui/imgui_layer.h"
 #include "../log/log.h"
 
@@ -16,13 +18,107 @@ Application::Application(/* args */) {
 
   imgui_layer_ = new ImGuiLayer();
   PushOverlay(imgui_layer_);
+
+  // 顶点数据
+  float vertices[] = {-0.5f, -0.5f, 0.f, 0.5f, -0.5f, 0.f, 0.f, 0.5f, 0.f};
+  // 顶点缓冲对象
+  GLuint VBO;
+  glGenBuffers(1, &VBO);
+  glBindBuffer(GL_ARRAY_BUFFER, VBO);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+  // 顶点数组对象
+  // GLuint VAO;
+  glGenVertexArrays(1, &VAO);
+  glBindVertexArray(VAO);
+  glBindBuffer(GL_ARRAY_BUFFER, VBO);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+  constexpr GLuint posLocation = 0;
+  constexpr GLint  posFloatCount = 3;
+  constexpr GLint  vertexFloatCount = posFloatCount;
+  // 定义OpenGL如何理解该顶点数据
+  glVertexAttribPointer(posLocation, posFloatCount, GL_FLOAT, GL_FALSE,
+                        vertexFloatCount * sizeof(float), nullptr);
+  // 启用顶点属性 顶点属性默认是禁用的
+  glEnableVertexAttribArray(posLocation);
+
+  const std::string g_vs_code = R"(
+#version 330 core
+layout (location = 0) in vec3 aPos;
+
+void main()
+{
+    gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+}
+)";
+
+  const std::string g_fs_code = R"(
+#version 330 core
+out vec4 FragColor;
+
+void main()
+{
+    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+}
+)";
+
+  // 顶点着色器
+  GLuint        vertexShader = glCreateShader(GL_VERTEX_SHADER);
+  const GLchar* vsCode = g_vs_code.c_str();
+  glShaderSource(vertexShader, 1, &vsCode, nullptr);
+  glCompileShader(vertexShader);
+  int  success;
+  char infoLog[512];
+  glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+  if (!success) {
+    glGetShaderInfoLog(vertexShader, 512, nullptr, infoLog);
+    SAMUI_ENGINE_ERROR("ERROR::SHADER::VERTEX::COMPILATION_FAILED");
+    SAMUI_ENGINE_ERROR(infoLog);
+  }
+
+  // 片段着色器
+  GLuint        fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+  const GLchar* fsCode = g_fs_code.c_str();
+  glShaderSource(fragmentShader, 1, &fsCode, nullptr);
+  glCompileShader(fragmentShader);
+  glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+  if (!success) {
+    glGetShaderInfoLog(fragmentShader, 512, nullptr, infoLog);
+    SAMUI_ENGINE_ERROR("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED");
+    SAMUI_ENGINE_ERROR(infoLog);
+  }
+
+  // Shader program
+  shaderProgram = glCreateProgram();
+  glAttachShader(shaderProgram, vertexShader);
+  glAttachShader(shaderProgram, fragmentShader);
+  glLinkProgram(shaderProgram);
+  glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+  if (!success) {
+    glGetProgramInfoLog(shaderProgram, 512, nullptr, infoLog);
+    SAMUI_ENGINE_ERROR("ERROR::SHADER::LINK_FAILED");
+    SAMUI_ENGINE_ERROR(infoLog);
+  }
+  glDeleteShader(vertexShader);
+  glDeleteShader(fragmentShader);
+
+  glClearColor(0, 0, 0, 1);
 }
 
 Application::~Application() {}
 
 void Application::Run() {
   while (running_) {
+    glClear(GL_COLOR_BUFFER_BIT);
+
     window_->BeforeUpdate();
+
+    // 当我们渲染一个物体时要使用着色器程序
+    glUseProgram(shaderProgram);
+    glBindVertexArray(VAO);
+    // 绘制物体
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
     for (Layer* layer : layer_stack_) {
       layer->OnUpdate();
     }

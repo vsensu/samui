@@ -35,6 +35,9 @@ class SAMUI_API Application {
   bool                    running_{true};
   LayerStack              layer_stack_;
   static Application*     instance_;
+
+  unsigned int shaderProgram;
+  unsigned int VAO;
 };
 
 Application* create_application();
