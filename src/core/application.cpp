@@ -4,12 +4,34 @@
 
 #include "../imgui/imgui_layer.h"
 #include "../log/log.h"
+#include "../render/buffer.h"
 
 namespace samui {
 #define BIND_EVENT_FUNC(x) \
   std::bind(&Application::x, this, std::placeholders::_1)
 
 Application* Application::instance_ = nullptr;
+
+// clang-format off
+static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type) {
+  switch (type) {
+    case ShaderDataType::Float:   return GL_FLOAT;
+    case ShaderDataType::Float2:  return GL_FLOAT;
+    case ShaderDataType::Float3:  return GL_FLOAT;
+    case ShaderDataType::Float4:  return GL_FLOAT;
+    case ShaderDataType::Mat3:    return GL_FLOAT;
+    case ShaderDataType::Mat4:    return GL_FLOAT;
+    case ShaderDataType::Int:     return GL_INT;
+    case ShaderDataType::Int2:    return GL_INT;
+    case ShaderDataType::Int3:    return GL_INT;
+    case ShaderDataType::Int4:    return GL_INT;
+    case ShaderDataType::Bool:    return GL_BOOL;
+  }
+
+  SAMUI_ENGINE_ASSERT(false, "Unkown ShaderDataType");
+  return 0;
+}
+// clang-format on
 
 Application::Application(/* args */) {
   instance_ = this;
@@ -21,6 +43,7 @@ Application::Application(/* args */) {
 
   // 顶点数据
   float vertices[] = {-0.5f, -0.5f, 0.f, 0.5f, -0.5f, 0.f, 0.f, 0.5f, 0.f};
+
   // 顶点缓冲对象
   GLuint VBO;
   glGenBuffers(1, &VBO);
@@ -33,14 +56,24 @@ Application::Application(/* args */) {
   glBindVertexArray(VAO);
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+  BufferLayout layout = {
+      {"Position", ShaderDataType::Float3},
+  };
+
   constexpr GLuint posLocation = 0;
   constexpr GLint  posFloatCount = 3;
   constexpr GLint  vertexFloatCount = posFloatCount;
-  // 定义OpenGL如何理解该顶点数据
-  glVertexAttribPointer(posLocation, posFloatCount, GL_FLOAT, GL_FALSE,
-                        vertexFloatCount * sizeof(float), nullptr);
-  // 启用顶点属性 顶点属性默认是禁用的
-  glEnableVertexAttribArray(posLocation);
+
+  uint32_t index = 0;
+  for (const auto& elem : layout) {
+    // 定义OpenGL如何理解该顶点数据
+    glVertexAttribPointer(index, ShaderDataTypeCount(elem.Type), ShaderDataTypeToOpenGLBaseType(elem.Type),
+                          GL_FALSE, vertexFloatCount * sizeof(float), nullptr);
+
+    // 启用顶点属性 顶点属性默认是禁用的
+    glEnableVertexAttribArray(index);
+  }
 
   const std::string g_vs_code = R"(
 #version 330 core
