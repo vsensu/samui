@@ -42,7 +42,11 @@ Application::Application(/* args */) {
   PushOverlay(imgui_layer_);
 
   // 顶点数据
-  float vertices[] = {-0.5f, -0.5f, 0.f, 0.5f, -0.5f, 0.f, 0.f, 0.5f, 0.f};
+  float vertices[3*7] = {
+    -0.5f, -0.5f, 0.f, 0.8f, 0.2f, 0.8f, 1.f,
+  0.5f, -0.5f, 0.f, 0.2f, 0.3f, 0.8f, 1.f,
+  0.f, 0.5f, 0.f, 0.8f, 0.8f, 0.2f, 1.f,
+  };
 
   // 顶点缓冲对象
   GLuint VBO;
@@ -59,29 +63,33 @@ Application::Application(/* args */) {
 
   BufferLayout layout = {
       {"Position", ShaderDataType::Float3},
+      {"Color", ShaderDataType::Float4},
   };
-
-  constexpr GLuint posLocation = 0;
-  constexpr GLint  posFloatCount = 3;
-  constexpr GLint  vertexFloatCount = posFloatCount;
 
   uint32_t index = 0;
   for (const auto& elem : layout) {
     // 定义OpenGL如何理解该顶点数据
-    glVertexAttribPointer(index, ShaderDataTypeCount(elem.Type), ShaderDataTypeToOpenGLBaseType(elem.Type),
-                          GL_FALSE, vertexFloatCount * sizeof(float), nullptr);
+    glVertexAttribPointer(index, ShaderDataTypeCount(elem.Type),
+                          ShaderDataTypeToOpenGLBaseType(elem.Type),
+                          elem.Normalized ? GL_TRUE : GL_FALSE,
+                          layout.GetStride(), (const void*)elem.Offset);
 
     // 启用顶点属性 顶点属性默认是禁用的
     glEnableVertexAttribArray(index);
+    index++;
   }
 
   const std::string g_vs_code = R"(
 #version 330 core
 layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec4 aColor;
+
+out vec4 vertexColor;
 
 void main()
 {
     gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+    vertexColor = aColor;
 }
 )";
 
@@ -89,9 +97,11 @@ void main()
 #version 330 core
 out vec4 FragColor;
 
+in vec4 vertexColor;
+
 void main()
 {
-    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+  FragColor = vertexColor;
 }
 )";
 

@@ -58,9 +58,15 @@ struct BufferElement {
   ShaderDataType Type;
   uint32_t       Size;
   uint32_t       Offset;
+  bool           Normalized;
 
-  BufferElement(const std::string& name, ShaderDataType type)
-      : Name(name), Type(type), Size(ShaderDataTypeSize(type)), Offset(0) {}
+  BufferElement(const std::string& name, ShaderDataType type,
+                bool normalized = false)
+      : Name(name),
+        Type(type),
+        Size(ShaderDataTypeSize(type)),
+        Offset(0),
+        Normalized(normalized) {}
 };
 
 class BufferLayout {
@@ -69,6 +75,8 @@ class BufferLayout {
       : elements_(elements) {
     CalcStrideAndOffset();
   }
+
+  inline uint32_t GetStride() const { return stride_; }
 
   inline const std::vector<BufferElement>& GetElements() const {
     return elements_;
