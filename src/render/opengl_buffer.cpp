@@ -32,6 +32,21 @@ void OpenGLIndexBuffer::Bind() {
 }
 
 void OpenGLIndexBuffer::UnBind() { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); }
+
+OpenGLVertexArray::OpenGLVertexArray() { glGenVertexArrays(1, &vao_id_); }
+
+void OpenGLVertexArray::Bind() { glBindVertexArray(vao_id_); }
+
+void OpenGLVertexArray::UnBind() { glBindVertexArray(0); }
+
+void OpenGLVertexArray::AddVertexBuffer(
+    const std::shared_ptr<VertexBuffer>& buffer) {
+      
+    }
+
+void OpenGLVertexArray::SetIndexBuffer(
+    const std::shared_ptr<IndexBuffer>& buffer) {}
+
 }  // namespace samui
 
 #endif

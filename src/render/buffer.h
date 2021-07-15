@@ -126,6 +126,22 @@ class SAMUI_API IndexBuffer : public Buffer {
 
   static IndexBuffer* Create(uint32_t* indices, uint32_t count);
 };
+
+class SAMUI_API VertexArray {
+ public:
+  virtual ~VertexArray() {}
+
+  virtual void Bind() = 0;
+  virtual void UnBind() = 0;
+
+  virtual void AddVertexBuffer(
+      const std::shared_ptr<VertexBuffer>& vertexBuffer) = 0;
+  virtual void SetIndexBuffer(
+      const std::shared_ptr<IndexBuffer>& vertexBuffer) = 0;
+
+  static VertexArray* Create();
+};
+
 }  // namespace samui
 
 #endif
