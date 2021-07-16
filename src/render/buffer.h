@@ -71,6 +71,7 @@ struct BufferElement {
 
 class BufferLayout {
  public:
+  BufferLayout() {}
   BufferLayout(const std::initializer_list<BufferElement>& elements)
       : elements_(elements) {
     CalcStrideAndOffset();
@@ -84,6 +85,12 @@ class BufferLayout {
 
   std::vector<BufferElement>::iterator begin() { return elements_.begin(); }
   std::vector<BufferElement>::iterator end() { return elements_.end(); }
+  std::vector<BufferElement>::const_iterator begin() const {
+    return elements_.begin();
+  }
+  std::vector<BufferElement>::const_iterator end() const {
+    return elements_.end();
+  }
 
  private:
   void CalcStrideAndOffset() {
@@ -113,7 +120,8 @@ class SAMUI_API VertexBuffer : public Buffer {
  public:
   virtual ~VertexBuffer() {}
 
-  // virtual void SetLayout(const BufferLayout &layout) = 0;
+  virtual const BufferLayout& GetLayout() const = 0;
+  virtual void                SetLayout(const BufferLayout& layout) = 0;
 
   static VertexBuffer* Create(float* vertices, uint32_t size);
 };

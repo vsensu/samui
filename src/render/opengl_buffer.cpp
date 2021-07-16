@@ -5,6 +5,27 @@
 #include <glad/glad.h>
 
 namespace samui {
+// clang-format off
+static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type) {
+  switch (type) {
+    case ShaderDataType::Float:   return GL_FLOAT;
+    case ShaderDataType::Float2:  return GL_FLOAT;
+    case ShaderDataType::Float3:  return GL_FLOAT;
+    case ShaderDataType::Float4:  return GL_FLOAT;
+    case ShaderDataType::Mat3:    return GL_FLOAT;
+    case ShaderDataType::Mat4:    return GL_FLOAT;
+    case ShaderDataType::Int:     return GL_INT;
+    case ShaderDataType::Int2:    return GL_INT;
+    case ShaderDataType::Int3:    return GL_INT;
+    case ShaderDataType::Int4:    return GL_INT;
+    case ShaderDataType::Bool:    return GL_BOOL;
+  }
+
+  SAMUI_ENGINE_ASSERT(false, "Unkown ShaderDataType");
+  return 0;
+}
+// clang-format on
+
 // VertexBuffer-------------------------------------------------------------------
 OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size) {
   glGenBuffers(1, &buffer_id_);
@@ -41,11 +62,35 @@ void OpenGLVertexArray::UnBind() { glBindVertexArray(0); }
 
 void OpenGLVertexArray::AddVertexBuffer(
     const std::shared_ptr<VertexBuffer>& buffer) {
-      
-    }
+  SAMUI_ENGINE_ASSERT(buffer->GetLayout().GetElements().size(),
+                      "Vertex Buffer has no layout!");
+                      
+  Bind();
+  buffer->Bind();
+
+  uint32_t    index = 0;
+  const auto& layout = buffer->GetLayout();
+  for (const auto& elem : layout) {
+    // 定义OpenGL如何理解该顶点数据
+    glVertexAttribPointer(index, ShaderDataTypeCount(elem.Type),
+                          ShaderDataTypeToOpenGLBaseType(elem.Type),
+                          elem.Normalized ? GL_TRUE : GL_FALSE,
+                          layout.GetStride(), (const void*)elem.Offset);
+
+    // 启用顶点属性 顶点属性默认是禁用的
+    glEnableVertexAttribArray(index);
+    index++;
+  }
+
+  vertex_buffers_.push_back(buffer);
+}
 
 void OpenGLVertexArray::SetIndexBuffer(
-    const std::shared_ptr<IndexBuffer>& buffer) {}
+    const std::shared_ptr<IndexBuffer>& buffer) {
+  Bind();
+  buffer->Bind();
+  index_buffer_ = buffer;
+}
 
 }  // namespace samui
 

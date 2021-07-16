@@ -5,7 +5,7 @@
 #include "core.h"
 #include "../events/application_event.h"
 #include "../layer/layer_stack.h"
-
+#include "../render/buffer.h"
 
 namespace samui {
 
@@ -37,7 +37,9 @@ class SAMUI_API Application {
   static Application*     instance_;
 
   unsigned int shaderProgram;
-  unsigned int VAO;
+  std::shared_ptr<VertexBuffer> vertex_buffer_;
+  std::shared_ptr<IndexBuffer> index_buffer_;
+  std::shared_ptr<VertexArray> vertex_array_;
 };
 
 Application* create_application();

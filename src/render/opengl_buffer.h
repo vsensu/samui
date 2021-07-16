@@ -14,8 +14,12 @@ class SAMUI_API OpenGLVertexBuffer : public VertexBuffer {
   void Bind() override;
   void UnBind() override;
 
+  const BufferLayout& GetLayout() const override { return layout_; }
+  void                SetLayout(const BufferLayout& layout) override { layout_ = layout; }
+
  private:
-  uint32_t buffer_id_{0};
+  uint32_t     buffer_id_{0};
+  BufferLayout layout_;
 };
 
 class SAMUI_API OpenGLIndexBuffer : public IndexBuffer {
