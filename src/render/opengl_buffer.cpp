@@ -29,6 +29,7 @@ static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type) {
 // VertexBuffer-------------------------------------------------------------------
 OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size) {
   glGenBuffers(1, &buffer_id_);
+  Bind();
   glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
 }
 
@@ -42,6 +43,7 @@ void OpenGLVertexBuffer::UnBind() { glBindBuffer(GL_ARRAY_BUFFER, 0); }
 OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indices, uint32_t count)
     : count_(count) {
   glGenBuffers(1, &buffer_id_);
+  Bind();
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices,
                GL_STATIC_DRAW);
 }
@@ -54,7 +56,10 @@ void OpenGLIndexBuffer::Bind() {
 
 void OpenGLIndexBuffer::UnBind() { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); }
 
-OpenGLVertexArray::OpenGLVertexArray() { glGenVertexArrays(1, &vao_id_); }
+OpenGLVertexArray::OpenGLVertexArray() {
+  glGenVertexArrays(1, &vao_id_);
+  Bind();
+}
 
 void OpenGLVertexArray::Bind() { glBindVertexArray(vao_id_); }
 
@@ -64,7 +69,7 @@ void OpenGLVertexArray::AddVertexBuffer(
     const std::shared_ptr<VertexBuffer>& buffer) {
   SAMUI_ENGINE_ASSERT(buffer->GetLayout().GetElements().size(),
                       "Vertex Buffer has no layout!");
-                      
+
   Bind();
   buffer->Bind();
 
