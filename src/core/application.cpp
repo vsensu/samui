@@ -21,27 +21,49 @@ Application::Application(/* args */) {
   PushOverlay(imgui_layer_);
 
   vertex_array_.reset(VertexArray::Create());
-
-  // 顶点数据
+  // clang-format off
   float vertices[3 * 7] = {
-      -0.5f, -0.5f, 0.f, 0.8f, 0.2f, 0.8f, 1.f,  0.5f, -0.5f, 0.f, 0.2f,
-      0.3f,  0.8f,  1.f, 0.f,  0.5f, 0.f,  0.8f, 0.8f, 0.2f,  1.f,
+      -0.5f, -0.5f, 0.f, 0.8f, 0.2f, 0.8f, 1.f,
+      0.5f, -0.5f, 0.f, 0.2f, 0.3f,  0.8f, 1.f,
+      0.f,  0.5f, 0.f, 0.8f, 0.8f, 0.2f,  1.f,
   };
-
-  vertex_buffer_.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
-
+  // clang-format on
+  std::shared_ptr<VertexBuffer> vertex_buffer;
+  vertex_buffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
   BufferLayout layout = {
       {"Position", ShaderDataType::Float3},
       {"Color", ShaderDataType::Float4},
   };
-
-  vertex_buffer_->SetLayout(layout);
-  vertex_array_->AddVertexBuffer(vertex_buffer_);
-
+  vertex_buffer->SetLayout(layout);
+  vertex_array_->AddVertexBuffer(vertex_buffer);
   uint32_t indices[3] = {0, 1, 2};
-  index_buffer_.reset(
+  std::shared_ptr<IndexBuffer> index_buffer;
+  index_buffer.reset(
       IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
-  vertex_array_->SetIndexBuffer(index_buffer_);
+  vertex_array_->SetIndexBuffer(index_buffer);
+
+  square_vertex_array_.reset(VertexArray::Create());
+  // clang-format off
+  float square_vertices[3 * 4] = {
+      -0.75f, -0.75f, 0.f,
+      0.75f, -0.75f, 0.f,
+      0.75f, 0.75f, 0.f,
+      -0.75f, 0.75f, 0.f,
+  };
+  // clang-format on
+  std::shared_ptr<VertexBuffer> square_vertex_buffer;
+  square_vertex_buffer.reset(
+      VertexBuffer::Create(square_vertices, sizeof(square_vertices)));
+  BufferLayout square_layout = {
+      {"Position", ShaderDataType::Float3},
+  };
+  square_vertex_buffer->SetLayout(square_layout);
+  square_vertex_array_->AddVertexBuffer(square_vertex_buffer);
+  uint32_t                     square_indices[6] = {0, 1, 2, 2, 3, 0};
+  std::shared_ptr<IndexBuffer> square_index_buffer;
+  square_index_buffer.reset(
+      IndexBuffer::Create(square_indices, sizeof(square_indices) / sizeof(uint32_t)));
+  square_vertex_array_->SetIndexBuffer(square_index_buffer);
 
   const std::string g_vs_code = R"(
 #version 330 core
@@ -69,7 +91,30 @@ void main()
 }
 )";
 
-  shader_.reset(new Shader<CreateShaderProgramFromString>(g_vs_code, g_fs_code));
+  shader_.reset(
+      new Shader<CreateShaderProgramFromString>(g_vs_code, g_fs_code));
+
+  const std::string g_vs_code_blue = R"(
+#version 330 core
+layout (location = 0) in vec3 aPos;
+
+void main()
+{
+    gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+}
+)";
+
+  const std::string g_fs_code_blue = R"(
+#version 330 core
+out vec4 FragColor;
+
+void main()
+{
+  FragColor = vec4(0.2, 0.3, 0.8, 1.0);
+}
+)";
+  blue_shader_.reset(new Shader<CreateShaderProgramFromString>(g_vs_code_blue,
+                                                               g_fs_code_blue));
 
   glClearColor(0, 0, 0, 1);
 }
@@ -82,9 +127,15 @@ void Application::Run() {
 
     window_->BeforeUpdate();
 
+    blue_shader_->Use();
+    square_vertex_array_->Bind();
+    glDrawElements(GL_TRIANGLES,
+                   square_vertex_array_->GetIndexBuffer()->GetCount(),
+                   GL_UNSIGNED_INT, nullptr);
+
     shader_->Use();
     vertex_array_->Bind();
-    glDrawElements(GL_TRIANGLES, index_buffer_->GetCount(), GL_UNSIGNED_INT,
+    glDrawElements(GL_TRIANGLES, vertex_array_->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT,
                    nullptr);
 
     for (Layer* layer : layer_stack_) {

@@ -61,6 +61,8 @@ OpenGLVertexArray::OpenGLVertexArray() {
   Bind();
 }
 
+OpenGLVertexArray::~OpenGLVertexArray() { glDeleteVertexArrays(1, &vao_id_); }
+
 void OpenGLVertexArray::Bind() { glBindVertexArray(vao_id_); }
 
 void OpenGLVertexArray::UnBind() { glBindVertexArray(0); }

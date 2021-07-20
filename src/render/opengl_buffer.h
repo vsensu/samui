@@ -38,13 +38,14 @@ class SAMUI_API OpenGLIndexBuffer : public IndexBuffer {
 class SAMUI_API OpenGLVertexArray : public VertexArray {
  public:
   OpenGLVertexArray();
-  virtual ~OpenGLVertexArray() {}
+  virtual ~OpenGLVertexArray();
 
   void Bind() override;
   void UnBind() override;
 
   void AddVertexBuffer(const std::shared_ptr<VertexBuffer>&) override;
   void SetIndexBuffer(const std::shared_ptr<IndexBuffer>&) override;
+  IndexBuffer* GetIndexBuffer() const override { return index_buffer_.get(); }
 
  private:
   std::vector<std::shared_ptr<VertexBuffer>> vertex_buffers_;

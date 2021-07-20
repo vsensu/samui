@@ -146,6 +146,7 @@ class SAMUI_API VertexArray {
       const std::shared_ptr<VertexBuffer>& vertexBuffer) = 0;
   virtual void SetIndexBuffer(
       const std::shared_ptr<IndexBuffer>& vertexBuffer) = 0;
+  virtual IndexBuffer* GetIndexBuffer() const = 0;
 
   static VertexArray* Create();
 };

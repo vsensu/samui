@@ -1,11 +1,11 @@
 #ifndef SAMUI_APPLICATION_H_
 #define SAMUI_APPLICATION_H_
 
-#include "Window.h"
-#include "core.h"
 #include "../events/application_event.h"
 #include "../layer/layer_stack.h"
 #include "../render/buffer.h"
+#include "Window.h"
+#include "core.h"
 #include "shader.h"
 
 namespace samui {
@@ -32,15 +32,16 @@ class SAMUI_API Application {
 
  private:
   std::unique_ptr<Window> window_;
-  ImGuiLayer *imgui_layer_;
+  ImGuiLayer*             imgui_layer_;
   bool                    running_{true};
   LayerStack              layer_stack_;
   static Application*     instance_;
 
   std::shared_ptr<Shader<CreateShaderProgramFromString>> shader_;
-  std::shared_ptr<VertexBuffer> vertex_buffer_;
-  std::shared_ptr<IndexBuffer> index_buffer_;
-  std::shared_ptr<VertexArray> vertex_array_;
+  std::shared_ptr<VertexArray>                           vertex_array_;
+
+  std::shared_ptr<Shader<CreateShaderProgramFromString>> blue_shader_;
+  std::shared_ptr<VertexArray>                           square_vertex_array_;
 };
 
 Application* create_application();
