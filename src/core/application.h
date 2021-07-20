@@ -6,6 +6,7 @@
 #include "../events/application_event.h"
 #include "../layer/layer_stack.h"
 #include "../render/buffer.h"
+#include "shader.h"
 
 namespace samui {
 
@@ -36,7 +37,7 @@ class SAMUI_API Application {
   LayerStack              layer_stack_;
   static Application*     instance_;
 
-  unsigned int shaderProgram;
+  std::shared_ptr<Shader<CreateShaderProgramFromString>> shader_;
   std::shared_ptr<VertexBuffer> vertex_buffer_;
   std::shared_ptr<IndexBuffer> index_buffer_;
   std::shared_ptr<VertexArray> vertex_array_;

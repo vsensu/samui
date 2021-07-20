@@ -23,10 +23,9 @@ Application::Application(/* args */) {
   vertex_array_.reset(VertexArray::Create());
 
   // 顶点数据
-  float vertices[3*7] = {
-    -0.5f, -0.5f, 0.f, 0.8f, 0.2f, 0.8f, 1.f,
-  0.5f, -0.5f, 0.f, 0.2f, 0.3f, 0.8f, 1.f,
-  0.f, 0.5f, 0.f, 0.8f, 0.8f, 0.2f, 1.f,
+  float vertices[3 * 7] = {
+      -0.5f, -0.5f, 0.f, 0.8f, 0.2f, 0.8f, 1.f,  0.5f, -0.5f, 0.f, 0.2f,
+      0.3f,  0.8f,  1.f, 0.f,  0.5f, 0.f,  0.8f, 0.8f, 0.2f,  1.f,
   };
 
   vertex_buffer_.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
@@ -40,7 +39,8 @@ Application::Application(/* args */) {
   vertex_array_->AddVertexBuffer(vertex_buffer_);
 
   uint32_t indices[3] = {0, 1, 2};
-  index_buffer_.reset(IndexBuffer::Create(indices, sizeof(indices)/sizeof(uint32_t)));
+  index_buffer_.reset(
+      IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
   vertex_array_->SetIndexBuffer(index_buffer_);
 
   const std::string g_vs_code = R"(
@@ -69,45 +69,7 @@ void main()
 }
 )";
 
-  // 顶点着色器
-  GLuint        vertexShader = glCreateShader(GL_VERTEX_SHADER);
-  const GLchar* vsCode = g_vs_code.c_str();
-  glShaderSource(vertexShader, 1, &vsCode, nullptr);
-  glCompileShader(vertexShader);
-  int  success;
-  char infoLog[512];
-  glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-  if (!success) {
-    glGetShaderInfoLog(vertexShader, 512, nullptr, infoLog);
-    SAMUI_ENGINE_ERROR("ERROR::SHADER::VERTEX::COMPILATION_FAILED");
-    SAMUI_ENGINE_ERROR(infoLog);
-  }
-
-  // 片段着色器
-  GLuint        fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-  const GLchar* fsCode = g_fs_code.c_str();
-  glShaderSource(fragmentShader, 1, &fsCode, nullptr);
-  glCompileShader(fragmentShader);
-  glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-  if (!success) {
-    glGetShaderInfoLog(fragmentShader, 512, nullptr, infoLog);
-    SAMUI_ENGINE_ERROR("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED");
-    SAMUI_ENGINE_ERROR(infoLog);
-  }
-
-  // Shader program
-  shaderProgram = glCreateProgram();
-  glAttachShader(shaderProgram, vertexShader);
-  glAttachShader(shaderProgram, fragmentShader);
-  glLinkProgram(shaderProgram);
-  glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-  if (!success) {
-    glGetProgramInfoLog(shaderProgram, 512, nullptr, infoLog);
-    SAMUI_ENGINE_ERROR("ERROR::SHADER::LINK_FAILED");
-    SAMUI_ENGINE_ERROR(infoLog);
-  }
-  glDeleteShader(vertexShader);
-  glDeleteShader(fragmentShader);
+  shader_.reset(new Shader<CreateShaderProgramFromString>(g_vs_code, g_fs_code));
 
   glClearColor(0, 0, 0, 1);
 }
@@ -120,13 +82,10 @@ void Application::Run() {
 
     window_->BeforeUpdate();
 
-    // 当我们渲染一个物体时要使用着色器程序
-    glUseProgram(shaderProgram);
-
+    shader_->Use();
     vertex_array_->Bind();
-
-    // 绘制物体
-    glDrawElements(GL_TRIANGLES, index_buffer_->GetCount(), GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, index_buffer_->GetCount(), GL_UNSIGNED_INT,
+                   nullptr);
 
     for (Layer* layer : layer_stack_) {
       layer->OnUpdate();
