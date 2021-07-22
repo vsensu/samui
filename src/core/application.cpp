@@ -1,10 +1,9 @@
 #include "application.h"
 
-#include <glad/glad.h>
-
 #include "../imgui/imgui_layer.h"
 #include "../log/log.h"
 #include "../render/buffer.h"
+#include "../render/renderer.h"
 
 namespace samui {
 #define BIND_EVENT_FUNC(x) \
@@ -36,7 +35,7 @@ Application::Application(/* args */) {
   };
   vertex_buffer->SetLayout(layout);
   vertex_array_->AddVertexBuffer(vertex_buffer);
-  uint32_t indices[3] = {0, 1, 2};
+  uint32_t                     indices[3] = {0, 1, 2};
   std::shared_ptr<IndexBuffer> index_buffer;
   index_buffer.reset(
       IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
@@ -61,8 +60,8 @@ Application::Application(/* args */) {
   square_vertex_array_->AddVertexBuffer(square_vertex_buffer);
   uint32_t                     square_indices[6] = {0, 1, 2, 2, 3, 0};
   std::shared_ptr<IndexBuffer> square_index_buffer;
-  square_index_buffer.reset(
-      IndexBuffer::Create(square_indices, sizeof(square_indices) / sizeof(uint32_t)));
+  square_index_buffer.reset(IndexBuffer::Create(
+      square_indices, sizeof(square_indices) / sizeof(uint32_t)));
   square_vertex_array_->SetIndexBuffer(square_index_buffer);
 
   const std::string g_vs_code = R"(
@@ -116,27 +115,25 @@ void main()
   blue_shader_.reset(new Shader<CreateShaderProgramFromString>(g_vs_code_blue,
                                                                g_fs_code_blue));
 
-  glClearColor(0, 0, 0, 1);
+  RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
 }
 
 Application::~Application() {}
 
 void Application::Run() {
   while (running_) {
-    glClear(GL_COLOR_BUFFER_BIT);
+    RenderCommand::Clear();
+    Renderer::BeginScene();
 
     window_->BeforeUpdate();
 
     blue_shader_->Use();
-    square_vertex_array_->Bind();
-    glDrawElements(GL_TRIANGLES,
-                   square_vertex_array_->GetIndexBuffer()->GetCount(),
-                   GL_UNSIGNED_INT, nullptr);
+    Renderer::Submit(square_vertex_array_);
 
     shader_->Use();
-    vertex_array_->Bind();
-    glDrawElements(GL_TRIANGLES, vertex_array_->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT,
-                   nullptr);
+    Renderer::Submit(vertex_array_);
+
+    Renderer::EndScene();
 
     for (Layer* layer : layer_stack_) {
       layer->OnUpdate();
