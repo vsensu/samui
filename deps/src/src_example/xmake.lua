@@ -1,3 +1,3 @@
 target("src_example")
-    set_kind("shared")
+    set_kind("static")
     add_files("*.cpp")

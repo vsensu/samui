@@ -1,4 +1,4 @@
 target("glad")
-    set_kind("shared")
+    set_kind("static")
     add_includedirs("include")
     add_files("**.c")
