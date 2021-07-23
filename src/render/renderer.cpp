@@ -1,14 +1,20 @@
 #include "renderer.h"
 
 namespace samui {
-void Renderer::BeginScene(OrthographicCamera& camera) {
+Renderer::SceneData* Renderer::scene_data_ = new Renderer::SceneData;
 
+void Renderer::BeginScene(OrthographicCamera& camera) {
+  scene_data_->view_proj_matrix = camera.get_view_projection_matrix();
 }
 
 void Renderer::EndScene() {}
 
-void Renderer::Submit(const std::shared_ptr<VertexArray>& va) {
-    va->Bind();
-    RenderCommand::DrawIndexed(va);
+void Renderer::Submit(const std::shared_ptr<Shader>&      shader,
+                      const std::shared_ptr<VertexArray>& vertex_array) {
+  shader->Bind();
+  shader->UploadUniform("viewProj", scene_data_->view_proj_matrix);
+
+  vertex_array->Bind();
+  RenderCommand::DrawIndexed(vertex_array);
 }
 }  // namespace samui

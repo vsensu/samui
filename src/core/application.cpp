@@ -11,7 +11,7 @@ namespace samui {
 
 Application* Application::instance_ = nullptr;
 
-Application::Application(/* args */) : camera_(-1.0f, 1.0f, -1.0f, 1.0f) {
+Application::Application(/* args */) : camera_(-1.6f, 1.6f, -0.9f, 0.9f) {
   instance_ = this;
   window_ = Window::Create();
   window_->SetEventCallback(BIND_EVENT_FUNC(OnEvent));
@@ -126,20 +126,14 @@ Application::~Application() {}
 void Application::Run() {
   while (running_) {
     RenderCommand::Clear();
+
+    camera_.set_rotation(45.f);
     Renderer::BeginScene(camera_);
+    Renderer::Submit(blue_shader_, square_vertex_array_);
+    Renderer::Submit(shader_, vertex_array_);
+    Renderer::EndScene();
 
     window_->BeforeUpdate();
-
-    blue_shader_->Bind();
-    blue_shader_->UploadUniform("viewProj",
-                                camera_.get_view_projection_matrix());
-    Renderer::Submit(square_vertex_array_);
-
-    shader_->Bind();
-    shader_->UploadUniform("viewProj", camera_.get_view_projection_matrix());
-    Renderer::Submit(vertex_array_);
-
-    Renderer::EndScene();
 
     for (Layer* layer : layer_stack_) {
       layer->OnUpdate();

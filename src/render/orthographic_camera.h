@@ -37,8 +37,8 @@ class SAMUI_API OrthographicCamera {
   glm::mat4 view_matrix_;
   glm::mat4 view_proj_matrix_;
 
-  glm::vec3 position_;
-  float     rotation_ = 0.0f;
+  glm::vec3 position_{0.f, 0.f, 0.f};
+  float     rotation_{0.f};
 };
 
 }  // namespace samui
