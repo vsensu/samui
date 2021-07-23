@@ -4,10 +4,10 @@
 #include "../events/application_event.h"
 #include "../layer/layer_stack.h"
 #include "../render/buffer.h"
+#include "../render/orthographic_camera.h"
 #include "Window.h"
 #include "core.h"
 #include "shader.h"
-#include "../render/orthographic_camera.h"
 
 namespace samui {
 
@@ -38,11 +38,11 @@ class SAMUI_API Application {
   LayerStack              layer_stack_;
   static Application*     instance_;
 
-  std::shared_ptr<Shader<CreateShaderProgramFromString>> shader_;
-  std::shared_ptr<VertexArray>                           vertex_array_;
+  std::shared_ptr<Shader>      shader_;
+  std::shared_ptr<VertexArray> vertex_array_;
 
-  std::shared_ptr<Shader<CreateShaderProgramFromString>> blue_shader_;
-  std::shared_ptr<VertexArray>                           square_vertex_array_;
+  std::shared_ptr<Shader>      blue_shader_;
+  std::shared_ptr<VertexArray> square_vertex_array_;
 
   OrthographicCamera camera_;
 };

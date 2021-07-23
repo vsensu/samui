@@ -92,8 +92,7 @@ void main()
 }
 )";
 
-  shader_.reset(
-      new Shader<CreateShaderProgramFromString>(g_vs_code, g_fs_code));
+  shader_.reset(Shader::Create(g_vs_code.c_str(), g_fs_code.c_str()));
 
   const std::string g_vs_code_blue = R"(
 #version 330 core
@@ -116,8 +115,8 @@ void main()
   FragColor = vec4(0.2, 0.3, 0.8, 1.0);
 }
 )";
-  blue_shader_.reset(new Shader<CreateShaderProgramFromString>(g_vs_code_blue,
-                                                               g_fs_code_blue));
+  blue_shader_.reset(
+      Shader::Create(g_vs_code_blue.c_str(), g_fs_code_blue.c_str()));
 
   RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
 }
@@ -131,12 +130,13 @@ void Application::Run() {
 
     window_->BeforeUpdate();
 
-    blue_shader_->Use();
-    blue_shader_->LoadUniform("viewProj", camera_.get_view_projection_matrix());
+    blue_shader_->Bind();
+    blue_shader_->UploadUniform("viewProj",
+                                camera_.get_view_projection_matrix());
     Renderer::Submit(square_vertex_array_);
 
-    shader_->Use();
-    shader_->LoadUniform("viewProj", camera_.get_view_projection_matrix());
+    shader_->Bind();
+    shader_->UploadUniform("viewProj", camera_.get_view_projection_matrix());
     Renderer::Submit(vertex_array_);
 
     Renderer::EndScene();
