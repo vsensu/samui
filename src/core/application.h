@@ -7,6 +7,7 @@
 #include "Window.h"
 #include "core.h"
 #include "shader.h"
+#include "../render/orthographic_camera.h"
 
 namespace samui {
 
@@ -42,6 +43,8 @@ class SAMUI_API Application {
 
   std::shared_ptr<Shader<CreateShaderProgramFromString>> blue_shader_;
   std::shared_ptr<VertexArray>                           square_vertex_array_;
+
+  OrthographicCamera camera_;
 };
 
 Application* create_application();

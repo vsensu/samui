@@ -11,7 +11,7 @@ namespace samui {
 
 Application* Application::instance_ = nullptr;
 
-Application::Application(/* args */) {
+Application::Application(/* args */) : camera_(-1.0f, 1.0f, -1.0f, 1.0f) {
   instance_ = this;
   window_ = Window::Create();
   window_->SetEventCallback(BIND_EVENT_FUNC(OnEvent));
@@ -69,11 +69,13 @@ Application::Application(/* args */) {
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec4 aColor;
 
+uniform mat4 viewProj;
+
 out vec4 vertexColor;
 
 void main()
 {
-    gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+    gl_Position = viewProj * vec4(aPos, 1.0);
     vertexColor = aColor;
 }
 )";
@@ -97,9 +99,11 @@ void main()
 #version 330 core
 layout (location = 0) in vec3 aPos;
 
+uniform mat4 viewProj;
+
 void main()
 {
-    gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+    gl_Position = viewProj * vec4(aPos, 1.0);
 }
 )";
 
@@ -123,14 +127,16 @@ Application::~Application() {}
 void Application::Run() {
   while (running_) {
     RenderCommand::Clear();
-    Renderer::BeginScene();
+    Renderer::BeginScene(camera_);
 
     window_->BeforeUpdate();
 
     blue_shader_->Use();
+    blue_shader_->LoadUniform("viewProj", camera_.get_view_projection_matrix());
     Renderer::Submit(square_vertex_array_);
 
     shader_->Use();
+    shader_->LoadUniform("viewProj", camera_.get_view_projection_matrix());
     Renderer::Submit(vertex_array_);
 
     Renderer::EndScene();

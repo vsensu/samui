@@ -1,7 +1,9 @@
 #include "renderer.h"
 
 namespace samui {
-void Renderer::BeginScene() {}
+void Renderer::BeginScene(OrthographicCamera& camera) {
+
+}
 
 void Renderer::EndScene() {}
 
