@@ -3,6 +3,7 @@
 
 #include "../core/core.h"
 #include "../events/event.h"
+#include "../core/timestep.h"
 
 namespace samui {
 
@@ -13,7 +14,7 @@ class SAMUI_API Layer {
 
   virtual void OnAttach() {}
   virtual void OnDetach() {}
-  virtual void OnUpdate() {}
+  virtual void OnUpdate(const Timestep &deltaTime) {}
   virtual void OnImGuiRender() {}
   virtual void OnEvent(Event& event) {}
 

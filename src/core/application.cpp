@@ -1,9 +1,12 @@
 #include "application.h"
 
+#include <GLFW/glfw3.h>
+
 #include "../imgui/imgui_layer.h"
 #include "../log/log.h"
 #include "../render/buffer.h"
 #include "../render/renderer.h"
+#include "timestep.h"
 
 namespace samui {
 Application* Application::instance_ = nullptr;
@@ -21,10 +24,14 @@ Application::~Application() {}
 
 void Application::Run() {
   while (running_) {
+    auto     time = (float)glfwGetTime();
+    Timestep delta_time = time - last_frame_time_;
+    last_frame_time_ = time;
+
     window_->BeforeUpdate();
 
     for (Layer* layer : layer_stack_) {
-      layer->OnUpdate();
+      layer->OnUpdate(delta_time);
     }
 
     imgui_layer_->Begin();
@@ -50,7 +57,8 @@ void Application::PushOverlay(Layer* layer) {
 
 void Application::OnEvent(Event& e) {
   EventDispatcher dispatcher(e);
-  dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FUNC(Application::OnWindowClose));
+  dispatcher.Dispatch<WindowCloseEvent>(
+      BIND_EVENT_FUNC(Application::OnWindowClose));
 
   for (auto it = layer_stack_.end(); it != layer_stack_.begin();) {
     (*--it)->OnEvent(e);

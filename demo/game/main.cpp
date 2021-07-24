@@ -109,16 +109,31 @@ void main()
 
     samui::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
   }
-  void OnUpdate() override {
+  void OnUpdate(const samui::Timestep& deltaTime) override {
     if (samui::Input::IsKeyPressed(SAMUI_KEY_TAB)) {
       SAMUI_TRACE("Tab is pressed!");
     }
+    SAMUI_INFO("delta time: {0}s, {1}ms", deltaTime.time_in_seconds(),
+               deltaTime.time_in_milliseconds());
+
+    auto camera_pos = camera_.get_position();
+    if (samui::Input::IsKeyPressed(SAMUI_KEY_LEFT)) {
+      camera_pos.x -= 1.f * deltaTime;
+    } else if (samui::Input::IsKeyPressed(SAMUI_KEY_RIGHT)) {
+      camera_pos.x += 1.f * deltaTime;
+    } else if (samui::Input::IsKeyPressed(SAMUI_KEY_UP)) {
+      camera_pos.y -= 1.f * deltaTime;
+    } else if (samui::Input::IsKeyPressed(SAMUI_KEY_DOWN)) {
+      camera_pos.y += 1.f * deltaTime;
+    }
+
+    camera_.set_position(camera_pos);
 
     auto rotation = camera_.get_rotation();
     if (samui::Input::IsKeyPressed(SAMUI_KEY_A)) {
-      rotation += 1.f;
+      rotation += 10.f * deltaTime;
     } else if (samui::Input::IsKeyPressed(SAMUI_KEY_D)) {
-      rotation -= 1.f;
+      rotation -= 10.f * deltaTime;
     }
     camera_.set_rotation(rotation);
 
@@ -146,22 +161,7 @@ void main()
     ImGui::ShowDemoWindow(&show);
   }
 
-  bool OnKeyPressedEvent(samui::KeyPressedEvent& event) {
-    auto camera_pos = camera_.get_position();
-    if (event.GetKeyCode() == SAMUI_KEY_LEFT) {
-      camera_pos.x -= 0.1f;
-    } else if (event.GetKeyCode() == SAMUI_KEY_RIGHT) {
-      camera_pos.x += 0.1f;
-    } else if (event.GetKeyCode() == SAMUI_KEY_UP) {
-      camera_pos.y -= 0.1f;
-    } else if (event.GetKeyCode() == SAMUI_KEY_DOWN) {
-      camera_pos.y += 0.1f;
-    }
-
-    camera_.set_position(camera_pos);
-
-    return false;
-  }
+  bool OnKeyPressedEvent(samui::KeyPressedEvent& event) { return false; }
 
  private:
   std::shared_ptr<samui::Shader>      shader_;

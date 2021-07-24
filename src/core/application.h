@@ -33,6 +33,7 @@ class SAMUI_API Application {
   ImGuiLayer*             imgui_layer_;
   bool                    running_{true};
   LayerStack              layer_stack_;
+  float                   last_frame_time_{0.f};
   static Application*     instance_;
 };
 
