@@ -10,9 +10,11 @@ void Renderer::BeginScene(OrthographicCamera& camera) {
 void Renderer::EndScene() {}
 
 void Renderer::Submit(const std::shared_ptr<Shader>&      shader,
-                      const std::shared_ptr<VertexArray>& vertex_array) {
+                      const std::shared_ptr<VertexArray>& vertex_array,
+                      const glm::mat4&                    transform) {
   shader->Bind();
   shader->UploadUniform("viewProj", scene_data_->view_proj_matrix);
+  shader->UploadUniform("transform", transform);
 
   vertex_array->Bind();
   RenderCommand::DrawIndexed(vertex_array);

@@ -33,10 +33,10 @@ class ExampleLayer : public samui::Layer {
     square_vertex_array_.reset(samui::VertexArray::Create());
     // clang-format off
     float square_vertices[3 * 4] = {
-      -0.75f, -0.75f, 0.f,
-      0.75f, -0.75f, 0.f,
-      0.75f, 0.75f, 0.f,
-      -0.75f, 0.75f, 0.f,
+      -0.5f, -0.5f, 0.f,
+      0.5f, -0.5f, 0.f,
+      0.5f, 0.5f, 0.f,
+      -0.5f, 0.5f, 0.f,
     };
     // clang-format on
     std::shared_ptr<samui::VertexBuffer> square_vertex_buffer;
@@ -59,12 +59,13 @@ layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec4 aColor;
 
 uniform mat4 viewProj;
+uniform mat4 transform;
 
 out vec4 vertexColor;
 
 void main()
 {
-    gl_Position = viewProj * vec4(aPos, 1.0);
+    gl_Position = viewProj * transform * vec4(aPos, 1.0);
     vertexColor = aColor;
 }
 )";
@@ -88,10 +89,11 @@ void main()
 layout (location = 0) in vec3 aPos;
 
 uniform mat4 viewProj;
+uniform mat4 transform;
 
 void main()
 {
-    gl_Position = viewProj * vec4(aPos, 1.0);
+    gl_Position = viewProj * transform * vec4(aPos, 1.0);
 }
 )";
 
@@ -122,12 +124,22 @@ void main()
     } else if (samui::Input::IsKeyPressed(SAMUI_KEY_RIGHT)) {
       camera_pos.x += 1.f * deltaTime;
     } else if (samui::Input::IsKeyPressed(SAMUI_KEY_UP)) {
-      camera_pos.y -= 1.f * deltaTime;
-    } else if (samui::Input::IsKeyPressed(SAMUI_KEY_DOWN)) {
       camera_pos.y += 1.f * deltaTime;
+    } else if (samui::Input::IsKeyPressed(SAMUI_KEY_DOWN)) {
+      camera_pos.y -= 1.f * deltaTime;
     }
 
     camera_.set_position(camera_pos);
+
+    if (samui::Input::IsKeyPressed(SAMUI_KEY_J)) {
+      square_pos_.x -= 1.f * deltaTime;
+    } else if (samui::Input::IsKeyPressed(SAMUI_KEY_L)) {
+      square_pos_.x += 1.f * deltaTime;
+    } else if (samui::Input::IsKeyPressed(SAMUI_KEY_I)) {
+      square_pos_.y += 1.f * deltaTime;
+    } else if (samui::Input::IsKeyPressed(SAMUI_KEY_K)) {
+      square_pos_.y -= 1.f * deltaTime;
+    }
 
     auto rotation = camera_.get_rotation();
     if (samui::Input::IsKeyPressed(SAMUI_KEY_A)) {
@@ -140,7 +152,19 @@ void main()
     samui::RenderCommand::Clear();
 
     samui::Renderer::BeginScene(camera_);
-    samui::Renderer::Submit(blue_shader_, square_vertex_array_);
+
+    static glm::mat4 scale =
+        glm::scale(glm::identity<glm::mat4>(), glm::vec3(0.1f));
+
+    for (int y = 0; y < 20; ++y) {
+      for (int x = 0; x < 20; ++x) {
+        glm::vec3 pos = square_pos_ + glm::vec3(x * 0.11f, y * 0.11f, 0.f);
+        auto      transform =
+            glm::translate(glm::identity<glm::mat4>(), pos) * scale;
+        samui::Renderer::Submit(blue_shader_, square_vertex_array_, transform);
+      }
+    }
+
     samui::Renderer::Submit(shader_, vertex_array_);
     samui::Renderer::EndScene();
   }
@@ -171,6 +195,8 @@ void main()
   std::shared_ptr<samui::VertexArray> square_vertex_array_;
 
   samui::OrthographicCamera camera_;
+
+  glm::vec3 square_pos_{glm::zero<glm::vec3>()};
 };
 
 class Demo : public samui::Application {

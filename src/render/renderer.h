@@ -2,6 +2,7 @@
 #define SAMUI_RENDERER_H_
 
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "core/core.h"
 #include "core/shader.h"
@@ -14,7 +15,8 @@ class SAMUI_API Renderer {
   static void BeginScene(OrthographicCamera& camera);
   static void EndScene();
   static void Submit(const std::shared_ptr<Shader>&      shader,
-                     const std::shared_ptr<VertexArray>& vertex_array);
+                     const std::shared_ptr<VertexArray>& vertex_array,
+                     const glm::mat4& transform = glm::identity<glm::mat4>());
 
   inline static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
 
