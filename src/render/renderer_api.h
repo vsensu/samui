@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 
 #include "core/core.h"
-#include "opengl_buffer.h"
+#include "buffer.h"
 
 namespace samui {
 class SAMUI_API RendererAPI {

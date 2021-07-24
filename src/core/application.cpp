@@ -6,133 +6,21 @@
 #include "../render/renderer.h"
 
 namespace samui {
-#define BIND_EVENT_FUNC(x) \
-  std::bind(&Application::x, this, std::placeholders::_1)
-
 Application* Application::instance_ = nullptr;
 
-Application::Application(/* args */) : camera_(-1.6f, 1.6f, -0.9f, 0.9f) {
+Application::Application(/* args */) {
   instance_ = this;
   window_ = Window::Create();
-  window_->SetEventCallback(BIND_EVENT_FUNC(OnEvent));
+  window_->SetEventCallback(BIND_EVENT_FUNC(Application::OnEvent));
 
   imgui_layer_ = new ImGuiLayer();
   PushOverlay(imgui_layer_);
-
-  vertex_array_.reset(VertexArray::Create());
-  // clang-format off
-  float vertices[3 * 7] = {
-      -0.5f, -0.5f, 0.f, 0.8f, 0.2f, 0.8f, 1.f,
-      0.5f, -0.5f, 0.f, 0.2f, 0.3f,  0.8f, 1.f,
-      0.f,  0.5f, 0.f, 0.8f, 0.8f, 0.2f,  1.f,
-  };
-  // clang-format on
-  std::shared_ptr<VertexBuffer> vertex_buffer;
-  vertex_buffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
-  BufferLayout layout = {
-      {"Position", ShaderDataType::Float3},
-      {"Color", ShaderDataType::Float4},
-  };
-  vertex_buffer->SetLayout(layout);
-  vertex_array_->AddVertexBuffer(vertex_buffer);
-  uint32_t                     indices[3] = {0, 1, 2};
-  std::shared_ptr<IndexBuffer> index_buffer;
-  index_buffer.reset(
-      IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
-  vertex_array_->SetIndexBuffer(index_buffer);
-
-  square_vertex_array_.reset(VertexArray::Create());
-  // clang-format off
-  float square_vertices[3 * 4] = {
-      -0.75f, -0.75f, 0.f,
-      0.75f, -0.75f, 0.f,
-      0.75f, 0.75f, 0.f,
-      -0.75f, 0.75f, 0.f,
-  };
-  // clang-format on
-  std::shared_ptr<VertexBuffer> square_vertex_buffer;
-  square_vertex_buffer.reset(
-      VertexBuffer::Create(square_vertices, sizeof(square_vertices)));
-  BufferLayout square_layout = {
-      {"Position", ShaderDataType::Float3},
-  };
-  square_vertex_buffer->SetLayout(square_layout);
-  square_vertex_array_->AddVertexBuffer(square_vertex_buffer);
-  uint32_t                     square_indices[6] = {0, 1, 2, 2, 3, 0};
-  std::shared_ptr<IndexBuffer> square_index_buffer;
-  square_index_buffer.reset(IndexBuffer::Create(
-      square_indices, sizeof(square_indices) / sizeof(uint32_t)));
-  square_vertex_array_->SetIndexBuffer(square_index_buffer);
-
-  const std::string g_vs_code = R"(
-#version 330 core
-layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec4 aColor;
-
-uniform mat4 viewProj;
-
-out vec4 vertexColor;
-
-void main()
-{
-    gl_Position = viewProj * vec4(aPos, 1.0);
-    vertexColor = aColor;
-}
-)";
-
-  const std::string g_fs_code = R"(
-#version 330 core
-out vec4 FragColor;
-
-in vec4 vertexColor;
-
-void main()
-{
-  FragColor = vertexColor;
-}
-)";
-
-  shader_.reset(Shader::Create(g_vs_code.c_str(), g_fs_code.c_str()));
-
-  const std::string g_vs_code_blue = R"(
-#version 330 core
-layout (location = 0) in vec3 aPos;
-
-uniform mat4 viewProj;
-
-void main()
-{
-    gl_Position = viewProj * vec4(aPos, 1.0);
-}
-)";
-
-  const std::string g_fs_code_blue = R"(
-#version 330 core
-out vec4 FragColor;
-
-void main()
-{
-  FragColor = vec4(0.2, 0.3, 0.8, 1.0);
-}
-)";
-  blue_shader_.reset(
-      Shader::Create(g_vs_code_blue.c_str(), g_fs_code_blue.c_str()));
-
-  RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
 }
 
 Application::~Application() {}
 
 void Application::Run() {
   while (running_) {
-    RenderCommand::Clear();
-
-    camera_.set_rotation(45.f);
-    Renderer::BeginScene(camera_);
-    Renderer::Submit(blue_shader_, square_vertex_array_);
-    Renderer::Submit(shader_, vertex_array_);
-    Renderer::EndScene();
-
     window_->BeforeUpdate();
 
     for (Layer* layer : layer_stack_) {
@@ -162,7 +50,7 @@ void Application::PushOverlay(Layer* layer) {
 
 void Application::OnEvent(Event& e) {
   EventDispatcher dispatcher(e);
-  dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FUNC(OnWindowClose));
+  dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FUNC(Application::OnWindowClose));
 
   for (auto it = layer_stack_.end(); it != layer_stack_.begin();) {
     (*--it)->OnEvent(e);
