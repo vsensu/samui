@@ -68,7 +68,7 @@ void OpenGLVertexArray::Bind() { glBindVertexArray(vao_id_); }
 void OpenGLVertexArray::UnBind() { glBindVertexArray(0); }
 
 void OpenGLVertexArray::AddVertexBuffer(
-    const std::shared_ptr<VertexBuffer>& buffer) {
+    const samui::Ref<VertexBuffer>& buffer) {
   SAMUI_ENGINE_ASSERT(buffer->GetLayout().GetElements().size(),
                       "Vertex Buffer has no layout!");
 
@@ -93,7 +93,7 @@ void OpenGLVertexArray::AddVertexBuffer(
 }
 
 void OpenGLVertexArray::SetIndexBuffer(
-    const std::shared_ptr<IndexBuffer>& buffer) {
+    const samui::Ref<IndexBuffer>& buffer) {
   Bind();
   buffer->Bind();
   index_buffer_ = buffer;

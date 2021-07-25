@@ -43,13 +43,13 @@ class SAMUI_API OpenGLVertexArray : public VertexArray {
   void Bind() override;
   void UnBind() override;
 
-  void AddVertexBuffer(const std::shared_ptr<VertexBuffer>&) override;
-  void SetIndexBuffer(const std::shared_ptr<IndexBuffer>&) override;
+  void AddVertexBuffer(const samui::Ref<VertexBuffer>&) override;
+  void SetIndexBuffer(const samui::Ref<IndexBuffer>&) override;
   IndexBuffer* GetIndexBuffer() const override { return index_buffer_.get(); }
 
  private:
-  std::vector<std::shared_ptr<VertexBuffer>> vertex_buffers_;
-  std::shared_ptr<IndexBuffer>               index_buffer_;
+  std::vector<samui::Ref<VertexBuffer>> vertex_buffers_;
+  samui::Ref<IndexBuffer>               index_buffer_;
   uint32_t                                   vao_id_{0};
 };
 

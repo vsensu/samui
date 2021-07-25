@@ -132,33 +132,43 @@ class SAMUI_API OpenGLShader : public Shader {
     return glGetUniformLocation(shaderProgram, name.c_str());
   }
 
-  void UploadUniform(const std::string& name,
-                     const glm::vec3&   vector) override {
-    glCheck(glUniform3fv(GetUniformLocation(name), 1, glm::value_ptr(vector)));
-  }
-
-  //   void UploadUniform(const std::string& name,
-  //  const glm::ivec3&  vector) override {
-  // glCheck(glUniform3iv(
-  // glUniform3fv(GetUniformLocation(name), 1, glm::value_ptr(vector))));
-  //   }
-
-  void UploadUniform(const std::string& name,
-                     const glm::mat4&   matrix) override {
-    glCheck(glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE,
-                               glm::value_ptr(matrix)));
-  }
-
-  void LoadUniform(const std::string& name, GLint value) {
+  void UploadUniform(const std::string& name, int value) override {
     glCheck(glUniform1i(GetUniformLocation(name), value));
   }
 
-  void LoadUniform(const std::string& name, GLuint value) {
+  void UploadUniform(const std::string& name, unsigned int value) override {
     glCheck(glUniform1ui(GetUniformLocation(name), value));
   }
 
-  void LoadUniform(const std::string& name, GLfloat value) {
+  void UploadUniform(const std::string& name, float value) override {
     glCheck(glUniform1f(GetUniformLocation(name), value));
+  }
+
+  void UploadUniform(const std::string& name, const glm::vec2& value) override {
+    glCheck(glUniform2fv(GetUniformLocation(name), 1, glm::value_ptr(value)));
+  }
+
+  void UploadUniform(const std::string& name, const glm::vec3& value) override {
+    glCheck(glUniform3fv(GetUniformLocation(name), 1, glm::value_ptr(value)));
+  }
+
+  void UploadUniform(const std::string& name,
+                     const glm::ivec3&  value) override {
+    glCheck(glUniform3iv(GetUniformLocation(name), 1, glm::value_ptr(value)));
+  }
+
+  void UploadUniform(const std::string& name, const glm::vec4& value) override {
+    glCheck(glUniform4fv(GetUniformLocation(name), 1, glm::value_ptr(value)));
+  }
+
+  void UploadUniform(const std::string& name, const glm::mat3& value) override {
+    glCheck(glUniformMatrix3fv(GetUniformLocation(name), 1, GL_FALSE,
+                               glm::value_ptr(value)));
+  }
+
+  void UploadUniform(const std::string& name, const glm::mat4& value) override {
+    glCheck(glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE,
+                               glm::value_ptr(value)));
   }
 
  private:

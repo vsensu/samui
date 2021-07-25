@@ -9,8 +9,8 @@ void Renderer::BeginScene(OrthographicCamera& camera) {
 
 void Renderer::EndScene() {}
 
-void Renderer::Submit(const std::shared_ptr<Shader>&      shader,
-                      const std::shared_ptr<VertexArray>& vertex_array,
+void Renderer::Submit(const samui::Ref<Shader>&      shader,
+                      const samui::Ref<VertexArray>& vertex_array,
                       const glm::mat4&                    transform) {
   shader->Bind();
   shader->UploadUniform("viewProj", scene_data_->view_proj_matrix);

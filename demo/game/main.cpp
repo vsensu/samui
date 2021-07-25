@@ -1,6 +1,7 @@
 #include <imgui.h>
 #include <samui.h>
 
+#include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 
 class ExampleLayer : public samui::Layer {
@@ -15,7 +16,7 @@ class ExampleLayer : public samui::Layer {
       0.f,  0.5f, 0.f, 0.8f, 0.8f, 0.2f,  1.f,
     };
     // clang-format on
-    std::shared_ptr<samui::VertexBuffer> vertex_buffer;
+    samui::Ref<samui::VertexBuffer> vertex_buffer;
     vertex_buffer.reset(
         samui::VertexBuffer::Create(vertices, sizeof(vertices)));
     samui::BufferLayout layout = {
@@ -25,7 +26,7 @@ class ExampleLayer : public samui::Layer {
     vertex_buffer->SetLayout(layout);
     vertex_array_->AddVertexBuffer(vertex_buffer);
     uint32_t                            indices[3] = {0, 1, 2};
-    std::shared_ptr<samui::IndexBuffer> index_buffer;
+    samui::Ref<samui::IndexBuffer> index_buffer;
     index_buffer.reset(samui::IndexBuffer::Create(
         indices, sizeof(indices) / sizeof(uint32_t)));
     vertex_array_->SetIndexBuffer(index_buffer);
@@ -39,7 +40,7 @@ class ExampleLayer : public samui::Layer {
       -0.5f, 0.5f, 0.f,
     };
     // clang-format on
-    std::shared_ptr<samui::VertexBuffer> square_vertex_buffer;
+    samui::Ref<samui::VertexBuffer> square_vertex_buffer;
     square_vertex_buffer.reset(
         samui::VertexBuffer::Create(square_vertices, sizeof(square_vertices)));
     samui::BufferLayout square_layout = {
@@ -48,7 +49,7 @@ class ExampleLayer : public samui::Layer {
     square_vertex_buffer->SetLayout(square_layout);
     square_vertex_array_->AddVertexBuffer(square_vertex_buffer);
     uint32_t                            square_indices[6] = {0, 1, 2, 2, 3, 0};
-    std::shared_ptr<samui::IndexBuffer> square_index_buffer;
+    samui::Ref<samui::IndexBuffer> square_index_buffer;
     square_index_buffer.reset(samui::IndexBuffer::Create(
         square_indices, sizeof(square_indices) / sizeof(uint32_t)));
     square_vertex_array_->SetIndexBuffer(square_index_buffer);
@@ -101,9 +102,12 @@ void main()
 #version 330 core
 out vec4 FragColor;
 
+uniform vec4 u_color;
+
 void main()
 {
-  FragColor = vec4(0.2, 0.3, 0.8, 1.0);
+  // FragColor = vec4(0.2, 0.3, 0.8, 1.0);
+  FragColor = u_color;
 }
 )";
     blue_shader_.reset(
@@ -111,6 +115,7 @@ void main()
 
     samui::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
   }
+
   void OnUpdate(const samui::Timestep& deltaTime) override {
     if (samui::Input::IsKeyPressed(SAMUI_KEY_TAB)) {
       SAMUI_TRACE("Tab is pressed!");
@@ -156,6 +161,9 @@ void main()
     static glm::mat4 scale =
         glm::scale(glm::identity<glm::mat4>(), glm::vec3(0.1f));
 
+    blue_shader_->Bind();
+    blue_shader_->UploadUniform("u_color", square_color_);
+
     for (int y = 0; y < 20; ++y) {
       for (int x = 0; x < 20; ++x) {
         glm::vec3 pos = square_pos_ + glm::vec3(x * 0.11f, y * 0.11f, 0.f);
@@ -181,22 +189,24 @@ void main()
   }
 
   void OnImGuiRender() override {
-    static bool show = true;
-    ImGui::ShowDemoWindow(&show);
+    ImGui::Begin("Settings");
+    ImGui::ColorEdit4("square color", glm::value_ptr(square_color_));
+    ImGui::End();
   }
 
   bool OnKeyPressedEvent(samui::KeyPressedEvent& event) { return false; }
 
  private:
-  std::shared_ptr<samui::Shader>      shader_;
-  std::shared_ptr<samui::VertexArray> vertex_array_;
+  samui::Ref<samui::Shader>      shader_;
+  samui::Ref<samui::VertexArray> vertex_array_;
 
-  std::shared_ptr<samui::Shader>      blue_shader_;
-  std::shared_ptr<samui::VertexArray> square_vertex_array_;
+  samui::Ref<samui::Shader>      blue_shader_;
+  samui::Ref<samui::VertexArray> square_vertex_array_;
 
   samui::OrthographicCamera camera_;
 
   glm::vec3 square_pos_{glm::zero<glm::vec3>()};
+  glm::vec4 square_color_{glm::vec4(1.f)};
 };
 
 class Demo : public samui::Application {

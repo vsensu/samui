@@ -13,8 +13,15 @@ class SAMUI_API Shader {
 
   static Shader* Create(const char* vertex_shader, const char* fragment_shader);
 
-  virtual void UploadUniform(const std::string& name, const glm::vec3& vector) = 0;
-  virtual void UploadUniform(const std::string& name, const glm::mat4& matrix) = 0;
+  virtual void UploadUniform(const std::string& name, int value) = 0;
+  virtual void UploadUniform(const std::string& name, unsigned int value) = 0;
+  virtual void UploadUniform(const std::string& name, float value) = 0;
+  virtual void UploadUniform(const std::string& name, const glm::vec2& value) = 0;
+  virtual void UploadUniform(const std::string& name, const glm::vec3& value) = 0;
+  virtual void UploadUniform(const std::string& name, const glm::ivec3& value) = 0;
+  virtual void UploadUniform(const std::string& name, const glm::vec4& value) = 0;
+  virtual void UploadUniform(const std::string& name, const glm::mat3& value) = 0;
+  virtual void UploadUniform(const std::string& name, const glm::mat4& value) = 0;
 };
 
 }  // namespace samui

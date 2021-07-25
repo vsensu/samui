@@ -28,7 +28,15 @@
 
 #define BIT(x) (1 << x)
 
-#define BIND_EVENT_FUNC(x) \
-  std::bind(&x, this, std::placeholders::_1)
+#define BIND_EVENT_FUNC(x) std::bind(&x, this, std::placeholders::_1)
+
+#include <memory>
+namespace samui {
+template <typename T>
+using Scope = std::unique_ptr<T>;
+
+template <typename T>
+using Ref = std::shared_ptr<T>;
+}  // namespace samui
 
 #endif

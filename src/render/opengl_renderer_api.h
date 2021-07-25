@@ -8,7 +8,7 @@ class SAMUI_API OpenGLRendererAPI : public RendererAPI {
  public:
   void SetClearColor(const glm::vec4& color) override;
   void Clear() override;
-  void DrawIndexed(const std::shared_ptr<VertexArray>& va) override;
+  void DrawIndexed(const samui::Ref<VertexArray>& va) override;
 };
 }  // namespace samui
 

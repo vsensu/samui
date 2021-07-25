@@ -11,7 +11,7 @@ class SAMUI_API RenderCommand {
   }
   inline static void Clear() { renderer_api_->Clear(); }
 
-  inline static void DrawIndexed(const std::shared_ptr<VertexArray>& va) {
+  inline static void DrawIndexed(const samui::Ref<VertexArray>& va) {
     renderer_api_->DrawIndexed(va);
   }
 
