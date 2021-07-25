@@ -25,7 +25,7 @@ class ExampleLayer : public samui::Layer {
     };
     vertex_buffer->SetLayout(layout);
     vertex_array_->AddVertexBuffer(vertex_buffer);
-    uint32_t                            indices[3] = {0, 1, 2};
+    uint32_t                       indices[3] = {0, 1, 2};
     samui::Ref<samui::IndexBuffer> index_buffer;
     index_buffer.reset(samui::IndexBuffer::Create(
         indices, sizeof(indices) / sizeof(uint32_t)));
@@ -33,11 +33,11 @@ class ExampleLayer : public samui::Layer {
 
     square_vertex_array_.reset(samui::VertexArray::Create());
     // clang-format off
-    float square_vertices[3 * 4] = {
-      -0.5f, -0.5f, 0.f,
-      0.5f, -0.5f, 0.f,
-      0.5f, 0.5f, 0.f,
-      -0.5f, 0.5f, 0.f,
+    float square_vertices[5 * 4] = {
+      -0.5f, -0.5f, 0.f, 0.f, 0.f,
+      0.5f, -0.5f, 0.f, 1.f, 0.f,
+      0.5f, 0.5f, 0.f, 1.f, 1.f,
+      -0.5f, 0.5f, 0.f, 0.f, 1.f
     };
     // clang-format on
     samui::Ref<samui::VertexBuffer> square_vertex_buffer;
@@ -45,10 +45,11 @@ class ExampleLayer : public samui::Layer {
         samui::VertexBuffer::Create(square_vertices, sizeof(square_vertices)));
     samui::BufferLayout square_layout = {
         {"Position", samui::ShaderDataType::Float3},
+        {"TexCoord", samui::ShaderDataType::Float2},
     };
     square_vertex_buffer->SetLayout(square_layout);
     square_vertex_array_->AddVertexBuffer(square_vertex_buffer);
-    uint32_t                            square_indices[6] = {0, 1, 2, 2, 3, 0};
+    uint32_t                       square_indices[6] = {0, 1, 2, 2, 3, 0};
     samui::Ref<samui::IndexBuffer> square_index_buffer;
     square_index_buffer.reset(samui::IndexBuffer::Create(
         square_indices, sizeof(square_indices) / sizeof(uint32_t)));
@@ -113,6 +114,43 @@ void main()
     blue_shader_.reset(
         samui::Shader::Create(g_vs_code_blue.c_str(), g_fs_code_blue.c_str()));
 
+    const std::string g_vs_code_texture = R"(
+#version 330 core
+layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec2 aTexCoord;
+
+out vec2 texCoord;
+
+uniform mat4 viewProj;
+uniform mat4 transform;
+
+void main()
+{
+    gl_Position = viewProj * transform * vec4(aPos, 1.0);
+    texCoord = aTexCoord;
+}
+)";
+
+    const std::string g_fs_code_texture = R"(
+#version 330 core
+out vec4 FragColor;
+
+in vec2 texCoord;
+
+uniform sampler2D u_texture;
+
+void main()
+{
+  FragColor = texture(u_texture, texCoord);
+}
+)";
+    texture_shader_.reset(samui::Shader::Create(g_vs_code_texture.c_str(),
+                                                g_fs_code_texture.c_str()));
+
+    texture_ = samui::Texture2D::Create("assets/textures/Checkerboard.png");
+
+    texture_shader_->UploadUniform("u_texture", 0);
+
     samui::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
   }
 
@@ -173,6 +211,11 @@ void main()
       }
     }
 
+    texture_->Bind();
+    samui::Renderer::Submit(
+        texture_shader_, square_vertex_array_,
+        glm::scale(glm::identity<glm::mat4>(), glm::vec3(1.5f)));
+
     samui::Renderer::Submit(shader_, vertex_array_);
     samui::Renderer::EndScene();
   }
@@ -202,6 +245,9 @@ void main()
 
   samui::Ref<samui::Shader>      blue_shader_;
   samui::Ref<samui::VertexArray> square_vertex_array_;
+
+  samui::Ref<samui::Shader>    texture_shader_;
+  samui::Ref<samui::Texture2D> texture_;
 
   samui::OrthographicCamera camera_;
 

@@ -21,6 +21,7 @@
 
 #include "render/buffer.h"
 #include "core/shader.h"
+#include "render/texture.h"
 
 #include "render/orthographic_camera.h"
 
