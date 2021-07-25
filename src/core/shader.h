@@ -4,6 +4,7 @@
 #include "core/core.h"
 
 #include <glm/glm.hpp>
+#include <string>
 
 namespace samui {
 class SAMUI_API Shader {
@@ -11,7 +12,8 @@ class SAMUI_API Shader {
   virtual ~Shader() {}
   virtual void Bind() = 0;
 
-  static Shader* Create(const char* vertex_shader, const char* fragment_shader);
+  static Shader* Create(const std::string& filepath);
+  static Shader* Create(const std::string& vertex_shader, const std::string& fragment_shader);
 
   virtual void UploadUniform(const std::string& name, int value) = 0;
   virtual void UploadUniform(const std::string& name, unsigned int value) = 0;

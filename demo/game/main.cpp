@@ -114,38 +114,7 @@ void main()
     blue_shader_.reset(
         samui::Shader::Create(g_vs_code_blue.c_str(), g_fs_code_blue.c_str()));
 
-    const std::string g_vs_code_texture = R"(
-#version 330 core
-layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec2 aTexCoord;
-
-out vec2 texCoord;
-
-uniform mat4 viewProj;
-uniform mat4 transform;
-
-void main()
-{
-    gl_Position = viewProj * transform * vec4(aPos, 1.0);
-    texCoord = aTexCoord;
-}
-)";
-
-    const std::string g_fs_code_texture = R"(
-#version 330 core
-out vec4 FragColor;
-
-in vec2 texCoord;
-
-uniform sampler2D u_texture;
-
-void main()
-{
-  FragColor = texture(u_texture, texCoord);
-}
-)";
-    texture_shader_.reset(samui::Shader::Create(g_vs_code_texture.c_str(),
-                                                g_fs_code_texture.c_str()));
+    texture_shader_.reset(samui::Shader::Create("assets/shaders/texture.glsl"));
 
     texture_ = samui::Texture2D::Create("assets/textures/Checkerboard.png");
     logo_texture_ = samui::Texture2D::Create("assets/textures/logo.png");
@@ -159,8 +128,8 @@ void main()
     if (samui::Input::IsKeyPressed(SAMUI_KEY_TAB)) {
       SAMUI_TRACE("Tab is pressed!");
     }
-    SAMUI_INFO("delta time: {0}s, {1}ms", deltaTime.time_in_seconds(),
-               deltaTime.time_in_milliseconds());
+    // SAMUI_INFO("delta time: {0}s, {1}ms", deltaTime.time_in_seconds(),
+              //  deltaTime.time_in_milliseconds());
 
     auto camera_pos = camera_.get_position();
     if (samui::Input::IsKeyPressed(SAMUI_KEY_LEFT)) {

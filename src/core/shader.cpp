@@ -4,7 +4,18 @@
 #include "opengl_shader.h"
 
 namespace samui {
-Shader* Shader::Create(const char* vertex_shader, const char* fragment_shader) {
+
+Shader* Shader::Create(const std::string& filepath) {
+  switch (Renderer::GetAPI()) {
+    case RendererAPI::API::OpenGL:
+      return new OpenGLShader(filepath);
+  }
+  SAMUI_ENGINE_ASSERT(false, "Unsupported Render API");
+  return nullptr;
+}
+
+Shader* Shader::Create(const std::string& vertex_shader,
+                       const std::string& fragment_shader) {
   switch (Renderer::GetAPI()) {
     case RendererAPI::API::OpenGL:
       return new OpenGLShader(vertex_shader, fragment_shader);

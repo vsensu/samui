@@ -8,6 +8,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 #include <string>
+#include <unordered_map>
 
 #include "gl_errors.h"
 #include "shader.h"
@@ -122,9 +123,9 @@ struct CreateShaderProgramFromString {
 
 class SAMUI_API OpenGLShader : public Shader {
  public:
-  OpenGLShader(const char* vertex_shader, const char* fragment_shader)
-      : shaderProgram(ShaderUtils::CreateShaderProgramFromString(
-            vertex_shader, fragment_shader)) {}
+  OpenGLShader(const std::string& filePath);
+
+  OpenGLShader(const std::string& vertex_shader, const std::string& fragment_shader);
 
   void Bind() override { glUseProgram(shaderProgram); }
 
@@ -170,6 +171,11 @@ class SAMUI_API OpenGLShader : public Shader {
     glCheck(glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE,
                                glm::value_ptr(value)));
   }
+
+ private:
+  std::string                             ReadFile(const std::string& filepath);
+  std::unordered_map<GLenum, std::string> PreProcess(const std::string& source);
+  void Compile(const std::unordered_map<GLenum, std::string>& shaderSources);
 
  private:
   GLuint shaderProgram;
