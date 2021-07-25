@@ -6,6 +6,8 @@
 namespace samui {
 class SAMUI_API RenderCommand {
  public:
+  inline static void Init() { renderer_api_->Init(); }
+
   inline static void SetClearColor(const glm::vec4& color) {
     renderer_api_->SetClearColor(color);
   }

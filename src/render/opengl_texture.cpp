@@ -14,6 +14,14 @@ OpenGLTexture2D::OpenGLTexture2D(const std::string& path) : path_(path) {
   width_ = width;
   height_ = height;
 
+  GLenum internal_format = 0;
+  if (channels == 4) {
+    internal_format = GL_RGBA;
+  } else if (channels == 3) {
+    internal_format = GL_RGB;
+  }
+  SAMUI_ENGINE_ASSERT(internal_format, "Format not supported!");
+
   // 创建纹理对象
   glGenTextures(1, &texture_id_);
   glBindTexture(GL_TEXTURE_2D, texture_id_);
@@ -23,8 +31,8 @@ OpenGLTexture2D::OpenGLTexture2D(const std::string& path) : path_(path) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-  glTexImage2D(GL_TEXTURE_2D, 0 /*mipmap*/, GL_RGB, width, height, 0 /*legacy*/,
-               GL_RGB, GL_UNSIGNED_BYTE, data);
+  glTexImage2D(GL_TEXTURE_2D, 0 /*mipmap*/, internal_format, width, height,
+               0 /*legacy*/, internal_format, GL_UNSIGNED_BYTE, data);
   glGenerateMipmap(GL_TEXTURE_2D);
   stbi_image_free(data);
 }

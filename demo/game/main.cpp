@@ -148,6 +148,7 @@ void main()
                                                 g_fs_code_texture.c_str()));
 
     texture_ = samui::Texture2D::Create("assets/textures/Checkerboard.png");
+    logo_texture_ = samui::Texture2D::Create("assets/textures/logo.png");
 
     texture_shader_->UploadUniform("u_texture", 0);
 
@@ -215,6 +216,10 @@ void main()
     samui::Renderer::Submit(
         texture_shader_, square_vertex_array_,
         glm::scale(glm::identity<glm::mat4>(), glm::vec3(1.5f)));
+    logo_texture_->Bind();
+    samui::Renderer::Submit(
+        texture_shader_, square_vertex_array_,
+        glm::scale(glm::identity<glm::mat4>(), glm::vec3(1.5f)));
 
     samui::Renderer::Submit(shader_, vertex_array_);
     samui::Renderer::EndScene();
@@ -247,7 +252,7 @@ void main()
   samui::Ref<samui::VertexArray> square_vertex_array_;
 
   samui::Ref<samui::Shader>    texture_shader_;
-  samui::Ref<samui::Texture2D> texture_;
+  samui::Ref<samui::Texture2D> texture_, logo_texture_;
 
   samui::OrthographicCamera camera_;
 

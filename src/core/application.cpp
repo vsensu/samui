@@ -16,6 +16,8 @@ Application::Application(/* args */) {
   window_ = Window::Create();
   window_->SetEventCallback(BIND_EVENT_FUNC(Application::OnEvent));
 
+  Renderer::Init();
+
   imgui_layer_ = new ImGuiLayer();
   PushOverlay(imgui_layer_);
 }
