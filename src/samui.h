@@ -24,6 +24,7 @@
 #include "render/texture.h"
 
 #include "render/orthographic_camera.h"
+#include "render/orthographic_camera_controller.h"
 
 #include "core/entrypoint.h"
 

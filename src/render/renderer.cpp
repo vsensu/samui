@@ -5,7 +5,7 @@ Renderer::SceneData* Renderer::scene_data_ = new Renderer::SceneData;
 
 void Renderer::Init() { RenderCommand::Init(); }
 
-void Renderer::BeginScene(OrthographicCamera& camera) {
+void Renderer::BeginScene(const OrthographicCamera& camera) {
   scene_data_->view_proj_matrix = camera.get_view_projection_matrix();
 }
 

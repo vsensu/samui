@@ -13,7 +13,7 @@ namespace samui {
 class SAMUI_API Renderer {
  public:
   static void Init();
-  static void BeginScene(OrthographicCamera& camera);
+  static void BeginScene(const OrthographicCamera& camera);
   static void EndScene();
   static void Submit(const samui::Ref<Shader>&      shader,
                      const samui::Ref<VertexArray>& vertex_array,

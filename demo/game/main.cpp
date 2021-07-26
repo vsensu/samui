@@ -6,7 +6,7 @@
 
 class ExampleLayer : public samui::Layer {
  public:
-  ExampleLayer() : Layer("Example"), camera_(-1.6f, 1.6f, -0.9f, 0.9f) {
+  ExampleLayer() : Layer("Example"), camera_controller_(1280.f / 720.f, true) {
     shader_library_ = std::make_shared<samui::ShaderLibrary>();
 
     vertex_array_.reset(samui::VertexArray::Create());
@@ -128,25 +128,13 @@ void main()
   }
 
   void OnUpdate(const samui::Timestep& deltaTime) override {
-    if (samui::Input::IsKeyPressed(SAMUI_KEY_TAB)) {
-      SAMUI_TRACE("Tab is pressed!");
-    }
     // SAMUI_INFO("delta time: {0}s, {1}ms", deltaTime.time_in_seconds(),
     //  deltaTime.time_in_milliseconds());
 
-    auto camera_pos = camera_.get_position();
-    if (samui::Input::IsKeyPressed(SAMUI_KEY_LEFT)) {
-      camera_pos.x -= 1.f * deltaTime;
-    } else if (samui::Input::IsKeyPressed(SAMUI_KEY_RIGHT)) {
-      camera_pos.x += 1.f * deltaTime;
-    } else if (samui::Input::IsKeyPressed(SAMUI_KEY_UP)) {
-      camera_pos.y += 1.f * deltaTime;
-    } else if (samui::Input::IsKeyPressed(SAMUI_KEY_DOWN)) {
-      camera_pos.y -= 1.f * deltaTime;
-    }
+    // update
+    camera_controller_.OnUpdate(deltaTime);
 
-    camera_.set_position(camera_pos);
-
+    // render
     if (samui::Input::IsKeyPressed(SAMUI_KEY_J)) {
       square_pos_.x -= 1.f * deltaTime;
     } else if (samui::Input::IsKeyPressed(SAMUI_KEY_L)) {
@@ -157,17 +145,9 @@ void main()
       square_pos_.y -= 1.f * deltaTime;
     }
 
-    auto rotation = camera_.get_rotation();
-    if (samui::Input::IsKeyPressed(SAMUI_KEY_A)) {
-      rotation += 10.f * deltaTime;
-    } else if (samui::Input::IsKeyPressed(SAMUI_KEY_D)) {
-      rotation -= 10.f * deltaTime;
-    }
-    camera_.set_rotation(rotation);
-
     samui::RenderCommand::Clear();
 
-    samui::Renderer::BeginScene(camera_);
+    samui::Renderer::BeginScene(camera_controller_.GetCamera());
 
     static glm::mat4 scale =
         glm::scale(glm::identity<glm::mat4>(), glm::vec3(0.1f));
@@ -199,14 +179,7 @@ void main()
   }
 
   void OnEvent(samui::Event& event) override {
-    if (event.GetEventType() == samui::EventType::KeyPressed) {
-      auto& key_press_event = static_cast<samui::KeyPressedEvent&>(event);
-      SAMUI_TRACE("Input:{0}", (char)key_press_event.GetKeyCode());
-    }
-
-    samui::EventDispatcher dispatcher(event);
-    dispatcher.Dispatch<samui::KeyPressedEvent>(
-        BIND_EVENT_FUNC(ExampleLayer::OnKeyPressedEvent));
+    camera_controller_.OnEvent(event);
   }
 
   void OnImGuiRender() override {
@@ -214,8 +187,6 @@ void main()
     ImGui::ColorEdit4("square color", glm::value_ptr(square_color_));
     ImGui::End();
   }
-
-  bool OnKeyPressedEvent(samui::KeyPressedEvent& event) { return false; }
 
  private:
   samui::Ref<samui::ShaderLibrary> shader_library_;
@@ -228,7 +199,7 @@ void main()
 
   samui::Ref<samui::Texture2D> texture_, logo_texture_;
 
-  samui::OrthographicCamera camera_;
+  samui::OrthographicCameraController camera_controller_;
 
   glm::vec3 square_pos_{glm::zero<glm::vec3>()};
   glm::vec4 square_color_{glm::vec4(1.f)};

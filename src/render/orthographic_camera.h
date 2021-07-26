@@ -10,6 +10,8 @@ class SAMUI_API OrthographicCamera {
  public:
   OrthographicCamera(float left, float right, float bottom, float top);
 
+  void set_projection(float left, float right, float bottom, float top);
+
   const glm::vec3& get_position() const { return position_; }
   float            get_rotation() const { return rotation_; }
 
