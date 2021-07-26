@@ -19,6 +19,9 @@ class SAMUI_API OrthographicCameraController {
 
   const OrthographicCamera& GetCamera() { return camera_; }
 
+  float GetZoomLevel() const { return zoom_level_; }
+  void  SetZoomLevel(float zoom_level) { zoom_level_ = zoom_level; }
+
  private:
   bool OnMouseScrolled(MouseScrolledEvent& e);
   bool OnWindowResized(WindowResizeEvent& e);

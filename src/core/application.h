@@ -27,11 +27,13 @@ class SAMUI_API Application {
  private:
   void OnEvent(Event& e);
   bool OnWindowClose(WindowCloseEvent& event);
+  bool OnWindowResize(WindowResizeEvent& event);
 
  private:
   std::unique_ptr<Window> window_;
   ImGuiLayer*             imgui_layer_;
   bool                    running_{true};
+  bool                    minimized_{false};
   LayerStack              layer_stack_;
   float                   last_frame_time_{0.f};
   static Application*     instance_;

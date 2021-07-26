@@ -32,10 +32,12 @@ void Application::Run() {
 
     window_->BeforeUpdate();
 
-    for (Layer* layer : layer_stack_) {
-      layer->OnUpdate(delta_time);
+    if (!minimized_) {
+      for (Layer* layer : layer_stack_) {
+        layer->OnUpdate(delta_time);
+      }
     }
-
+    
     imgui_layer_->Begin();
     for (Layer* layer : layer_stack_) {
       layer->OnImGuiRender();
@@ -61,6 +63,8 @@ void Application::OnEvent(Event& e) {
   EventDispatcher dispatcher(e);
   dispatcher.Dispatch<WindowCloseEvent>(
       BIND_EVENT_FUNC(Application::OnWindowClose));
+  dispatcher.Dispatch<WindowResizeEvent>(
+      BIND_EVENT_FUNC(Application::OnWindowResize));
 
   for (auto it = layer_stack_.end(); it != layer_stack_.begin();) {
     (*--it)->OnEvent(e);
@@ -73,6 +77,18 @@ void Application::OnEvent(Event& e) {
 bool Application::OnWindowClose(WindowCloseEvent& event) {
   running_ = false;
   return true;
+}
+
+bool Application::OnWindowResize(WindowResizeEvent& event) {
+  if (event.GetWidth() == 0 || event.GetHeight() == 0) {
+    minimized_ = true;
+    return false;
+  }
+
+  minimized_ = false;
+  Renderer::OnWindowResize(event.GetWidth(), event.GetHeight());
+
+  return false;
 }
 
 }  // namespace samui
