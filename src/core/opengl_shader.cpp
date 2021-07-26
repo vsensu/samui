@@ -1,6 +1,7 @@
 #include "opengl_shader.h"
 
 #include "log/log.h"
+#include "pch.h"
 
 namespace samui {
 GLenum ShaderTypeFromString(const std::string& type) {
@@ -76,8 +77,10 @@ std::unordered_map<GLenum, std::string> OpenGLShader::PreProcess(
 void OpenGLShader::Compile(
     const std::unordered_map<GLenum, std::string>& shaderSources) {
   // Create Shader program
-  GLuint              program = glCreateProgram();
-  std::vector<GLuint> shader_ids(shaderSources.size());
+  GLuint program = glCreateProgram();
+  SAMUI_ENGINE_ASSERT(shaderSources.size() < 3, "Only support 2 shaders now");
+  std::array<GLuint, 2> shader_ids;
+  int                   shader_id_index = 0;
 
   for (const auto& pair : shaderSources) {
     auto type = pair.first;
@@ -108,7 +111,7 @@ void OpenGLShader::Compile(
     // process.
     glAttachShader(program, shader);
 
-    shader_ids.push_back(shader);
+    shader_ids[shader_id_index++] = shader;
   }
 
   shaderProgram = program;

@@ -7,6 +7,8 @@
 class ExampleLayer : public samui::Layer {
  public:
   ExampleLayer() : Layer("Example"), camera_(-1.6f, 1.6f, -0.9f, 0.9f) {
+    shader_library_ = std::make_shared<samui::ShaderLibrary>();
+
     vertex_array_.reset(samui::VertexArray::Create());
 
     // clang-format off
@@ -84,7 +86,7 @@ void main()
 }
 )";
 
-    shader_.reset(samui::Shader::Create(g_vs_code.c_str(), g_fs_code.c_str()));
+    shader_ = samui::Shader::Create(g_vs_code.c_str(), g_fs_code.c_str());
 
     const std::string g_vs_code_blue = R"(
 #version 330 core
@@ -111,15 +113,16 @@ void main()
   FragColor = u_color;
 }
 )";
-    blue_shader_.reset(
-        samui::Shader::Create(g_vs_code_blue.c_str(), g_fs_code_blue.c_str()));
+    blue_shader_ =
+        samui::Shader::Create(g_vs_code_blue.c_str(), g_fs_code_blue.c_str());
 
-    texture_shader_.reset(samui::Shader::Create("assets/shaders/texture.glsl"));
+    shader_library_->Add("texture",
+                         samui::Shader::Create("assets/shaders/texture.glsl"));
 
     texture_ = samui::Texture2D::Create("assets/textures/Checkerboard.png");
     logo_texture_ = samui::Texture2D::Create("assets/textures/logo.png");
 
-    texture_shader_->UploadUniform("u_texture", 0);
+    shader_library_->Get("texture")->UploadUniform("u_texture", 0);
 
     samui::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
   }
@@ -129,7 +132,7 @@ void main()
       SAMUI_TRACE("Tab is pressed!");
     }
     // SAMUI_INFO("delta time: {0}s, {1}ms", deltaTime.time_in_seconds(),
-              //  deltaTime.time_in_milliseconds());
+    //  deltaTime.time_in_milliseconds());
 
     auto camera_pos = camera_.get_position();
     if (samui::Input::IsKeyPressed(SAMUI_KEY_LEFT)) {
@@ -181,6 +184,7 @@ void main()
       }
     }
 
+    auto texture_shader_ = shader_library_->Get("texture");
     texture_->Bind();
     samui::Renderer::Submit(
         texture_shader_, square_vertex_array_,
@@ -214,13 +218,14 @@ void main()
   bool OnKeyPressedEvent(samui::KeyPressedEvent& event) { return false; }
 
  private:
+  samui::Ref<samui::ShaderLibrary> shader_library_;
+
   samui::Ref<samui::Shader>      shader_;
   samui::Ref<samui::VertexArray> vertex_array_;
 
   samui::Ref<samui::Shader>      blue_shader_;
   samui::Ref<samui::VertexArray> square_vertex_array_;
 
-  samui::Ref<samui::Shader>    texture_shader_;
   samui::Ref<samui::Texture2D> texture_, logo_texture_;
 
   samui::OrthographicCamera camera_;
