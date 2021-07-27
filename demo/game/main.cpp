@@ -205,9 +205,11 @@ void main()
   glm::vec4 square_color_{glm::vec4(1.f)};
 };
 
+#include "game2d.h"
+
 class Demo : public samui::Application {
  public:
-  Demo() : Application() { PushLayer(new ExampleLayer()); }
+  Demo() : Application() { PushLayer(new Game2DLayer()); }
 };
 
 samui::Application* samui::create_application() {
