@@ -123,7 +123,7 @@ class SAMUI_API VertexBuffer : public Buffer {
   virtual const BufferLayout& GetLayout() const = 0;
   virtual void                SetLayout(const BufferLayout& layout) = 0;
 
-  static VertexBuffer* Create(float* vertices, uint32_t size);
+  static Ref<VertexBuffer> Create(float* vertices, uint32_t size);
 };
 
 class SAMUI_API IndexBuffer : public Buffer {
@@ -132,7 +132,7 @@ class SAMUI_API IndexBuffer : public Buffer {
 
   virtual uint32_t GetCount() const = 0;
 
-  static IndexBuffer* Create(uint32_t* indices, uint32_t count);
+  static Ref<IndexBuffer> Create(uint32_t* indices, uint32_t count);
 };
 
 class SAMUI_API VertexArray {
@@ -144,11 +144,10 @@ class SAMUI_API VertexArray {
 
   virtual void AddVertexBuffer(
       const samui::Ref<VertexBuffer>& vertexBuffer) = 0;
-  virtual void SetIndexBuffer(
-      const samui::Ref<IndexBuffer>& vertexBuffer) = 0;
+  virtual void SetIndexBuffer(const samui::Ref<IndexBuffer>& vertexBuffer) = 0;
   virtual IndexBuffer* GetIndexBuffer() const = 0;
 
-  static VertexArray* Create();
+  static Ref<VertexArray> Create();
 };
 
 }  // namespace samui

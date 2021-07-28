@@ -17,6 +17,7 @@
 #include "core/timestep.h"
 
 #include "render/renderer.h"
+#include "render/renderer2d.h"
 #include "render/render_command.h"
 
 #include "render/buffer.h"
