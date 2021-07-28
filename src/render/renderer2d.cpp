@@ -11,6 +11,7 @@ namespace samui {
 struct Rendderer2DStorage {
   Ref<VertexArray> vertex_array;
   Ref<Shader>      flat_color_shader;
+  Ref<Shader>      texture_shader;
 };
 
 static Rendderer2DStorage* renderer2d_storage;
@@ -20,11 +21,11 @@ void Renderer2D::Init() {
   renderer2d_storage->vertex_array = VertexArray::Create();
 
   // clang-format off
-    float square_vertices[3 * 4] = {
-      -0.5f, -0.5f, 0.f,
-      0.5f, -0.5f, 0.f,
-      0.5f, 0.5f, 0.f,
-      -0.5f, 0.5f, 0.f
+    float square_vertices[5 * 4] = {
+      -0.5f, -0.5f, 0.f, 0.f, 0.f,
+      0.5f, -0.5f, 0.f, 1.f, 0.f,
+      0.5f, 0.5f, 0.f, 1.f, 1.f,
+      -0.5f, 0.5f, 0.f, 0.f, 1.f
     };
   // clang-format on
   Ref<VertexBuffer> square_vertex_buffer;
@@ -32,6 +33,7 @@ void Renderer2D::Init() {
       VertexBuffer::Create(square_vertices, sizeof(square_vertices));
   BufferLayout square_layout = {
       {"Position", ShaderDataType::Float3},
+      {"TexCoord", ShaderDataType::Float2},
   };
   square_vertex_buffer->SetLayout(square_layout);
   renderer2d_storage->vertex_array->AddVertexBuffer(square_vertex_buffer);
@@ -43,6 +45,11 @@ void Renderer2D::Init() {
 
   renderer2d_storage->flat_color_shader =
       Shader::Create("assets/shaders/flatcolor.glsl");
+  renderer2d_storage->texture_shader =
+      Shader::Create("assets/shaders/texture.glsl");
+
+  renderer2d_storage->texture_shader->Bind();
+  renderer2d_storage->texture_shader->SetInt("u_texture", 0);
 }
 
 void Renderer2D::Shutdown() {
@@ -54,8 +61,10 @@ void Renderer2D::BeginScene(const OrthographicCamera& camera) {
   renderer2d_storage->flat_color_shader->Bind();
   renderer2d_storage->flat_color_shader->SetMat4(
       "viewProj", camera.get_view_projection_matrix());
-  renderer2d_storage->flat_color_shader->SetMat4("transform",
-                                                 glm::identity<glm::mat4>());
+
+  renderer2d_storage->texture_shader->Bind();
+  renderer2d_storage->texture_shader->SetMat4(
+      "viewProj", camera.get_view_projection_matrix());
 }
 
 void Renderer2D::EndScene() {}
@@ -73,6 +82,25 @@ void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec2& size,
       glm::translate(glm::identity<glm::mat4>(), pos) *
       glm::scale(glm::identity<glm::mat4>(), {size.x, size.y, 1.f});
   renderer2d_storage->flat_color_shader->SetMat4("transform", transform);
+
+  renderer2d_storage->vertex_array->Bind();
+  RenderCommand::DrawIndexed(renderer2d_storage->vertex_array);
+}
+
+void Renderer2D::DrawQuad(const glm::vec2& pos, const glm::vec2& size,
+                          const Ref<Texture2D>& texture) {
+  DrawQuad({pos.x, pos.y, 0.f}, size, texture);
+}
+
+void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec2& size,
+                          const Ref<Texture2D>& texture) {
+  renderer2d_storage->texture_shader->Bind();
+  auto transform =
+      glm::translate(glm::identity<glm::mat4>(), pos) *
+      glm::scale(glm::identity<glm::mat4>(), {size.x, size.y, 1.f});
+  renderer2d_storage->texture_shader->SetMat4("transform", transform);
+
+  texture->Bind();
 
   renderer2d_storage->vertex_array->Bind();
   RenderCommand::DrawIndexed(renderer2d_storage->vertex_array);
