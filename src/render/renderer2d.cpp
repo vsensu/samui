@@ -52,10 +52,10 @@ void Renderer2D::Shutdown() {
 
 void Renderer2D::BeginScene(const OrthographicCamera& camera) {
   renderer2d_storage->flat_color_shader->Bind();
-  renderer2d_storage->flat_color_shader->UploadUniform(
+  renderer2d_storage->flat_color_shader->SetMat4(
       "viewProj", camera.get_view_projection_matrix());
-  renderer2d_storage->flat_color_shader->UploadUniform(
-      "transform", glm::identity<glm::mat4>());
+  renderer2d_storage->flat_color_shader->SetMat4("transform",
+                                                 glm::identity<glm::mat4>());
 }
 
 void Renderer2D::EndScene() {}
@@ -68,7 +68,11 @@ void Renderer2D::DrawQuad(const glm::vec2& pos, const glm::vec2& size,
 void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec2& size,
                           const glm::vec4& color) {
   renderer2d_storage->flat_color_shader->Bind();
-  renderer2d_storage->flat_color_shader->UploadUniform("u_color", color);
+  renderer2d_storage->flat_color_shader->SetFloat4("u_color", color);
+  auto transform =
+      glm::translate(glm::identity<glm::mat4>(), pos) *
+      glm::scale(glm::identity<glm::mat4>(), {size.x, size.y, 1.f});
+  renderer2d_storage->flat_color_shader->SetMat4("transform", transform);
 
   renderer2d_storage->vertex_array->Bind();
   RenderCommand::DrawIndexed(renderer2d_storage->vertex_array);

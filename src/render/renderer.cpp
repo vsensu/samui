@@ -24,8 +24,8 @@ void Renderer::Submit(const samui::Ref<Shader>&      shader,
                       const samui::Ref<VertexArray>& vertex_array,
                       const glm::mat4&               transform) {
   shader->Bind();
-  shader->UploadUniform("viewProj", scene_data_->view_proj_matrix);
-  shader->UploadUniform("transform", transform);
+  shader->SetMat4("viewProj", scene_data_->view_proj_matrix);
+  shader->SetMat4("transform", transform);
 
   vertex_array->Bind();
   RenderCommand::DrawIndexed(vertex_array);

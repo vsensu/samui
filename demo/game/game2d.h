@@ -20,7 +20,9 @@ class Game2DLayer : public samui::Layer {
 
     samui::RenderCommand::Clear();
     samui::Renderer2D::BeginScene(camera_controller_.GetCamera());
-    samui::Renderer2D::DrawQuad({0.f, 0.f}, {1.f, 1.f}, square_color_);
+    samui::Renderer2D::DrawQuad({-1.f, 0.f}, {0.8f, 0.8f}, square_color_);
+    samui::Renderer2D::DrawQuad({0.5f, 0.5f}, {0.2f, 0.5f},
+                                {0.2f, 0.8f, 0.4f, 1.f});
     samui::Renderer2D::EndScene();
   }
   virtual void OnImGuiRender() {

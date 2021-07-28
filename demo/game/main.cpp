@@ -121,7 +121,7 @@ void main()
     texture_ = samui::Texture2D::Create("assets/textures/Checkerboard.png");
     logo_texture_ = samui::Texture2D::Create("assets/textures/logo.png");
 
-    shader_library_->Get("texture")->UploadUniform("u_texture", 0);
+    shader_library_->Get("texture")->SetInt("u_texture", 0);
 
     samui::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
   }
@@ -152,7 +152,7 @@ void main()
         glm::scale(glm::identity<glm::mat4>(), glm::vec3(0.1f));
 
     blue_shader_->Bind();
-    blue_shader_->UploadUniform("u_color", square_color_);
+    blue_shader_->SetFloat4("u_color", square_color_);
 
     for (int y = 0; y < 20; ++y) {
       for (int x = 0; x < 20; ++x) {

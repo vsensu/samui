@@ -17,21 +17,15 @@ class SAMUI_API Shader {
   static Ref<Shader> Create(const std::string& vertex_shader,
                             const std::string& fragment_shader);
 
-  virtual void UploadUniform(const std::string& name, int value) = 0;
-  virtual void UploadUniform(const std::string& name, unsigned int value) = 0;
-  virtual void UploadUniform(const std::string& name, float value) = 0;
-  virtual void UploadUniform(const std::string& name,
-                             const glm::vec2&   value) = 0;
-  virtual void UploadUniform(const std::string& name,
-                             const glm::vec3&   value) = 0;
-  virtual void UploadUniform(const std::string& name,
-                             const glm::ivec3&  value) = 0;
-  virtual void UploadUniform(const std::string& name,
-                             const glm::vec4&   value) = 0;
-  virtual void UploadUniform(const std::string& name,
-                             const glm::mat3&   value) = 0;
-  virtual void UploadUniform(const std::string& name,
-                             const glm::mat4&   value) = 0;
+  virtual void SetInt(const std::string& name, int value) = 0;
+  virtual void SetUInt(const std::string& name, unsigned int value) = 0;
+  virtual void SetFloat(const std::string& name, float value) = 0;
+  virtual void SetFloat2(const std::string& name, const glm::vec2& value) = 0;
+  virtual void SetFloat3(const std::string& name, const glm::vec3& value) = 0;
+  virtual void SetInt3(const std::string& name, const glm::ivec3& value) = 0;
+  virtual void SetFloat4(const std::string& name, const glm::vec4& value) = 0;
+  virtual void SetMat3(const std::string& name, const glm::mat3& value) = 0;
+  virtual void SetMat4(const std::string& name, const glm::mat4& value) = 0;
 };
 
 class SAMUI_API ShaderLibrary {
