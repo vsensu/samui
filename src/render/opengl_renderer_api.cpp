@@ -25,5 +25,6 @@ void OpenGLRendererAPI::Clear() {
 void OpenGLRendererAPI::DrawIndexed(const samui::Ref<VertexArray>& va) {
   glDrawElements(GL_TRIANGLES, va->GetIndexBuffer()->GetCount(),
                  GL_UNSIGNED_INT, nullptr);
+                 glBindTexture(GL_TEXTURE_2D, 0);
 }
 }  // namespace samui
