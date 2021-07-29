@@ -27,6 +27,7 @@
 #include "render/orthographic_camera.h"
 #include "render/orthographic_camera_controller.h"
 
+#include "debug/instrumentor.h"
 #include "core/entrypoint.h"
 
 // clang-format on
