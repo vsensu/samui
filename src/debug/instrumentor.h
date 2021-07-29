@@ -16,7 +16,7 @@
 namespace samui {
 using FloatingPointMicroseconds = std::chrono::duration<double, std::micro>;
 
-struct ProfileResult {
+struct SAMUI_API ProfileResult {
   std::string Name;
 
   FloatingPointMicroseconds Start;
@@ -28,7 +28,7 @@ struct InstrumentationSession {
   std::string Name;
 };
 
-class Instrumentor {
+class SAMUI_API Instrumentor {
  public:
   Instrumentor(const Instrumentor&) = delete;
   Instrumentor(Instrumentor&&) = delete;
@@ -129,7 +129,7 @@ class Instrumentor {
   std::ofstream           m_OutputStream;
 };
 
-class InstrumentationTimer {
+class SAMUI_API InstrumentationTimer {
  public:
   InstrumentationTimer(const char* name) : m_Name(name), m_Stopped(false) {
     m_StartTimepoint = std::chrono::steady_clock::now();
@@ -165,12 +165,12 @@ class InstrumentationTimer {
 namespace InstrumentorUtils {
 
 template <size_t N>
-struct ChangeResult {
+struct SAMUI_API ChangeResult {
   char Data[N];
 };
 
 template <size_t N, size_t K>
-constexpr auto CleanupOutputString(const char (&expr)[N],
+constexpr auto SAMUI_API CleanupOutputString(const char (&expr)[N],
                                    const char (&remove)[K]) {
   ChangeResult<N> result = {};
 

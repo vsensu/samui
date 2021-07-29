@@ -13,6 +13,8 @@
 #include "gl_errors.h"
 #include "shader.h"
 
+#include "debug/instrumentor.h"
+
 namespace samui {
 class SAMUI_API OpenGLShader : public Shader {
  public:
@@ -28,39 +30,48 @@ class SAMUI_API OpenGLShader : public Shader {
   }
 
   void SetInt(const std::string& name, int value) override {
+    SAMUI_PROFILE_FUNCTION();
     glCheck(glUniform1i(GetUniformLocation(name), value));
   }
 
   void SetUInt(const std::string& name, unsigned int value) override {
+    SAMUI_PROFILE_FUNCTION();
     glCheck(glUniform1ui(GetUniformLocation(name), value));
   }
 
   void SetFloat(const std::string& name, float value) override {
+    SAMUI_PROFILE_FUNCTION();
     glCheck(glUniform1f(GetUniformLocation(name), value));
   }
 
   void SetFloat2(const std::string& name, const glm::vec2& value) override {
+    SAMUI_PROFILE_FUNCTION();
     glCheck(glUniform2fv(GetUniformLocation(name), 1, glm::value_ptr(value)));
   }
 
   void SetFloat3(const std::string& name, const glm::vec3& value) override {
+    SAMUI_PROFILE_FUNCTION();
     glCheck(glUniform3fv(GetUniformLocation(name), 1, glm::value_ptr(value)));
   }
 
   void SetInt3(const std::string& name, const glm::ivec3& value) override {
+    SAMUI_PROFILE_FUNCTION();
     glCheck(glUniform3iv(GetUniformLocation(name), 1, glm::value_ptr(value)));
   }
 
   void SetFloat4(const std::string& name, const glm::vec4& value) override {
+    SAMUI_PROFILE_FUNCTION();
     glCheck(glUniform4fv(GetUniformLocation(name), 1, glm::value_ptr(value)));
   }
 
   void SetMat3(const std::string& name, const glm::mat3& value) override {
+    SAMUI_PROFILE_FUNCTION();
     glCheck(glUniformMatrix3fv(GetUniformLocation(name), 1, GL_FALSE,
                                glm::value_ptr(value)));
   }
 
   void SetMat4(const std::string& name, const glm::mat4& value) override {
+    SAMUI_PROFILE_FUNCTION();
     glCheck(glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE,
                                glm::value_ptr(value)));
   }

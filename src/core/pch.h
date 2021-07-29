@@ -9,7 +9,6 @@
 #include <array>
 
 #include "log/log.h"
-#include "debug/instrumentor.h"
 
 #ifdef SAMUI_PLATFORM_WINDOWS
 #include <Windows.h>

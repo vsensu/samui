@@ -2,6 +2,7 @@
 
 #include "log/log.h"
 #include "pch.h"
+#include "debug/instrumentor.h"
 
 namespace samui {
 GLenum ShaderTypeFromString(const std::string& type) {
