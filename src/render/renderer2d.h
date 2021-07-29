@@ -21,9 +21,25 @@ class SAMUI_API Renderer2D {
                        const glm::vec4& color);
 
   static void DrawQuad(const glm::vec2& pos, const glm::vec2& size,
-                       const Ref<Texture2D>& texture);
+                       const Ref<Texture2D>& texture, float tilingFactor = 1.f,
+                       glm::vec4 tint = glm::vec4(1.f));
   static void DrawQuad(const glm::vec3& pos, const glm::vec2& size,
-                       const Ref<Texture2D>& texture);
+                       const Ref<Texture2D>& texture, float tilingFactor = 1.f,
+                       glm::vec4 tint = glm::vec4(1.f));
+
+  static void DrawRotatedQuad(const glm::vec2& pos, const glm::vec2& size,
+                              float rotation, const glm::vec4& color);
+  static void DrawRotatedQuad(const glm::vec3& pos, const glm::vec2& size,
+                              float rotation, const glm::vec4& color);
+
+  static void DrawRotatedQuad(const glm::vec2& pos, const glm::vec2& size,
+                              float rotation, const Ref<Texture2D>& texture,
+                              float     tilingFactor = 1.f,
+                              glm::vec4 tint = glm::vec4(1.f));
+  static void DrawRotatedQuad(const glm::vec3& pos, const glm::vec2& size,
+                              float rotation, const Ref<Texture2D>& texture,
+                              float     tilingFactor = 1.f,
+                              glm::vec4 tint = glm::vec4(1.f));
 };
 
 }  // namespace samui

@@ -81,7 +81,7 @@ void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec2& size,
                           const glm::vec4& color) {
   SAMUI_PROFILE_FUNCTION();
   renderer2d_storage->white_texture->Bind();
-
+  renderer2d_storage->texture_shader->SetFloat("u_tiling_factor", 1.f);
   renderer2d_storage->texture_shader->SetFloat4("u_color", color);
   auto transform =
       glm::translate(glm::identity<glm::mat4>(), pos) *
@@ -93,18 +93,65 @@ void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec2& size,
 }
 
 void Renderer2D::DrawQuad(const glm::vec2& pos, const glm::vec2& size,
-                          const Ref<Texture2D>& texture) {
-  DrawQuad({pos.x, pos.y, 0.f}, size, texture);
+                          const Ref<Texture2D>& texture, float tilingFactor,
+                          glm::vec4 tint) {
+  DrawQuad({pos.x, pos.y, 0.f}, size, texture, tilingFactor, tint);
 }
 
 void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec2& size,
-                          const Ref<Texture2D>& texture) {
+                          const Ref<Texture2D>& texture, float tilingFactor,
+                          glm::vec4 tint) {
   SAMUI_PROFILE_FUNCTION();
   texture->Bind();
-  renderer2d_storage->texture_shader->SetFloat4("u_color",
-                                                glm::one<glm::vec4>());
+  renderer2d_storage->texture_shader->SetFloat("u_tiling_factor", tilingFactor);
+  renderer2d_storage->texture_shader->SetFloat4("u_color", tint);
   auto transform =
       glm::translate(glm::identity<glm::mat4>(), pos) *
+      glm::scale(glm::identity<glm::mat4>(), {size.x, size.y, 1.f});
+  renderer2d_storage->texture_shader->SetMat4("transform", transform);
+
+  renderer2d_storage->vertex_array->Bind();
+  RenderCommand::DrawIndexed(renderer2d_storage->vertex_array);
+}
+
+void Renderer2D::DrawRotatedQuad(const glm::vec2& pos, const glm::vec2& size,
+                                 float rotation, const glm::vec4& color) {
+  DrawRotatedQuad({pos.x, pos.y, 0.f}, size, rotation, color);
+}
+
+void Renderer2D::DrawRotatedQuad(const glm::vec3& pos, const glm::vec2& size,
+                                 float rotation, const glm::vec4& color) {
+  SAMUI_PROFILE_FUNCTION();
+  renderer2d_storage->white_texture->Bind();
+  renderer2d_storage->texture_shader->SetFloat("u_tiling_factor", 1.f);
+  renderer2d_storage->texture_shader->SetFloat4("u_color", color);
+  auto transform =
+      glm::translate(glm::identity<glm::mat4>(), pos) *
+      glm::rotate(glm::identity<glm::mat4>(), rotation, {0.f, 0.f, 1.f}) *
+      glm::scale(glm::identity<glm::mat4>(), {size.x, size.y, 1.f});
+  renderer2d_storage->texture_shader->SetMat4("transform", transform);
+
+  renderer2d_storage->vertex_array->Bind();
+  RenderCommand::DrawIndexed(renderer2d_storage->vertex_array);
+}
+
+void Renderer2D::DrawRotatedQuad(const glm::vec2& pos, const glm::vec2& size,
+                                 float rotation, const Ref<Texture2D>& texture,
+                                 float tilingFactor, glm::vec4 tint) {
+  DrawRotatedQuad({pos.x, pos.y, 0.f}, size, rotation, texture, tilingFactor,
+                  tint);
+}
+
+void Renderer2D::DrawRotatedQuad(const glm::vec3& pos, const glm::vec2& size,
+                                 float rotation, const Ref<Texture2D>& texture,
+                                 float tilingFactor, glm::vec4 tint) {
+  SAMUI_PROFILE_FUNCTION();
+  texture->Bind();
+  renderer2d_storage->texture_shader->SetFloat("u_tiling_factor", tilingFactor);
+  renderer2d_storage->texture_shader->SetFloat4("u_color", tint);
+  auto transform =
+      glm::translate(glm::identity<glm::mat4>(), pos) *
+      glm::rotate(glm::identity<glm::mat4>(), rotation, {0.f, 0.f, 1.f}) *
       glm::scale(glm::identity<glm::mat4>(), {size.x, size.y, 1.f});
   renderer2d_storage->texture_shader->SetMat4("transform", transform);
 

@@ -32,14 +32,16 @@ class Game2DLayer : public samui::Layer {
     {
       SAMUI_PROFILE_SCOPE("Render Draw(CPU)");
       samui::Renderer2D::BeginScene(camera_controller_.GetCamera());
-      samui::Renderer2D::DrawQuad({-1.f, 0.f}, {0.8f, 0.8f}, square_color_);
+      samui::Renderer2D::DrawRotatedQuad({-1.f, 0.f}, {0.8f, 0.8f},
+                                         glm::radians(45.f), square_color_);
       samui::Renderer2D::DrawQuad({0.5f, 0.5f}, {0.2f, 0.5f},
                                   {0.2f, 0.8f, 0.4f, 1.f});
-      samui::Renderer2D::DrawQuad({0.f, 0.f, -0.1f}, {10.f, 10.f}, texture_);
+      samui::Renderer2D::DrawQuad({0.f, 0.f, -0.1f}, {10.f, 10.f}, texture_,
+                                  10.f, glm::vec4(1.f, 0.8f, 0.8f, 1.f));
       samui::Renderer2D::EndScene();
     }
   }
-  
+
   virtual void OnImGuiRender() {
     ImGui::Begin("Settings");
     ImGui::ColorEdit4("square color", glm::value_ptr(square_color_));
