@@ -1,13 +1,22 @@
 #include "renderer.h"
 
 #include "renderer2d.h"
+#include "debug/instrumentor.h"
 
 namespace samui {
 Renderer::SceneData* Renderer::scene_data_ = new Renderer::SceneData;
 
 void Renderer::Init() {
+  SAMUI_PROFILE_FUNCTION();
+
   RenderCommand::Init();
   Renderer2D::Init();
+}
+
+void Renderer::Shutdown() {
+  SAMUI_PROFILE_FUNCTION();
+
+  Renderer2D::Shutdown();
 }
 
 void Renderer::OnWindowResize(uint32_t width, uint32_t height) {

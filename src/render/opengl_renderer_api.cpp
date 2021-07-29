@@ -2,8 +2,11 @@
 
 #include <glad/glad.h>
 
+#include "debug/instrumentor.h"
+
 namespace samui {
 void OpenGLRendererAPI::Init() {
+  SAMUI_PROFILE_FUNCTION();
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_DEPTH_TEST);

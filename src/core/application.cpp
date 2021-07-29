@@ -6,12 +6,15 @@
 #include "../log/log.h"
 #include "../render/buffer.h"
 #include "../render/renderer.h"
+#include "debug/instrumentor.h"
 #include "timestep.h"
 
 namespace samui {
 Application* Application::instance_ = nullptr;
 
 Application::Application(/* args */) {
+  SAMUI_PROFILE_FUNCTION();
+
   instance_ = this;
   window_ = Window::Create();
   window_->SetEventCallback(BIND_EVENT_FUNC(Application::OnEvent));
@@ -22,10 +25,15 @@ Application::Application(/* args */) {
   PushOverlay(imgui_layer_);
 }
 
-Application::~Application() {}
+Application::~Application() {
+  SAMUI_PROFILE_FUNCTION();
+  Renderer::Shutdown();
+}
 
 void Application::Run() {
+  SAMUI_PROFILE_FUNCTION();
   while (running_) {
+    SAMUI_PROFILE_SCOPE("RunLoop");
     auto     time = (float)glfwGetTime();
     Timestep delta_time = time - last_frame_time_;
     last_frame_time_ = time;
@@ -33,16 +41,21 @@ void Application::Run() {
     window_->BeforeUpdate();
 
     if (!minimized_) {
-      for (Layer* layer : layer_stack_) {
-        layer->OnUpdate(delta_time);
+      {
+        SAMUI_PROFILE_SCOPE("LayerStack OnUpdate");
+        for (Layer* layer : layer_stack_) {
+          layer->OnUpdate(delta_time);
+        }
+      }
+      {
+        SAMUI_PROFILE_SCOPE("LayerStack OnImGuiRender");
+        imgui_layer_->Begin();
+        for (Layer* layer : layer_stack_) {
+          layer->OnImGuiRender();
+        }
+        imgui_layer_->End();
       }
     }
-    
-    imgui_layer_->Begin();
-    for (Layer* layer : layer_stack_) {
-      layer->OnImGuiRender();
-    }
-    imgui_layer_->End();
 
     window_->OnUpdate();
     window_->LateUpdate();
@@ -50,16 +63,19 @@ void Application::Run() {
 }
 
 void Application::PushLayer(Layer* layer) {
+  SAMUI_PROFILE_FUNCTION();
   layer_stack_.PushLayer(layer);
   layer->OnAttach();
 }
 
 void Application::PushOverlay(Layer* layer) {
+  SAMUI_PROFILE_FUNCTION();
   layer_stack_.PushOverlay(layer);
   layer->OnAttach();
 }
 
 void Application::OnEvent(Event& e) {
+  SAMUI_PROFILE_FUNCTION();
   EventDispatcher dispatcher(e);
   dispatcher.Dispatch<WindowCloseEvent>(
       BIND_EVENT_FUNC(Application::OnWindowClose));
@@ -80,6 +96,7 @@ bool Application::OnWindowClose(WindowCloseEvent& event) {
 }
 
 bool Application::OnWindowResize(WindowResizeEvent& event) {
+  SAMUI_PROFILE_FUNCTION();
   if (event.GetWidth() == 0 || event.GetHeight() == 0) {
     minimized_ = true;
     return false;

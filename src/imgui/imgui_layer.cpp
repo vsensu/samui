@@ -5,6 +5,7 @@
 #include <imgui.h>
 
 #include "../core/application.h"
+#include "debug/instrumentor.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
@@ -14,6 +15,7 @@ ImGuiLayer::ImGuiLayer() : Layer("ImGuiLayer") {}
 ImGuiLayer::~ImGuiLayer() {}
 
 void ImGuiLayer::OnAttach() {
+  SAMUI_PROFILE_FUNCTION();
   // Setup Dear ImGui context
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
@@ -34,12 +36,14 @@ void ImGuiLayer::OnAttach() {
 }
 
 void ImGuiLayer::OnDetach() {
+  SAMUI_PROFILE_FUNCTION();
   ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplGlfw_Shutdown();
   ImGui::DestroyContext();
 }
 
 void ImGuiLayer::Begin() {
+  SAMUI_PROFILE_FUNCTION();
   // Start the Dear ImGui frame
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
@@ -47,6 +51,7 @@ void ImGuiLayer::Begin() {
 }
 
 void ImGuiLayer::End() {
+  SAMUI_PROFILE_FUNCTION();
   ImGuiIO&     io = ImGui::GetIO();
   Application& app = Application::Get();
   io.DisplaySize =

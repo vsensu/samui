@@ -4,6 +4,8 @@
 
 #include <glad/glad.h>
 
+#include "../debug/instrumentor.h"
+
 namespace samui {
 // clang-format off
 static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type) {
@@ -28,47 +30,76 @@ static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type) {
 
 // VertexBuffer-------------------------------------------------------------------
 OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size) {
+  SAMUI_PROFILE_FUNCTION();
   glGenBuffers(1, &buffer_id_);
   Bind();
   glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
 }
 
-OpenGLVertexBuffer::~OpenGLVertexBuffer() { glDeleteBuffers(1, &buffer_id_); }
+OpenGLVertexBuffer::~OpenGLVertexBuffer() {
+  SAMUI_PROFILE_FUNCTION();
+  glDeleteBuffers(1, &buffer_id_);
+}
 
-void OpenGLVertexBuffer::Bind() { glBindBuffer(GL_ARRAY_BUFFER, buffer_id_); }
+void OpenGLVertexBuffer::Bind() {
+  SAMUI_PROFILE_FUNCTION();
+  glBindBuffer(GL_ARRAY_BUFFER, buffer_id_);
+}
 
-void OpenGLVertexBuffer::UnBind() { glBindBuffer(GL_ARRAY_BUFFER, 0); }
+void OpenGLVertexBuffer::UnBind() {
+  SAMUI_PROFILE_FUNCTION();
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
 
 // IndexBuffer-------------------------------------------------------------------
 OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indices, uint32_t count)
     : count_(count) {
+  SAMUI_PROFILE_FUNCTION();
   glGenBuffers(1, &buffer_id_);
   Bind();
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices,
                GL_STATIC_DRAW);
 }
 
-OpenGLIndexBuffer::~OpenGLIndexBuffer() { glDeleteBuffers(1, &buffer_id_); }
+OpenGLIndexBuffer::~OpenGLIndexBuffer() {
+  SAMUI_PROFILE_FUNCTION();
+  glDeleteBuffers(1, &buffer_id_);
+}
 
 void OpenGLIndexBuffer::Bind() {
+  SAMUI_PROFILE_FUNCTION();
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer_id_);
 }
 
-void OpenGLIndexBuffer::UnBind() { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); }
+void OpenGLIndexBuffer::UnBind() {
+  SAMUI_PROFILE_FUNCTION();
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
 
 OpenGLVertexArray::OpenGLVertexArray() {
+  SAMUI_PROFILE_FUNCTION();
   glGenVertexArrays(1, &vao_id_);
   Bind();
 }
 
-OpenGLVertexArray::~OpenGLVertexArray() { glDeleteVertexArrays(1, &vao_id_); }
+OpenGLVertexArray::~OpenGLVertexArray() {
+  SAMUI_PROFILE_FUNCTION();
+  glDeleteVertexArrays(1, &vao_id_);
+}
 
-void OpenGLVertexArray::Bind() { glBindVertexArray(vao_id_); }
+void OpenGLVertexArray::Bind() {
+  SAMUI_PROFILE_FUNCTION();
+  glBindVertexArray(vao_id_);
+}
 
-void OpenGLVertexArray::UnBind() { glBindVertexArray(0); }
+void OpenGLVertexArray::UnBind() {
+  SAMUI_PROFILE_FUNCTION();
+  glBindVertexArray(0);
+}
 
 void OpenGLVertexArray::AddVertexBuffer(
     const samui::Ref<VertexBuffer>& buffer) {
+  SAMUI_PROFILE_FUNCTION();
   SAMUI_ENGINE_ASSERT(buffer->GetLayout().GetElements().size(),
                       "Vertex Buffer has no layout!");
 
@@ -92,8 +123,8 @@ void OpenGLVertexArray::AddVertexBuffer(
   vertex_buffers_.push_back(buffer);
 }
 
-void OpenGLVertexArray::SetIndexBuffer(
-    const samui::Ref<IndexBuffer>& buffer) {
+void OpenGLVertexArray::SetIndexBuffer(const samui::Ref<IndexBuffer>& buffer) {
+  SAMUI_PROFILE_FUNCTION();
   Bind();
   buffer->Bind();
   index_buffer_ = buffer;

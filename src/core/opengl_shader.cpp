@@ -18,6 +18,7 @@ GLenum ShaderTypeFromString(const std::string& type) {
 }
 
 OpenGLShader::OpenGLShader(const std::string& filePath) {
+  SAMUI_PROFILE_FUNCTION();
   std::string source = ReadFile(filePath);
   auto        shader_sources = PreProcess(source);
   Compile(shader_sources);
@@ -25,6 +26,7 @@ OpenGLShader::OpenGLShader(const std::string& filePath) {
 
 OpenGLShader::OpenGLShader(const std::string& vertex_shader,
                            const std::string& fragment_shader) {
+  SAMUI_PROFILE_FUNCTION();
   std::unordered_map<GLenum, std::string> shader_sources;
   shader_sources[GL_VERTEX_SHADER] = vertex_shader;
   shader_sources[GL_FRAGMENT_SHADER] = fragment_shader;
@@ -32,6 +34,7 @@ OpenGLShader::OpenGLShader(const std::string& vertex_shader,
 }
 
 std::string OpenGLShader::ReadFile(const std::string& filepath) {
+  SAMUI_PROFILE_FUNCTION();
   std::string   result;
   std::ifstream in(filepath, std::ios::in | std::ios::binary);
   if (in) {
@@ -49,6 +52,7 @@ std::string OpenGLShader::ReadFile(const std::string& filepath) {
 
 std::unordered_map<GLenum, std::string> OpenGLShader::PreProcess(
     const std::string& source) {
+  SAMUI_PROFILE_FUNCTION();
   std::unordered_map<GLenum, std::string> shaderSources;
 
   const char* type_token = "#type";
@@ -76,6 +80,7 @@ std::unordered_map<GLenum, std::string> OpenGLShader::PreProcess(
 
 void OpenGLShader::Compile(
     const std::unordered_map<GLenum, std::string>& shaderSources) {
+      SAMUI_PROFILE_FUNCTION();
   // Create Shader program
   GLuint program = glCreateProgram();
   SAMUI_ENGINE_ASSERT(shaderSources.size() < 3, "Only support 2 shaders now");

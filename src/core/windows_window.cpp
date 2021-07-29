@@ -2,6 +2,7 @@
 
 #include "windows_window.h"
 
+#include "../debug/instrumentor.h"
 #include "../events/application_event.h"
 #include "../events/key_event.h"
 #include "../events/mouse_event.h"
@@ -22,11 +23,19 @@ std::unique_ptr<Window> Window::Create(const WindowProps& props) {
   return std::make_unique<WindowsWindow>(props);
 }
 
-WindowsWindow::WindowsWindow(const WindowProps& props) { Init(props); }
+WindowsWindow::WindowsWindow(const WindowProps& props) {
+  SAMUI_PROFILE_FUNCTION();
+  Init(props);
+}
 
-WindowsWindow::~WindowsWindow() { Shutdown(); }
+WindowsWindow::~WindowsWindow() {
+  SAMUI_PROFILE_FUNCTION();
+  Shutdown();
+}
 
 void WindowsWindow::Init(const WindowProps& props) {
+  SAMUI_PROFILE_FUNCTION();
+
   data_.Title = props.Title;
   data_.Width = props.Width;
   data_.Height = props.Height;
@@ -35,18 +44,25 @@ void WindowsWindow::Init(const WindowProps& props) {
                     props.Height);
 
   glfwSetErrorCallback(&glfw_error_callback);
-  if (glfwInit() != GLFW_TRUE) {
-    SAMUI_ENGINE_FATAL("failed to initialize glfw");
-    glfwTerminate();
-    return;
+  {
+    SAMUI_PROFILE_SCOPE("glfwInit");
+    if (glfwInit() != GLFW_TRUE) {
+      SAMUI_ENGINE_FATAL("failed to initialize glfw");
+      glfwTerminate();
+      return;
+    }
   }
 
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-  window_ = glfwCreateWindow((int)props.Width, (int)props.Height,
-                             data_.Title.c_str(), nullptr, nullptr);
+  {
+    SAMUI_PROFILE_SCOPE("glfwCreateWindow");
+    window_ = glfwCreateWindow((int)props.Width, (int)props.Height,
+                               data_.Title.c_str(), nullptr, nullptr);
+  }
+
   if (window_ == nullptr) {
     SAMUI_ENGINE_FATAL("Failed to create GLFW window");
     glfwTerminate();
@@ -134,15 +150,25 @@ void WindowsWindow::Init(const WindowProps& props) {
       });
 }
 
-void WindowsWindow::Shutdown() { glfwDestroyWindow(window_); }
+void WindowsWindow::Shutdown() {
+  SAMUI_PROFILE_FUNCTION();
+  glfwDestroyWindow(window_);
+}
 
-void WindowsWindow::BeforeUpdate() { glfwPollEvents(); }
+void WindowsWindow::BeforeUpdate() {
+  SAMUI_PROFILE_FUNCTION();
+  glfwPollEvents();
+}
 
-void WindowsWindow::OnUpdate() {}
+void WindowsWindow::OnUpdate() { SAMUI_PROFILE_FUNCTION(); }
 
-void WindowsWindow::LateUpdate() { graphics_context_->SwapBuffers(); }
+void WindowsWindow::LateUpdate() {
+  SAMUI_PROFILE_FUNCTION();
+  graphics_context_->SwapBuffers();
+}
 
 void WindowsWindow::SetVSync(bool enabled) {
+  SAMUI_PROFILE_FUNCTION();
   if (enabled) {
     glfwSwapInterval(1);
   } else {

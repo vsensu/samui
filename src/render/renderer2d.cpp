@@ -5,6 +5,7 @@
 
 #include "../core/shader.h"
 #include "buffer.h"
+#include "debug/instrumentor.h"
 #include "render_command.h"
 
 namespace samui {
@@ -17,6 +18,7 @@ struct Rendderer2DStorage {
 static Rendderer2DStorage* renderer2d_storage;
 
 void Renderer2D::Init() {
+  SAMUI_PROFILE_FUNCTION();
   renderer2d_storage = new Rendderer2DStorage();
   renderer2d_storage->vertex_array = VertexArray::Create();
 
@@ -56,17 +58,19 @@ void Renderer2D::Init() {
 }
 
 void Renderer2D::Shutdown() {
+  SAMUI_PROFILE_FUNCTION();
   delete renderer2d_storage;
   renderer2d_storage = nullptr;
 }
 
 void Renderer2D::BeginScene(const OrthographicCamera& camera) {
+  SAMUI_PROFILE_FUNCTION();
   renderer2d_storage->texture_shader->Bind();
   renderer2d_storage->texture_shader->SetMat4(
       "viewProj", camera.get_view_projection_matrix());
 }
 
-void Renderer2D::EndScene() {}
+void Renderer2D::EndScene() { SAMUI_PROFILE_FUNCTION(); }
 
 void Renderer2D::DrawQuad(const glm::vec2& pos, const glm::vec2& size,
                           const glm::vec4& color) {
@@ -75,6 +79,7 @@ void Renderer2D::DrawQuad(const glm::vec2& pos, const glm::vec2& size,
 
 void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec2& size,
                           const glm::vec4& color) {
+  SAMUI_PROFILE_FUNCTION();
   renderer2d_storage->white_texture->Bind();
 
   renderer2d_storage->texture_shader->SetFloat4("u_color", color);
@@ -94,6 +99,7 @@ void Renderer2D::DrawQuad(const glm::vec2& pos, const glm::vec2& size,
 
 void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec2& size,
                           const Ref<Texture2D>& texture) {
+  SAMUI_PROFILE_FUNCTION();
   texture->Bind();
   renderer2d_storage->texture_shader->SetFloat4("u_color",
                                                 glm::one<glm::vec4>());

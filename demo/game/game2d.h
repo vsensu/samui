@@ -13,16 +13,16 @@ class Game2DLayer : public samui::Layer {
   Game2DLayer() : Layer("Example"), camera_controller_(1280.f / 720.f, true) {}
 
   virtual void OnAttach() override {
+    SAMUI_PROFILE_FUNCTION();
     samui::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
     texture_ = samui::Texture2D::Create("assets/textures/Checkerboard.png");
   }
-  virtual void OnDetach() override {}
+
+  virtual void OnDetach() override { SAMUI_PROFILE_FUNCTION(); }
+
   virtual void OnUpdate(const samui::Timestep& deltaTime) {
     SAMUI_PROFILE_FUNCTION();
-    {
-      SAMUI_PROFILE_SCOPE("CameraController::OnUpdate");
-      camera_controller_.OnUpdate(deltaTime);
-    }
+    camera_controller_.OnUpdate(deltaTime);
 
     {
       SAMUI_PROFILE_SCOPE("Render Prepare");
@@ -39,6 +39,7 @@ class Game2DLayer : public samui::Layer {
       samui::Renderer2D::EndScene();
     }
   }
+  
   virtual void OnImGuiRender() {
     ImGui::Begin("Settings");
     ImGui::ColorEdit4("square color", glm::value_ptr(square_color_));

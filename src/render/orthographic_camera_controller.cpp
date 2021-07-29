@@ -2,6 +2,7 @@
 
 #include "core/input.h"
 #include "core/keycodes.h"
+#include "debug/instrumentor.h"
 
 namespace samui {
 OrthographicCameraController::OrthographicCameraController(float aspect_ratio,
@@ -12,6 +13,7 @@ OrthographicCameraController::OrthographicCameraController(float aspect_ratio,
               -zoom_level_, zoom_level_) {}
 
 void OrthographicCameraController::OnUpdate(const Timestep& deltaTime) {
+  SAMUI_PROFILE_FUNCTION();
   auto camera_pos = camera_.get_position();
   if (Input::IsKeyPressed(SAMUI_KEY_A)) {
     camera_pos.x -= 1.f * deltaTime;
@@ -44,6 +46,7 @@ void OrthographicCameraController::OnUpdate(const Timestep& deltaTime) {
 }
 
 void OrthographicCameraController::OnEvent(Event& e) {
+  SAMUI_PROFILE_FUNCTION();
   EventDispatcher dispatcher(e);
   dispatcher.Dispatch<MouseScrolledEvent>(
       BIND_EVENT_FUNC(OrthographicCameraController::OnMouseScrolled));
@@ -53,6 +56,7 @@ void OrthographicCameraController::OnEvent(Event& e) {
 }
 
 bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent& e) {
+  SAMUI_PROFILE_FUNCTION();
   zoom_level_ -= e.GetYOffset() * 0.2f;
   zoom_level_ = std::max(zoom_level_, 0.25f);
   camera_.set_projection(-aspect_ratio_ * zoom_level_,
@@ -63,6 +67,7 @@ bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent& e) {
 }
 
 bool OrthographicCameraController::OnWindowResized(WindowResizeEvent& e) {
+  SAMUI_PROFILE_FUNCTION();
   aspect_ratio_ = e.GetWidth() / (float)e.GetHeight();
   camera_.set_projection(-aspect_ratio_ * zoom_level_,
                          aspect_ratio_ * zoom_level_, -zoom_level_,
