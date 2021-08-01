@@ -41,6 +41,19 @@ class SAMUI_API Renderer2D {
                               float rotation, const Ref<Texture2D>& texture,
                               float     tilingFactor = 1.f,
                               glm::vec4 tint = glm::vec4(1.f));
+
+  struct Statistics {
+    uint32_t draw_calls = 0;
+    uint32_t quad_count = 0;
+
+    uint32_t get_total_vertex_count() const { return quad_count * 4; }
+  };
+
+  static void       ResetStats();
+  static Statistics GetStats();
+
+ private:
+  static void FlushAndReset();
 };
 
 }  // namespace samui

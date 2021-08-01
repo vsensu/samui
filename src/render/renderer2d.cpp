@@ -18,7 +18,7 @@ struct QuadVertex {
 };
 
 struct Rendderer2DData {
-  constexpr static uint32_t max_quads = 10000;
+  constexpr static uint32_t max_quads = 20000;
   constexpr static uint32_t max_vertices = max_quads * 4;
   constexpr static uint32_t max_indices = max_quads * 6;
   constexpr static uint32_t max_texture_slots = 32;
@@ -36,6 +36,8 @@ struct Rendderer2DData {
   uint32_t texture_slot_index = 1;  // 0 is white texture
 
   glm::vec4 quad_vertex_positions[4];
+
+  Renderer2D::Statistics stats;
 };
 
 static Rendderer2DData renderer2d_data;
@@ -132,6 +134,8 @@ void Renderer2D::Flush() {
   }
   RenderCommand::DrawIndexed(renderer2d_data.quad_vertex_array,
                              renderer2d_data.quad_index_count);
+
+  ++renderer2d_data.stats.draw_calls;
 }
 
 void Renderer2D::DrawQuad(const glm::vec2& pos, const glm::vec2& size,
@@ -142,6 +146,10 @@ void Renderer2D::DrawQuad(const glm::vec2& pos, const glm::vec2& size,
 void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec2& size,
                           const glm::vec4& color) {
   SAMUI_PROFILE_FUNCTION();
+
+  if (renderer2d_data.quad_index_count >= Rendderer2DData::max_indices) {
+    FlushAndReset();
+  }
 
   constexpr float white_texture_index = 0.f;
   constexpr float tilingFactor = 1.f;
@@ -183,6 +191,8 @@ void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec2& size,
   ++renderer2d_data.quad_vertex_buffer_ptr;
 
   renderer2d_data.quad_index_count += 6;
+
+  ++renderer2d_data.stats.quad_count;
 }
 
 void Renderer2D::DrawQuad(const glm::vec2& pos, const glm::vec2& size,
@@ -195,6 +205,11 @@ void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec2& size,
                           const Ref<Texture2D>& texture, float tilingFactor,
                           glm::vec4 tint) {
   SAMUI_PROFILE_FUNCTION();
+
+  if (renderer2d_data.quad_index_count >= Rendderer2DData::max_indices) {
+    FlushAndReset();
+  }
+
   float texture_index = 0.f;
 
   for (int i = 1; i < renderer2d_data.texture_slot_index; ++i) {
@@ -247,6 +262,8 @@ void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec2& size,
   ++renderer2d_data.quad_vertex_buffer_ptr;
 
   renderer2d_data.quad_index_count += 6;
+
+  ++renderer2d_data.stats.quad_count;
 }
 
 void Renderer2D::DrawRotatedQuad(const glm::vec2& pos, const glm::vec2& size,
@@ -257,6 +274,10 @@ void Renderer2D::DrawRotatedQuad(const glm::vec2& pos, const glm::vec2& size,
 void Renderer2D::DrawRotatedQuad(const glm::vec3& pos, const glm::vec2& size,
                                  float rotation, const glm::vec4& color) {
   SAMUI_PROFILE_FUNCTION();
+
+  if (renderer2d_data.quad_index_count >= Rendderer2DData::max_indices) {
+    FlushAndReset();
+  }
 
   constexpr float white_texture_index = 0.f;
   constexpr float tilingFactor = 1.f;
@@ -299,6 +320,8 @@ void Renderer2D::DrawRotatedQuad(const glm::vec3& pos, const glm::vec2& size,
   ++renderer2d_data.quad_vertex_buffer_ptr;
 
   renderer2d_data.quad_index_count += 6;
+
+  ++renderer2d_data.stats.quad_count;
 }
 
 void Renderer2D::DrawRotatedQuad(const glm::vec2& pos, const glm::vec2& size,
@@ -313,6 +336,10 @@ void Renderer2D::DrawRotatedQuad(const glm::vec3& pos, const glm::vec2& size,
                                  float tilingFactor, glm::vec4 tint) {
   SAMUI_PROFILE_FUNCTION();
 
+  if (renderer2d_data.quad_index_count >= Rendderer2DData::max_indices) {
+    FlushAndReset();
+  }
+
   float texture_index = 0.f;
 
   for (int i = 1; i < renderer2d_data.texture_slot_index; ++i) {
@@ -366,6 +393,25 @@ void Renderer2D::DrawRotatedQuad(const glm::vec3& pos, const glm::vec2& size,
   ++renderer2d_data.quad_vertex_buffer_ptr;
 
   renderer2d_data.quad_index_count += 6;
+
+  ++renderer2d_data.stats.quad_count;
+}
+
+void Renderer2D::ResetStats() {
+  memset(&renderer2d_data.stats, 0, sizeof(renderer2d_data.stats));
+}
+
+Renderer2D::Statistics Renderer2D::GetStats() { return renderer2d_data.stats; }
+
+void Renderer2D::FlushAndReset() {
+  SAMUI_PROFILE_FUNCTION();
+  EndScene();
+
+  renderer2d_data.quad_vertex_buffer_ptr =
+      renderer2d_data.quad_vertex_buffer_base;
+
+  renderer2d_data.quad_index_count = 0;
+  renderer2d_data.texture_slot_index = 1;
 }
 
 }  // namespace samui

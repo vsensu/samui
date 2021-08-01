@@ -24,6 +24,7 @@ class Game2DLayer : public samui::Layer {
     SAMUI_PROFILE_FUNCTION();
     camera_controller_.OnUpdate(deltaTime);
 
+    samui::Renderer2D::ResetStats();
     {
       SAMUI_PROFILE_SCOPE("Render Prepare");
       samui::RenderCommand::Clear();
@@ -52,11 +53,24 @@ class Game2DLayer : public samui::Layer {
                                          glm::radians(45.f), texture_, 10.f,
                                          glm::vec4(1.f, 0.8f, 0.8f, 1.f));
       samui::Renderer2D::EndScene();
+
+      samui::Renderer2D::BeginScene(camera_controller_.GetCamera());
+      for (float y = -5.f; y < 5.f; y += 0.5f) {
+        for (float x = -5.f; x < 5.f; x += 0.5f) {
+          glm::vec4 color = {(x + 5.f) / 10.f, 0.4f, (y + 5.f) / 10.f, 1.f};
+          samui::Renderer2D::DrawQuad({x, y}, {0.45f, 0.45f}, color);
+        };
+      }
     }
+    samui::Renderer2D::EndScene();
   }
 
   virtual void OnImGuiRender() {
+    auto stats = samui::Renderer2D::GetStats();
     ImGui::Begin("Settings");
+    ImGui::Text("Renderer2D Stats:");
+    ImGui::Text("Draw Calls: %d", stats.draw_calls);
+    ImGui::Text("Quads: %d", stats.quad_count);
     ImGui::ColorEdit4("square color", glm::value_ptr(square_color_));
     ImGui::End();
   }
