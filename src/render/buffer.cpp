@@ -5,6 +5,15 @@
 #include "renderer.h"
 
 namespace samui {
+Ref<VertexBuffer> VertexBuffer::Create(uint32_t size) {
+  switch (Renderer::GetAPI()) {
+    case RendererAPI::API::OpenGL:
+      return std::make_shared<OpenGLVertexBuffer>(size);
+  }
+  SAMUI_ENGINE_ASSERT(false, "Unsupported Render API");
+  return nullptr;
+}
+
 Ref<VertexBuffer> VertexBuffer::Create(float* vertices, uint32_t size) {
   switch (Renderer::GetAPI()) {
     case RendererAPI::API::OpenGL:

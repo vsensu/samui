@@ -25,9 +25,11 @@ void OpenGLRendererAPI::Clear() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void OpenGLRendererAPI::DrawIndexed(const samui::Ref<VertexArray>& va) {
-  glDrawElements(GL_TRIANGLES, va->GetIndexBuffer()->GetCount(),
-                 GL_UNSIGNED_INT, nullptr);
-                 glBindTexture(GL_TEXTURE_2D, 0);
+void OpenGLRendererAPI::DrawIndexed(const samui::Ref<VertexArray>& vertex_array,
+                                    uint32_t index_count) {
+  uint32_t count = index_count == 0 ? vertex_array->GetIndexBuffer()->GetCount()
+                                    : index_count;
+  glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
+  glBindTexture(GL_TEXTURE_2D, 0);
 }
 }  // namespace samui

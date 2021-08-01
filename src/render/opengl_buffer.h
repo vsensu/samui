@@ -9,13 +9,16 @@
 namespace samui {
 class SAMUI_API OpenGLVertexBuffer : public VertexBuffer {
  public:
+  OpenGLVertexBuffer(uint32_t size);
   OpenGLVertexBuffer(float* vertices, uint32_t size);
   virtual ~OpenGLVertexBuffer();
   void Bind() override;
   void UnBind() override;
 
+  virtual void SetData(const void* data, uint32_t size) override;
+
   const BufferLayout& GetLayout() const override { return layout_; }
-  void                SetLayout(const BufferLayout& layout) override { layout_ = layout; }
+  void SetLayout(const BufferLayout& layout) override { layout_ = layout; }
 
  private:
   uint32_t     buffer_id_{0};
@@ -43,14 +46,14 @@ class SAMUI_API OpenGLVertexArray : public VertexArray {
   void Bind() override;
   void UnBind() override;
 
-  void AddVertexBuffer(const samui::Ref<VertexBuffer>&) override;
-  void SetIndexBuffer(const samui::Ref<IndexBuffer>&) override;
+  void         AddVertexBuffer(const samui::Ref<VertexBuffer>&) override;
+  void         SetIndexBuffer(const samui::Ref<IndexBuffer>&) override;
   IndexBuffer* GetIndexBuffer() const override { return index_buffer_.get(); }
 
  private:
   std::vector<samui::Ref<VertexBuffer>> vertex_buffers_;
   samui::Ref<IndexBuffer>               index_buffer_;
-  uint32_t                                   vao_id_{0};
+  uint32_t                              vao_id_{0};
 };
 
 }  // namespace samui

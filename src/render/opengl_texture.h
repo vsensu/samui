@@ -16,6 +16,10 @@ class SAMUI_API OpenGLTexture2D : public Texture2D {
   virtual uint32_t GetHeight() const override { return height_; }
   virtual void     SetData(void* data, uint32_t size) override;
   virtual void     Bind(uint8_t slot = 0) override;
+  virtual bool     operator==(const Texture& other) const override {
+    return texture_id_ ==
+           static_cast<const OpenGLTexture2D&>(other).texture_id_;
+  }
 
   static unsigned int GetOpenGLTextureEnum(uint8_t slot);
 

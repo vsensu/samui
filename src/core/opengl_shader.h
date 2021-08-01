@@ -34,6 +34,11 @@ class SAMUI_API OpenGLShader : public Shader {
     glCheck(glUniform1i(GetUniformLocation(name), value));
   }
 
+  void SetIntArray(const std::string& name, int* value, uint32_t count) override {
+    SAMUI_PROFILE_FUNCTION();
+    glCheck(glUniform1iv(GetUniformLocation(name), count, value));
+  }
+
   void SetUInt(const std::string& name, unsigned int value) override {
     SAMUI_PROFILE_FUNCTION();
     glCheck(glUniform1ui(GetUniformLocation(name), value));

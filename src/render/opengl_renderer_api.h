@@ -11,7 +11,7 @@ class SAMUI_API OpenGLRendererAPI : public RendererAPI {
                    uint32_t height) override;
   void SetClearColor(const glm::vec4& color) override;
   void Clear() override;
-  void DrawIndexed(const samui::Ref<VertexArray>& va) override;
+  void DrawIndexed(const samui::Ref<VertexArray>& vertex_array, uint32_t index_count = 0) override;
 };
 }  // namespace samui
 

@@ -29,6 +29,13 @@ static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type) {
 // clang-format on
 
 // VertexBuffer-------------------------------------------------------------------
+OpenGLVertexBuffer::OpenGLVertexBuffer(uint32_t size) {
+  SAMUI_PROFILE_FUNCTION();
+  glGenBuffers(1, &buffer_id_);
+  Bind();
+  glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
+}
+
 OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size) {
   SAMUI_PROFILE_FUNCTION();
   glGenBuffers(1, &buffer_id_);
@@ -49,6 +56,12 @@ void OpenGLVertexBuffer::Bind() {
 void OpenGLVertexBuffer::UnBind() {
   SAMUI_PROFILE_FUNCTION();
   glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void OpenGLVertexBuffer::SetData(const void* data, uint32_t size) {
+  SAMUI_PROFILE_FUNCTION();
+  glBindBuffer(GL_ARRAY_BUFFER, buffer_id_);
+  glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
 }
 
 // IndexBuffer-------------------------------------------------------------------
