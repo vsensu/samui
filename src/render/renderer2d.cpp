@@ -34,6 +34,8 @@ struct Rendderer2DData {
 
   std::array<Ref<Texture2D>, max_texture_slots> texture_slots;
   uint32_t texture_slot_index = 1;  // 0 is white texture
+
+  glm::vec4 quad_vertex_positions[4];
 };
 
 static Rendderer2DData renderer2d_data;
@@ -91,6 +93,11 @@ void Renderer2D::Init() {
       "u_textures", samplers, renderer2d_data.max_texture_slots);
 
   renderer2d_data.texture_slots[0] = renderer2d_data.white_texture;
+
+  renderer2d_data.quad_vertex_positions[0] = {-0.5f, -0.5f, 0.0f, 1.0f};
+  renderer2d_data.quad_vertex_positions[1] = {0.5f, -0.5f, 0.0f, 1.0f};
+  renderer2d_data.quad_vertex_positions[2] = {0.5f, 0.5f, 0.0f, 1.0f};
+  renderer2d_data.quad_vertex_positions[3] = {-0.5f, 0.5f, 0.0f, 1.0f};
 }
 
 void Renderer2D::Shutdown() { SAMUI_PROFILE_FUNCTION(); }
@@ -139,31 +146,36 @@ void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec2& size,
   constexpr float white_texture_index = 0.f;
   constexpr float tilingFactor = 1.f;
 
-  renderer2d_data.quad_vertex_buffer_ptr->position = pos;
+  auto transform =
+      glm::translate(glm::identity<glm::mat4>(), pos) *
+      glm::scale(glm::identity<glm::mat4>(), {size.x, size.y, 1.f});
+
+  renderer2d_data.quad_vertex_buffer_ptr->position =
+      transform * renderer2d_data.quad_vertex_positions[0];
   renderer2d_data.quad_vertex_buffer_ptr->color = color;
   renderer2d_data.quad_vertex_buffer_ptr->texcoord = {0.f, 0.f};
   renderer2d_data.quad_vertex_buffer_ptr->texture_index = white_texture_index;
   renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
   ++renderer2d_data.quad_vertex_buffer_ptr;
 
-  renderer2d_data.quad_vertex_buffer_ptr->position = {pos.x + size.x, pos.y,
-                                                      0.f};
+  renderer2d_data.quad_vertex_buffer_ptr->position =
+      transform * renderer2d_data.quad_vertex_positions[1];
   renderer2d_data.quad_vertex_buffer_ptr->color = color;
   renderer2d_data.quad_vertex_buffer_ptr->texcoord = {1.f, 0.f};
   renderer2d_data.quad_vertex_buffer_ptr->texture_index = white_texture_index;
   renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
   ++renderer2d_data.quad_vertex_buffer_ptr;
 
-  renderer2d_data.quad_vertex_buffer_ptr->position = {pos.x + size.x,
-                                                      pos.y + size.y, 0.f};
+  renderer2d_data.quad_vertex_buffer_ptr->position =
+      transform * renderer2d_data.quad_vertex_positions[2];
   renderer2d_data.quad_vertex_buffer_ptr->color = color;
   renderer2d_data.quad_vertex_buffer_ptr->texcoord = {1.f, 1.f};
   renderer2d_data.quad_vertex_buffer_ptr->texture_index = white_texture_index;
   renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
   ++renderer2d_data.quad_vertex_buffer_ptr;
 
-  renderer2d_data.quad_vertex_buffer_ptr->position = {pos.x, pos.y + size.y,
-                                                      0.f};
+  renderer2d_data.quad_vertex_buffer_ptr->position =
+      transform * renderer2d_data.quad_vertex_positions[3];
   renderer2d_data.quad_vertex_buffer_ptr->color = color;
   renderer2d_data.quad_vertex_buffer_ptr->texcoord = {0.f, 1.f};
   renderer2d_data.quad_vertex_buffer_ptr->texture_index = white_texture_index;
@@ -171,19 +183,6 @@ void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec2& size,
   ++renderer2d_data.quad_vertex_buffer_ptr;
 
   renderer2d_data.quad_index_count += 6;
-
-  /*
-    renderer2d_data.white_texture->Bind();
-    renderer2d_data.texture_shader->SetFloat("u_tiling_factor", 1.f);
-    renderer2d_data.texture_shader->SetFloat4("u_color", color);
-    auto transform =
-        glm::translate(glm::identity<glm::mat4>(), pos) *
-        glm::scale(glm::identity<glm::mat4>(), {size.x, size.y, 1.f});
-    renderer2d_data.texture_shader->SetMat4("transform", transform);
-
-    renderer2d_data.quad_vertex_array->Bind();
-    RenderCommand::DrawIndexed(renderer2d_data.quad_vertex_array);
-    */
 }
 
 void Renderer2D::DrawQuad(const glm::vec2& pos, const glm::vec2& size,
@@ -196,8 +195,123 @@ void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec2& size,
                           const Ref<Texture2D>& texture, float tilingFactor,
                           glm::vec4 tint) {
   SAMUI_PROFILE_FUNCTION();
+  float texture_index = 0.f;
 
-  constexpr glm::vec4 color = {1.f, 1.f, 1.f, 1.f};
+  for (int i = 1; i < renderer2d_data.texture_slot_index; ++i) {
+    if (*renderer2d_data.texture_slots[i].get() == *texture.get()) {
+      texture_index = i;
+      break;
+    }
+  }
+
+  if (texture_index == 0.f) {
+    texture_index = (float)renderer2d_data.texture_slot_index;
+    renderer2d_data.texture_slots[renderer2d_data.texture_slot_index] = texture;
+    ++renderer2d_data.texture_slot_index;
+  }
+
+  auto transform =
+      glm::translate(glm::identity<glm::mat4>(), pos) *
+      glm::scale(glm::identity<glm::mat4>(), {size.x, size.y, 1.f});
+
+  renderer2d_data.quad_vertex_buffer_ptr->position =
+      transform * renderer2d_data.quad_vertex_positions[0];
+  renderer2d_data.quad_vertex_buffer_ptr->color = tint;
+  renderer2d_data.quad_vertex_buffer_ptr->texcoord = {0.f, 0.f};
+  renderer2d_data.quad_vertex_buffer_ptr->texture_index = texture_index;
+  renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
+  ++renderer2d_data.quad_vertex_buffer_ptr;
+
+  renderer2d_data.quad_vertex_buffer_ptr->position =
+      transform * renderer2d_data.quad_vertex_positions[1];
+  renderer2d_data.quad_vertex_buffer_ptr->color = tint;
+  renderer2d_data.quad_vertex_buffer_ptr->texcoord = {1.f, 0.f};
+  renderer2d_data.quad_vertex_buffer_ptr->texture_index = texture_index;
+  renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
+  ++renderer2d_data.quad_vertex_buffer_ptr;
+
+  renderer2d_data.quad_vertex_buffer_ptr->position =
+      transform * renderer2d_data.quad_vertex_positions[2];
+  renderer2d_data.quad_vertex_buffer_ptr->color = tint;
+  renderer2d_data.quad_vertex_buffer_ptr->texcoord = {1.f, 1.f};
+  renderer2d_data.quad_vertex_buffer_ptr->texture_index = texture_index;
+  renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
+  ++renderer2d_data.quad_vertex_buffer_ptr;
+
+  renderer2d_data.quad_vertex_buffer_ptr->position =
+      transform * renderer2d_data.quad_vertex_positions[3];
+  renderer2d_data.quad_vertex_buffer_ptr->color = tint;
+  renderer2d_data.quad_vertex_buffer_ptr->texcoord = {0.f, 1.f};
+  renderer2d_data.quad_vertex_buffer_ptr->texture_index = texture_index;
+  renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
+  ++renderer2d_data.quad_vertex_buffer_ptr;
+
+  renderer2d_data.quad_index_count += 6;
+}
+
+void Renderer2D::DrawRotatedQuad(const glm::vec2& pos, const glm::vec2& size,
+                                 float rotation, const glm::vec4& color) {
+  DrawRotatedQuad({pos.x, pos.y, 0.f}, size, rotation, color);
+}
+
+void Renderer2D::DrawRotatedQuad(const glm::vec3& pos, const glm::vec2& size,
+                                 float rotation, const glm::vec4& color) {
+  SAMUI_PROFILE_FUNCTION();
+
+  constexpr float white_texture_index = 0.f;
+  constexpr float tilingFactor = 1.f;
+
+  auto transform =
+      glm::translate(glm::identity<glm::mat4>(), pos) *
+      glm::rotate(glm::identity<glm::mat4>(), rotation, {0.f, 0.f, 1.f}) *
+      glm::scale(glm::identity<glm::mat4>(), {size.x, size.y, 1.f});
+
+  renderer2d_data.quad_vertex_buffer_ptr->position =
+      transform * renderer2d_data.quad_vertex_positions[0];
+  renderer2d_data.quad_vertex_buffer_ptr->color = color;
+  renderer2d_data.quad_vertex_buffer_ptr->texcoord = {0.f, 0.f};
+  renderer2d_data.quad_vertex_buffer_ptr->texture_index = white_texture_index;
+  renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
+  ++renderer2d_data.quad_vertex_buffer_ptr;
+
+  renderer2d_data.quad_vertex_buffer_ptr->position =
+      transform * renderer2d_data.quad_vertex_positions[1];
+  renderer2d_data.quad_vertex_buffer_ptr->color = color;
+  renderer2d_data.quad_vertex_buffer_ptr->texcoord = {1.f, 0.f};
+  renderer2d_data.quad_vertex_buffer_ptr->texture_index = white_texture_index;
+  renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
+  ++renderer2d_data.quad_vertex_buffer_ptr;
+
+  renderer2d_data.quad_vertex_buffer_ptr->position =
+      transform * renderer2d_data.quad_vertex_positions[2];
+  renderer2d_data.quad_vertex_buffer_ptr->color = color;
+  renderer2d_data.quad_vertex_buffer_ptr->texcoord = {1.f, 1.f};
+  renderer2d_data.quad_vertex_buffer_ptr->texture_index = white_texture_index;
+  renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
+  ++renderer2d_data.quad_vertex_buffer_ptr;
+
+  renderer2d_data.quad_vertex_buffer_ptr->position =
+      transform * renderer2d_data.quad_vertex_positions[3];
+  renderer2d_data.quad_vertex_buffer_ptr->color = color;
+  renderer2d_data.quad_vertex_buffer_ptr->texcoord = {0.f, 1.f};
+  renderer2d_data.quad_vertex_buffer_ptr->texture_index = white_texture_index;
+  renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
+  ++renderer2d_data.quad_vertex_buffer_ptr;
+
+  renderer2d_data.quad_index_count += 6;
+}
+
+void Renderer2D::DrawRotatedQuad(const glm::vec2& pos, const glm::vec2& size,
+                                 float rotation, const Ref<Texture2D>& texture,
+                                 float tilingFactor, glm::vec4 tint) {
+  DrawRotatedQuad({pos.x, pos.y, 0.f}, size, rotation, texture, tilingFactor,
+                  tint);
+}
+
+void Renderer2D::DrawRotatedQuad(const glm::vec3& pos, const glm::vec2& size,
+                                 float rotation, const Ref<Texture2D>& texture,
+                                 float tilingFactor, glm::vec4 tint) {
+  SAMUI_PROFILE_FUNCTION();
 
   float texture_index = 0.f;
 
@@ -214,96 +328,44 @@ void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec2& size,
     ++renderer2d_data.texture_slot_index;
   }
 
-  renderer2d_data.quad_vertex_buffer_ptr->position = pos;
-  renderer2d_data.quad_vertex_buffer_ptr->color = color;
+  auto transform =
+      glm::translate(glm::identity<glm::mat4>(), pos) *
+      glm::rotate(glm::identity<glm::mat4>(), rotation, {0.f, 0.f, 1.f}) *
+      glm::scale(glm::identity<glm::mat4>(), {size.x, size.y, 1.f});
+
+  renderer2d_data.quad_vertex_buffer_ptr->position =
+      transform * renderer2d_data.quad_vertex_positions[0];
+  renderer2d_data.quad_vertex_buffer_ptr->color = tint;
   renderer2d_data.quad_vertex_buffer_ptr->texcoord = {0.f, 0.f};
   renderer2d_data.quad_vertex_buffer_ptr->texture_index = texture_index;
   renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
   ++renderer2d_data.quad_vertex_buffer_ptr;
 
-  renderer2d_data.quad_vertex_buffer_ptr->position = {pos.x + size.x, pos.y,
-                                                      0.f};
-  renderer2d_data.quad_vertex_buffer_ptr->color = color;
+  renderer2d_data.quad_vertex_buffer_ptr->position =
+      transform * renderer2d_data.quad_vertex_positions[1];
+  renderer2d_data.quad_vertex_buffer_ptr->color = tint;
   renderer2d_data.quad_vertex_buffer_ptr->texcoord = {1.f, 0.f};
   renderer2d_data.quad_vertex_buffer_ptr->texture_index = texture_index;
   renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
   ++renderer2d_data.quad_vertex_buffer_ptr;
 
-  renderer2d_data.quad_vertex_buffer_ptr->position = {pos.x + size.x,
-                                                      pos.y + size.y, 0.f};
-  renderer2d_data.quad_vertex_buffer_ptr->color = color;
+  renderer2d_data.quad_vertex_buffer_ptr->position =
+      transform * renderer2d_data.quad_vertex_positions[2];
+  renderer2d_data.quad_vertex_buffer_ptr->color = tint;
   renderer2d_data.quad_vertex_buffer_ptr->texcoord = {1.f, 1.f};
   renderer2d_data.quad_vertex_buffer_ptr->texture_index = texture_index;
   renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
   ++renderer2d_data.quad_vertex_buffer_ptr;
 
-  renderer2d_data.quad_vertex_buffer_ptr->position = {pos.x, pos.y + size.y,
-                                                      0.f};
-  renderer2d_data.quad_vertex_buffer_ptr->color = color;
+  renderer2d_data.quad_vertex_buffer_ptr->position =
+      transform * renderer2d_data.quad_vertex_positions[3];
+  renderer2d_data.quad_vertex_buffer_ptr->color = tint;
   renderer2d_data.quad_vertex_buffer_ptr->texcoord = {0.f, 1.f};
   renderer2d_data.quad_vertex_buffer_ptr->texture_index = texture_index;
   renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
   ++renderer2d_data.quad_vertex_buffer_ptr;
 
   renderer2d_data.quad_index_count += 6;
-
-#if OLD_PATH
-  texture->Bind();
-  renderer2d_data.texture_shader->SetFloat("u_tiling_factor", tilingFactor);
-  renderer2d_data.texture_shader->SetFloat4("u_color", tint);
-  auto transform =
-      glm::translate(glm::identity<glm::mat4>(), pos) *
-      glm::scale(glm::identity<glm::mat4>(), {size.x, size.y, 1.f});
-  renderer2d_data.texture_shader->SetMat4("transform", transform);
-
-  renderer2d_data.quad_vertex_array->Bind();
-  RenderCommand::DrawIndexed(renderer2d_data.quad_vertex_array);
-#endif
-}
-
-void Renderer2D::DrawRotatedQuad(const glm::vec2& pos, const glm::vec2& size,
-                                 float rotation, const glm::vec4& color) {
-  DrawRotatedQuad({pos.x, pos.y, 0.f}, size, rotation, color);
-}
-
-void Renderer2D::DrawRotatedQuad(const glm::vec3& pos, const glm::vec2& size,
-                                 float rotation, const glm::vec4& color) {
-  SAMUI_PROFILE_FUNCTION();
-  renderer2d_data.white_texture->Bind();
-  renderer2d_data.texture_shader->SetFloat("u_tiling_factor", 1.f);
-  renderer2d_data.texture_shader->SetFloat4("u_color", color);
-  auto transform =
-      glm::translate(glm::identity<glm::mat4>(), pos) *
-      glm::rotate(glm::identity<glm::mat4>(), rotation, {0.f, 0.f, 1.f}) *
-      glm::scale(glm::identity<glm::mat4>(), {size.x, size.y, 1.f});
-  renderer2d_data.texture_shader->SetMat4("transform", transform);
-
-  renderer2d_data.quad_vertex_array->Bind();
-  RenderCommand::DrawIndexed(renderer2d_data.quad_vertex_array);
-}
-
-void Renderer2D::DrawRotatedQuad(const glm::vec2& pos, const glm::vec2& size,
-                                 float rotation, const Ref<Texture2D>& texture,
-                                 float tilingFactor, glm::vec4 tint) {
-  DrawRotatedQuad({pos.x, pos.y, 0.f}, size, rotation, texture, tilingFactor,
-                  tint);
-}
-
-void Renderer2D::DrawRotatedQuad(const glm::vec3& pos, const glm::vec2& size,
-                                 float rotation, const Ref<Texture2D>& texture,
-                                 float tilingFactor, glm::vec4 tint) {
-  SAMUI_PROFILE_FUNCTION();
-  texture->Bind();
-  renderer2d_data.texture_shader->SetFloat("u_tiling_factor", tilingFactor);
-  renderer2d_data.texture_shader->SetFloat4("u_color", tint);
-  auto transform =
-      glm::translate(glm::identity<glm::mat4>(), pos) *
-      glm::rotate(glm::identity<glm::mat4>(), rotation, {0.f, 0.f, 1.f}) *
-      glm::scale(glm::identity<glm::mat4>(), {size.x, size.y, 1.f});
-  renderer2d_data.texture_shader->SetMat4("transform", transform);
-
-  renderer2d_data.quad_vertex_array->Bind();
-  RenderCommand::DrawIndexed(renderer2d_data.quad_vertex_array);
 }
 
 }  // namespace samui
