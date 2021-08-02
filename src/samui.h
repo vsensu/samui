@@ -24,6 +24,7 @@
 #include "core/shader.h"
 #include "render/texture.h"
 #include "render/subtexture2d.h"
+#include "render/frame_buffer.h"
 
 #include "render/orthographic_camera.h"
 #include "render/orthographic_camera_controller.h"

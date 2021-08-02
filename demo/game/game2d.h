@@ -63,6 +63,11 @@ class Game2DLayer : public samui::Layer {
     tile_level_->SetTileDefines(tileDefines);
 
     camera_controller_.SetZoomLevel(5.f);
+
+    samui::FrameBufferSpecification spec;
+    spec.width = 1280;
+    spec.height = 720;
+    frame_buffer_ = samui::FrameBuffer::Create(spec);
   }
 
   virtual void OnDetach() override { SAMUI_PROFILE_FUNCTION(); }
@@ -74,6 +79,7 @@ class Game2DLayer : public samui::Layer {
     samui::Renderer2D::ResetStats();
     {
       SAMUI_PROFILE_SCOPE("Render Prepare");
+      frame_buffer_->Bind();
       samui::RenderCommand::Clear();
     }
 
@@ -82,6 +88,7 @@ class Game2DLayer : public samui::Layer {
       samui::Renderer2D::BeginScene(camera_controller_.GetCamera());
       tile_level_->Draw();
       samui::Renderer2D::EndScene();
+      frame_buffer_->Unbind();
     }
   }
 
@@ -92,6 +99,8 @@ class Game2DLayer : public samui::Layer {
     ImGui::Text("Draw Calls: %d", stats.draw_calls);
     ImGui::Text("Quads: %d", stats.quad_count);
     ImGui::ColorEdit4("square color", glm::value_ptr(square_color_));
+    uint32_t texture_id = frame_buffer_->GetColorAttachmentRenderID();
+    ImGui::Image((ImTextureID)texture_id, ImVec2{1280, 720});
     ImGui::End();
   }
 
@@ -102,9 +111,10 @@ class Game2DLayer : public samui::Layer {
  private:
   samui::OrthographicCameraController camera_controller_;
 
-  glm::vec4                    square_color_{glm::vec4(1.f)};
-  samui::Ref<samui::Texture2D> sprite_sheet_;
-  samui::Ref<TileLevel>        tile_level_;
+  glm::vec4                      square_color_{glm::vec4(1.f)};
+  samui::Ref<samui::Texture2D>   sprite_sheet_;
+  samui::Ref<TileLevel>          tile_level_;
+  samui::Ref<samui::FrameBuffer> frame_buffer_;
 };
 
 #endif  // GAME_GAME2D_H_
