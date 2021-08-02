@@ -16,6 +16,12 @@ class Game2DLayer : public samui::Layer {
     SAMUI_PROFILE_FUNCTION();
     samui::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
     texture_ = samui::Texture2D::Create("assets/textures/Checkerboard.png");
+    sprite_sheet_ =
+        samui::Texture2D::Create("assets/textures/RPGpack_sheet_2X.png");
+    texture_statirs_ = samui::SubTexture2D::CreateFromCoords(
+        sprite_sheet_, {7, 6}, {128, 128});
+    texture_tree_ = samui::SubTexture2D::CreateFromCoords(sprite_sheet_, {2, 1},
+                                                          {128, 128}, {1, 2});
   }
 
   virtual void OnDetach() override { SAMUI_PROFILE_FUNCTION(); }
@@ -61,8 +67,11 @@ class Game2DLayer : public samui::Layer {
           samui::Renderer2D::DrawQuad({x, y}, {0.45f, 0.45f}, color);
         };
       }
+      samui::Renderer2D::DrawQuad({0.f, 0.f, 1.f}, {0.5f, 0.5f},
+                                  texture_statirs_);
+      samui::Renderer2D::DrawQuad({0.5f, 0.f, 1.f}, {0.5f, 1.f}, texture_tree_);
+      samui::Renderer2D::EndScene();
     }
-    samui::Renderer2D::EndScene();
   }
 
   virtual void OnImGuiRender() {
@@ -82,8 +91,11 @@ class Game2DLayer : public samui::Layer {
  private:
   samui::OrthographicCameraController camera_controller_;
 
-  glm::vec4                    square_color_{glm::vec4(1.f)};
-  samui::Ref<samui::Texture2D> texture_;
+  glm::vec4                       square_color_{glm::vec4(1.f)};
+  samui::Ref<samui::Texture2D>    texture_;
+  samui::Ref<samui::Texture2D>    sprite_sheet_;
+  samui::Ref<samui::SubTexture2D> texture_statirs_;
+  samui::Ref<samui::SubTexture2D> texture_tree_;
 };
 
 #endif  // GAME_GAME2D_H_

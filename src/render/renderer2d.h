@@ -3,6 +3,7 @@
 
 #include "core/core.h"
 #include "orthographic_camera.h"
+#include "subtexture2d.h"
 #include "texture.h"
 
 namespace samui {
@@ -27,6 +28,14 @@ class SAMUI_API Renderer2D {
   static void DrawQuad(const glm::vec3& pos, const glm::vec2& size,
                        const Ref<Texture2D>& texture, float tilingFactor = 1.f,
                        glm::vec4 tint = glm::vec4(1.f));
+  static void DrawQuad(const glm::vec2& pos, const glm::vec2& size,
+                       const Ref<SubTexture2D>& subtexture,
+                       float                    tilingFactor = 1.f,
+                       glm::vec4                tint = glm::vec4(1.f));
+  static void DrawQuad(const glm::vec3& pos, const glm::vec2& size,
+                       const Ref<SubTexture2D>& subtexture,
+                       float                    tilingFactor = 1.f,
+                       glm::vec4                tint = glm::vec4(1.f));
 
   static void DrawRotatedQuad(const glm::vec2& pos, const glm::vec2& size,
                               float rotation, const glm::vec4& color);
@@ -39,6 +48,14 @@ class SAMUI_API Renderer2D {
                               glm::vec4 tint = glm::vec4(1.f));
   static void DrawRotatedQuad(const glm::vec3& pos, const glm::vec2& size,
                               float rotation, const Ref<Texture2D>& texture,
+                              float     tilingFactor = 1.f,
+                              glm::vec4 tint = glm::vec4(1.f));
+  static void DrawRotatedQuad(const glm::vec2& pos, const glm::vec2& size,
+                              float rotation, const Ref<SubTexture2D>& subtexture,
+                              float     tilingFactor = 1.f,
+                              glm::vec4 tint = glm::vec4(1.f));
+  static void DrawRotatedQuad(const glm::vec3& pos, const glm::vec2& size,
+                              float rotation, const Ref<SubTexture2D>& subtexture,
                               float     tilingFactor = 1.f,
                               glm::vec4 tint = glm::vec4(1.f));
 
