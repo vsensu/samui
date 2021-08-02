@@ -8,6 +8,41 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 
+class TileLevel {
+ public:
+  TileLevel(const char* levelString, const glm::uvec2& mapSize)
+      : level_str_(levelString), map_size_(mapSize) {}
+
+  void Draw() {
+    for (uint32_t y = 0; y < map_size_.y; ++y) {
+      for (uint32_t x = 0; x < map_size_.x; ++x) {
+        char tile_type = level_str_[y * map_size_.x + x];
+        samui::Ref<samui::SubTexture2D> texture = tiles_[tile_type];
+        samui::Renderer2D::DrawQuad(
+            {x - map_size_.x / 2.f, y - map_size_.y / 2.f, 0.5f}, {1.f, 1.f},
+            texture);
+      }
+    }
+  }
+
+  void SetTileDefines(
+      const std::unordered_map<char, samui::Ref<samui::SubTexture2D>>&
+          tileDefines) {
+    tiles_ = tileDefines;
+  }
+
+ private:
+  const char*                                               level_str_;
+  glm::uvec2                                                map_size_;
+  std::unordered_map<char, samui::Ref<samui::SubTexture2D>> tiles_;
+  // samui::Ref<samui::Texture2D>                              sprite_sheet_;
+};
+
+const char* level_str =
+    "WWWW"
+    "WDDW"
+    "WWWW";
+
 class Game2DLayer : public samui::Layer {
  public:
   Game2DLayer() : Layer("Example"), camera_controller_(1280.f / 720.f, true) {}
@@ -15,13 +50,19 @@ class Game2DLayer : public samui::Layer {
   virtual void OnAttach() override {
     SAMUI_PROFILE_FUNCTION();
     samui::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
-    texture_ = samui::Texture2D::Create("assets/textures/Checkerboard.png");
     sprite_sheet_ =
         samui::Texture2D::Create("assets/textures/RPGpack_sheet_2X.png");
-    texture_statirs_ = samui::SubTexture2D::CreateFromCoords(
-        sprite_sheet_, {7, 6}, {128, 128});
-    texture_tree_ = samui::SubTexture2D::CreateFromCoords(sprite_sheet_, {2, 1},
-                                                          {128, 128}, {1, 2});
+
+    tile_level_ = std::make_shared<TileLevel>(level_str, glm::uvec2(4, 3));
+    std::unordered_map<char, samui::Ref<samui::SubTexture2D>> tileDefines = {
+        {'D', samui::SubTexture2D::CreateFromCoords(sprite_sheet_, {6, 11},
+                                                    {128, 128})},
+        {'W', samui::SubTexture2D::CreateFromCoords(sprite_sheet_, {11, 11},
+                                                    {128, 128})},
+    };
+    tile_level_->SetTileDefines(tileDefines);
+
+    camera_controller_.SetZoomLevel(5.f);
   }
 
   virtual void OnDetach() override { SAMUI_PROFILE_FUNCTION(); }
@@ -39,37 +80,7 @@ class Game2DLayer : public samui::Layer {
     {
       SAMUI_PROFILE_SCOPE("Render Draw(CPU)");
       samui::Renderer2D::BeginScene(camera_controller_.GetCamera());
-      // samui::Renderer2D::DrawRotatedQuad({-1.f, 0.f}, {0.8f, 0.8f},
-      //  glm::radians(45.f), square_color_);
-      samui::Renderer2D::DrawQuad({-1.f, 2.f}, {0.5f, 0.5f}, square_color_);
-      samui::Renderer2D::DrawQuad({-1.f, 1.f, 0.f}, {0.2f, 0.5f},
-                                  {0.2f, 0.8f, 0.4f, 1.f});
-      samui::Renderer2D::DrawQuad({-1.f, 0.f}, {0.5f, 0.5f}, texture_, 1.f,
-                                  glm::vec4(1.f, 0.8f, 0.8f, 1.f));
-      samui::Renderer2D::DrawQuad({-1.f, -1.f, 0.f}, {0.5f, 0.5f}, texture_,
-                                  10.f, glm::vec4(1.f, 0.5f, 0.5f, 1.f));
-      samui::Renderer2D::DrawRotatedQuad({1.f, 2.f}, {0.5f, 0.5f},
-                                         glm::radians(45.f), square_color_);
-      samui::Renderer2D::DrawRotatedQuad({1.f, 1.f, 0.f}, {0.5f, 0.5f},
-                                         glm::radians(45.f), square_color_);
-      samui::Renderer2D::DrawRotatedQuad({1.f, 0.f}, {0.5f, 0.5f},
-                                         glm::radians(45.f), texture_, 10.f,
-                                         glm::vec4(1.f, 0.8f, 0.8f, 1.f));
-      samui::Renderer2D::DrawRotatedQuad({1.f, -1.f, 0.f}, {0.5f, 0.5f},
-                                         glm::radians(45.f), texture_, 10.f,
-                                         glm::vec4(1.f, 0.8f, 0.8f, 1.f));
-      samui::Renderer2D::EndScene();
-
-      samui::Renderer2D::BeginScene(camera_controller_.GetCamera());
-      for (float y = -5.f; y < 5.f; y += 0.5f) {
-        for (float x = -5.f; x < 5.f; x += 0.5f) {
-          glm::vec4 color = {(x + 5.f) / 10.f, 0.4f, (y + 5.f) / 10.f, 1.f};
-          samui::Renderer2D::DrawQuad({x, y}, {0.45f, 0.45f}, color);
-        };
-      }
-      samui::Renderer2D::DrawQuad({0.f, 0.f, 1.f}, {0.5f, 0.5f},
-                                  texture_statirs_);
-      samui::Renderer2D::DrawQuad({0.5f, 0.f, 1.f}, {0.5f, 1.f}, texture_tree_);
+      tile_level_->Draw();
       samui::Renderer2D::EndScene();
     }
   }
@@ -91,11 +102,9 @@ class Game2DLayer : public samui::Layer {
  private:
   samui::OrthographicCameraController camera_controller_;
 
-  glm::vec4                       square_color_{glm::vec4(1.f)};
-  samui::Ref<samui::Texture2D>    texture_;
-  samui::Ref<samui::Texture2D>    sprite_sheet_;
-  samui::Ref<samui::SubTexture2D> texture_statirs_;
-  samui::Ref<samui::SubTexture2D> texture_tree_;
+  glm::vec4                    square_color_{glm::vec4(1.f)};
+  samui::Ref<samui::Texture2D> sprite_sheet_;
+  samui::Ref<TileLevel>        tile_level_;
 };
 
 #endif  // GAME_GAME2D_H_

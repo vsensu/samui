@@ -9,6 +9,12 @@
 #include "orthographic_camera.h"
 
 namespace samui {
+struct OrthographicCameraBounds {
+  float left, right, bottom, top;
+
+  float GetWidth() { return right - left; }
+  float GetHeight() { return top - bottom; }
+};
 
 class SAMUI_API OrthographicCameraController {
  public:
@@ -20,9 +26,15 @@ class SAMUI_API OrthographicCameraController {
   const OrthographicCamera& GetCamera() { return camera_; }
 
   float GetZoomLevel() const { return zoom_level_; }
-  void  SetZoomLevel(float zoom_level) { zoom_level_ = zoom_level; }
+  void  SetZoomLevel(float zoom_level) {
+    zoom_level_ = zoom_level;
+    CalculateView();
+  }
+
+  const OrthographicCameraBounds& GetBounds() const { return bounds_; }
 
  private:
+  void CalculateView();
   bool OnMouseScrolled(MouseScrolledEvent& e);
   bool OnWindowResized(WindowResizeEvent& e);
 
@@ -31,7 +43,8 @@ class SAMUI_API OrthographicCameraController {
   float zoom_level_{1.f};
   bool  rotation_enabled_{false};
 
-  OrthographicCamera camera_;
+  OrthographicCamera       camera_;
+  OrthographicCameraBounds bounds_;
 };
 
 }  // namespace samui
