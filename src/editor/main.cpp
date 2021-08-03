@@ -2,8 +2,6 @@
 #include <samui.h>
 #include <entrypoint.h>
 
-#include <imgui.h>
-
 #include "editor_layer.h"
 // clang-format on
 

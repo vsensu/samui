@@ -13,6 +13,7 @@
 #include "events/application_event.h"
 #include "events/key_event.h"
 #include "events/mouse_event.h"
+#include "imgui/imgui.h"
 #include "imgui/imgui_layer.h"
 #include "core/timestep.h"
 

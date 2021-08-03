@@ -1,12 +1,14 @@
 #ifndef GAME_GAME2D_H_
 #define GAME_GAME2D_H_
 
-#include <imgui.h>
+// clang-format off
+#include <iostream>
+#include <chrono>
+
 #include <samui.h>
 
-#include <chrono>
 #include <glm/gtc/type_ptr.hpp>
-#include <iostream>
+// clang-format on
 
 class TileLevel {
  public:

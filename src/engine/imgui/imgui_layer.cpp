@@ -1,13 +1,16 @@
+// clang-format off
 #include "imgui_layer.h"
 
-#include <GLFW/glfw3.h>
 #include <glad/glad.h>
-#include <imgui.h>
+#include <GLFW/glfw3.h>
+
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 
 #include "../core/application.h"
 #include "debug/instrumentor.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
+// clang-format on
 
 namespace samui {
 

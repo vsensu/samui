@@ -4,7 +4,6 @@
 #include <samui.h>
 #include <entrypoint.h>
 
-#include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 // clang-format on
 
