@@ -48,6 +48,9 @@ void EditorLayer::OnImGuiRender() {
   ImGui::Text("Draw Calls: %d", stats.draw_calls);
   ImGui::Text("Quads: %d", stats.quad_count);
   ImGui::ColorEdit4("square color", glm::value_ptr(square_color_));
+  ImGui::End();
+
+  ImGui::Begin("Viewport");
   uint32_t texture_id = frame_buffer_->GetColorAttachmentRenderID();
   ImGui::Image((ImTextureID)texture_id, ImVec2{1280, 720});
   ImGui::End();

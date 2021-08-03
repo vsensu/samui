@@ -88,7 +88,7 @@ void Renderer2D::Init() {
   }
 
   renderer2d_data.texture_shader =
-      Shader::Create("assets/shaders/texture.glsl");
+      Shader::Create("engine/assets/shaders/2d.glsl");
 
   renderer2d_data.texture_shader->Bind();
   renderer2d_data.texture_shader->SetIntArray(

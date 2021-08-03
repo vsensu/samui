@@ -24,3 +24,11 @@ target("engine")
     add_deps("src_example", "glad", "stb_image")
     add_deps("imgui")
     add_links("lib_example")
+    after_build(function (target)
+        local target_dir = path.join(target:targetdir(), "engine")
+        if not os.isdir(target_dir) then
+            os.mkdir(target_dir)
+        end
+        print("[build] copy engine assets ...")
+        os.cp("$(projectdir)/src/engine/assets/", target_dir)
+    end)
