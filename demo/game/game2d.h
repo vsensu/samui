@@ -79,12 +79,13 @@ class Game2DLayer : public samui::Layer {
     samui::Renderer2D::ResetStats();
     {
       SAMUI_PROFILE_SCOPE("Render Prepare");
-      frame_buffer_->Bind();
       samui::RenderCommand::Clear();
     }
 
     {
       SAMUI_PROFILE_SCOPE("Render Draw(CPU)");
+      frame_buffer_->Bind();
+      samui::RenderCommand::Clear();
       samui::Renderer2D::BeginScene(camera_controller_.GetCamera());
       tile_level_->Draw();
       samui::Renderer2D::EndScene();

@@ -5,7 +5,9 @@
 namespace samui {
 
 OpenGLFrameBuffer::OpenGLFrameBuffer(const FrameBufferSpecification& spec)
-    : spec_(spec) {}
+    : spec_(spec) {
+  Invalidate();
+}
 
 OpenGLFrameBuffer::~OpenGLFrameBuffer() {
   glDeleteFramebuffers(1, &buffer_id_);
@@ -36,7 +38,7 @@ void OpenGLFrameBuffer::Invalidate() {
 
   glGenTextures(1, &depth_);
   glBindTexture(GL_TEXTURE_2D, depth_);
-  glTexImage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, spec_.width, spec_.height,
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, spec_.width, spec_.height,
                0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, NULL);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
                          GL_TEXTURE_2D, depth_, 0);
