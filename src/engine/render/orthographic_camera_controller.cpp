@@ -55,6 +55,11 @@ void OrthographicCameraController::OnEvent(Event& e) {
       BIND_EVENT_FUNC(OrthographicCameraController::OnWindowResized));
 }
 
+void OrthographicCameraController::OnResize(float width, float height) {
+  aspect_ratio_ = width / height;
+  CalculateView();
+}
+
 void OrthographicCameraController::CalculateView() {
   bounds_ = {-aspect_ratio_ * zoom_level_, aspect_ratio_ * zoom_level_,
              -zoom_level_, zoom_level_};

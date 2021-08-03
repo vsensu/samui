@@ -13,6 +13,7 @@ class SAMUI_API OpenGLFrameBuffer : public FrameBuffer {
 
   virtual void     Bind() override;
   virtual void     Unbind() override;
+  virtual void     Resize(uint32_t width, uint32_t height) override;
   virtual uint32_t GetColorAttachmentRenderID() const override {
     return texture_;
   }
@@ -21,8 +22,8 @@ class SAMUI_API OpenGLFrameBuffer : public FrameBuffer {
   }
 
  private:
-  uint32_t                 buffer_id_;
-  uint32_t                 texture_, depth_;
+  uint32_t                 buffer_id_{0};
+  uint32_t                 texture_{0}, depth_{0};
   FrameBufferSpecification spec_;
 };
 }  // namespace samui

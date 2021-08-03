@@ -19,6 +19,7 @@ class EditorLayer : public Layer {
 
   glm::vec4        square_color_{glm::vec4(1.f)};
   Ref<FrameBuffer> frame_buffer_;
+  ImVec2           last_viewport_size_;
 };
 
 }  // namespace samui

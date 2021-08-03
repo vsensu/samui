@@ -23,6 +23,8 @@ class SAMUI_API OrthographicCameraController {
   void OnUpdate(const Timestep& deltaTime);
   void OnEvent(Event& e);
 
+  void OnResize(float width, float height);
+
   const OrthographicCamera& GetCamera() { return camera_; }
 
   float GetZoomLevel() const { return zoom_level_; }

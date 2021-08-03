@@ -11,9 +11,17 @@ OpenGLFrameBuffer::OpenGLFrameBuffer(const FrameBufferSpecification& spec)
 
 OpenGLFrameBuffer::~OpenGLFrameBuffer() {
   glDeleteFramebuffers(1, &buffer_id_);
+  glDeleteTextures(1, &texture_);
+  glDeleteTextures(1, &depth_);
 }
 
 void OpenGLFrameBuffer::Invalidate() {
+  if (buffer_id_) {
+    glDeleteFramebuffers(1, &buffer_id_);
+    glDeleteTextures(1, &texture_);
+    glDeleteTextures(1, &depth_);
+  }
+
   // 一个完整的帧缓冲需要满足以下的条件：
   // 附加至少一个缓冲（颜色、深度或模板缓冲）。
   // 至少有一个颜色附件(Attachment)。
@@ -53,8 +61,15 @@ void OpenGLFrameBuffer::Invalidate() {
 
 void OpenGLFrameBuffer::Bind() {
   glBindFramebuffer(GL_FRAMEBUFFER, buffer_id_);
+  glViewport(0, 0, spec_.width, spec_.height);
 }
 
 void OpenGLFrameBuffer::Unbind() { glBindFramebuffer(GL_FRAMEBUFFER, 0); }
+
+void OpenGLFrameBuffer::Resize(uint32_t width, uint32_t height) {
+  spec_.width = width;
+  spec_.height = height;
+  Invalidate();
+}
 
 }  // namespace samui
