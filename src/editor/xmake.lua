@@ -1,4 +1,4 @@
-target("game")
+target("editor")
     set_kind("binary")
     add_includedirs("$(projectdir)/deps/headeronly", "$(projectdir)/deps/src", "$(projectdir)/src/engine/")
     add_includedirs("$(projectdir)/deps/src/glad/include")

@@ -1,8 +1,6 @@
 #ifndef SAMUI_ENTRYPOINT_H_
 #define SAMUI_ENTRYPOINT_H_
 
-#include "debug/instrumentor.h"
-
 #ifdef SAMUI_PLATFORM_WINDOWS
 
 extern samui::Application* samui::create_application();

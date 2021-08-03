@@ -1,8 +1,12 @@
-#include <imgui.h>
-#include <samui.h>
-
-#include <glm/gtc/type_ptr.hpp>
+// clang-format off
 #include <iostream>
+
+#include <samui.h>
+#include <entrypoint.h>
+
+#include <imgui.h>
+#include <glm/gtc/type_ptr.hpp>
+// clang-format on
 
 class ExampleLayer : public samui::Layer {
  public:
