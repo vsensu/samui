@@ -8,8 +8,8 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
-#include "../core/application.h"
-#include "debug/instrumentor.h"
+#include <core/application.h>
+#include <debug/instrumentor.h>
 // clang-format on
 
 namespace samui {

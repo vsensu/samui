@@ -1,9 +1,11 @@
 #ifndef SAMUI_IMGUI_LAYER_H_
 #define SAMUI_IMGUI_LAYER_H_
 
-#include "../core/core.h"
-#include "../events/event.h"
-#include "../layer/layer.h"
+// clang-format off
+#include <core/core.h>
+#include <events/event.h>
+#include <layer/layer.h>
+// clang-format on
 
 namespace samui {
 class SAMUI_API ImGuiLayer : public Layer {

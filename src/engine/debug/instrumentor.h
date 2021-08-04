@@ -1,6 +1,7 @@
 #ifndef SAMUI_INSTRUMENTOR_H_
 #define SAMUI_INSTRUMENTOR_H_
 
+// clang-format off
 #include <algorithm>
 #include <chrono>
 #include <fstream>
@@ -10,8 +11,9 @@
 #include <string>
 #include <thread>
 
-#include "../core/core.h"
-#include "../log/log.h"
+#include <core/core.h>
+#include <log/log.h>
+// clang-format on
 
 namespace samui {
 using FloatingPointMicroseconds = std::chrono::duration<double, std::micro>;

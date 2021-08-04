@@ -1,9 +1,11 @@
 #ifndef SAMUI_LAYER_H_
 #define SAMUI_LAYER_H_
 
-#include "../core/core.h"
-#include "../events/event.h"
-#include "../core/timestep.h"
+// clang-format off
+#include <core/core.h>
+#include <core/timestep.h>
+#include <events/event.h>
+// clang-format on
 
 namespace samui {
 

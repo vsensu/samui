@@ -1,9 +1,11 @@
 #ifndef SAMUI_LOG_H_H
 #define SAMUI_LOG_H_H
 
+// clang-format off
 #include <spdlog/spdlog.h>
 
-#include "../core/core.h"
+#include <core/core.h>
+// clang-format on
 
 namespace samui {
 

@@ -2,6 +2,7 @@
 #include "opengl_frame_buffer.h"
 
 #include <glad/glad.h>
+#include <log/log.h>
 // clang-format on
 
 namespace samui {

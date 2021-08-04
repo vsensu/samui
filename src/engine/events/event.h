@@ -1,7 +1,9 @@
 #ifndef SAMUI_EVENT_H_
 #define SAMUI_EVENT_H_
 
-#include "../core/core.h"
+// clang-format off
+#include <core/core.h>
+// clang-format on
 
 namespace samui {
 

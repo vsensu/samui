@@ -1,10 +1,12 @@
 #ifndef SAMUI_SUBTEXTURE2D_H_
 #define SAMUI_SUBTEXTURE2D_H_
 
+// clang-format off
 #include <glm/glm.hpp>
 
-#include "../core/core.h"
+#include <core/core.h>
 #include "texture.h"
+// clang-format on
 
 namespace samui {
 class SAMUI_API SubTexture2D {

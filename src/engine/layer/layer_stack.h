@@ -1,8 +1,10 @@
 #ifndef SAMUI_LAYER_STACK_H_
 #define SAMUI_LAYER_STACK_H_
 
-#include "../core/core.h"
+// clang-format off
+#include <core/core.h>
 #include "layer.h"
+// clang-format on
 
 namespace samui {
 class SAMUI_API LayerStack {

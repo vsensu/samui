@@ -1,7 +1,9 @@
 #ifndef SAMUI_FRAME_BUFFER_H_
 #define SAMUI_FRAME_BUFFER_H_
 
-#include "../core/core.h"
+// clang-format off
+#include <core/core.h>
+// clang-format on
 
 namespace samui {
 struct SAMUI_API FrameBufferSpecification {

@@ -8,8 +8,6 @@
 #include <vector>
 #include <array>
 
-#include "log/log.h"
-
 #ifdef SAMUI_PLATFORM_WINDOWS
 #include <Windows.h>
 #endif

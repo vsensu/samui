@@ -1,8 +1,10 @@
 #ifndef SAMUI_WINDOW_H_
 #define SAMUI_WINDOW_H_
 
+// clang-format off
 #include "core.h"
-#include "../events/event.h"
+#include <events/event.h>
+// clang-format on
 
 namespace samui {
 struct WindowProps {

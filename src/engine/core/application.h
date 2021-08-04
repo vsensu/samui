@@ -1,10 +1,12 @@
 #ifndef SAMUI_APPLICATION_H_
 #define SAMUI_APPLICATION_H_
 
-#include "../events/application_event.h"
-#include "../layer/layer_stack.h"
-#include "Window.h"
+// clang-format off
 #include "core.h"
+#include "Window.h"
+#include <events/application_event.h>
+#include <layer/layer_stack.h>
+// clang-format on
 
 namespace samui {
 

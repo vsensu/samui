@@ -1,7 +1,11 @@
 #ifndef SAMUI_APPLICATION_EVENT_H_
 #define SAMUI_APPLICATION_EVENT_H_
 
+// clang-format off
 #include "event.h"
+
+#include <core/pch.h>
+// clang-format on
 
 namespace samui {
 class SAMUI_API WindowResizeEvent : public Event {
