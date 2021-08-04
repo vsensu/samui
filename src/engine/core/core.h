@@ -14,6 +14,7 @@
 
 #ifdef SAMUI_DEBUG
   #define SAMUI_ENABLE_ASSERTS
+  #define DEBUG_GL_ERRORS
 #endif
 
 #ifdef SAMUI_ENABLE_ASSERTS

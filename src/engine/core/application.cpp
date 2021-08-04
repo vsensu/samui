@@ -1,13 +1,15 @@
+// clang-format off
 #include "application.h"
 
 #include <GLFW/glfw3.h>
 
-#include "../imgui/imgui_layer.h"
 #include "../log/log.h"
+#include "timestep.h"
+#include "../imgui/imgui_layer.h"
 #include "../render/buffer.h"
 #include "../render/renderer.h"
 #include "debug/instrumentor.h"
-#include "timestep.h"
+// clang-format on
 
 namespace samui {
 Application* Application::instance_ = nullptr;
