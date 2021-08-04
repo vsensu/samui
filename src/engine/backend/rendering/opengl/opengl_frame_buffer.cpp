@@ -70,6 +70,14 @@ void OpenGLFrameBuffer::Bind() {
 void OpenGLFrameBuffer::Unbind() { glBindFramebuffer(GL_FRAMEBUFFER, 0); }
 
 void OpenGLFrameBuffer::Resize(uint32_t width, uint32_t height) {
+  constexpr uint32_t max_buffer_size = 8192;
+  if (width == 0 || height == 0 || width > max_buffer_size ||
+      height > max_buffer_size) {
+    SAMUI_ENGINE_ERROR("OpenGLFrameBuffer::Resize: Invalid size {0},{1}!",
+                       width, height);
+    return;
+  }
+
   spec_.width = width;
   spec_.height = height;
   Invalidate();
