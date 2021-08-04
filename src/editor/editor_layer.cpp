@@ -17,6 +17,14 @@ void EditorLayer::OnAttach() {
   spec.width = 1280;
   spec.height = 720;
   frame_buffer_ = FrameBuffer::Create(spec);
+
+  active_scene_ = std::make_shared<Scene>();
+
+  square_entity_ = active_scene_->CreateEntity();
+  auto& registry = active_scene_->registry();
+  registry.emplace<TransformComponent>(square_entity_, glm::mat4(1.f));
+  registry.emplace<SpriteRendererComponent>(square_entity_,
+                                            glm::vec4{0.f, 1.f, 0.f, 1.f});
 }
 
 void EditorLayer::OnDetach() { SAMUI_PROFILE_FUNCTION(); }
@@ -38,10 +46,11 @@ void EditorLayer::OnUpdate(const Timestep& deltaTime) {
     SAMUI_PROFILE_SCOPE("Render Draw(CPU)");
     frame_buffer_->Bind();
     RenderCommand::Clear();
+
     Renderer2D::BeginScene(camera_controller_.GetCamera());
-    Renderer2D::DrawQuad({0.f, 0.f}, {1.f, 1.f}, {1.f, 1.f, 1.f, 1.f});
-    Renderer2D::DrawQuad({1.f, 0.f}, {1.f, 1.f}, {1.f, 0.f, 0.f, 1.f});
+    active_scene_->OnUpdate(deltaTime);
     Renderer2D::EndScene();
+
     frame_buffer_->Unbind();
   }
 }
@@ -54,6 +63,9 @@ void EditorLayer::OnImGuiRender() {
   ImGui::Text("Renderer2D Stats:");
   ImGui::Text("Draw Calls: %d", stats.draw_calls);
   ImGui::Text("Quads: %d", stats.quad_count);
+  auto& square_color_ = active_scene_->registry()
+                            .get<SpriteRendererComponent>(square_entity_)
+                            .color;
   ImGui::ColorEdit4("square color", glm::value_ptr(square_color_));
   ImGui::End();
 
@@ -62,7 +74,7 @@ void EditorLayer::OnImGuiRender() {
   viewport_focused_ = ImGui::IsWindowFocused();
   viewport_hovered_ = ImGui::IsWindowHovered();
   Application::Get().GetImGuiLayer()->BlockEvents(!viewport_focused_ ||
-                                                   !viewport_hovered_);
+                                                  !viewport_hovered_);
   const auto& viewport_size = ImGui::GetContentRegionAvail();
   if (viewport_size.x > 0 && viewport_size.y > 0) {
     if (viewport_size.x != last_viewport_size_.x ||

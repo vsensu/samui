@@ -547,6 +547,174 @@ void Renderer2D::DrawRotatedQuad(const glm::vec3& pos, const glm::vec2& size,
   ++renderer2d_data.stats.quad_count;
 }
 
+void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color) {
+  SAMUI_PROFILE_FUNCTION();
+
+  if (renderer2d_data.quad_index_count >= Rendderer2DData::max_indices) {
+    FlushAndReset();
+  }
+
+  constexpr float white_texture_index = 0.f;
+  constexpr float tilingFactor = 1.f;
+
+  renderer2d_data.quad_vertex_buffer_ptr->position =
+      transform * renderer2d_data.quad_vertex_positions[0];
+  renderer2d_data.quad_vertex_buffer_ptr->color = color;
+  renderer2d_data.quad_vertex_buffer_ptr->texcoord = {0.f, 0.f};
+  renderer2d_data.quad_vertex_buffer_ptr->texture_index = white_texture_index;
+  renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
+  ++renderer2d_data.quad_vertex_buffer_ptr;
+
+  renderer2d_data.quad_vertex_buffer_ptr->position =
+      transform * renderer2d_data.quad_vertex_positions[1];
+  renderer2d_data.quad_vertex_buffer_ptr->color = color;
+  renderer2d_data.quad_vertex_buffer_ptr->texcoord = {1.f, 0.f};
+  renderer2d_data.quad_vertex_buffer_ptr->texture_index = white_texture_index;
+  renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
+  ++renderer2d_data.quad_vertex_buffer_ptr;
+
+  renderer2d_data.quad_vertex_buffer_ptr->position =
+      transform * renderer2d_data.quad_vertex_positions[2];
+  renderer2d_data.quad_vertex_buffer_ptr->color = color;
+  renderer2d_data.quad_vertex_buffer_ptr->texcoord = {1.f, 1.f};
+  renderer2d_data.quad_vertex_buffer_ptr->texture_index = white_texture_index;
+  renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
+  ++renderer2d_data.quad_vertex_buffer_ptr;
+
+  renderer2d_data.quad_vertex_buffer_ptr->position =
+      transform * renderer2d_data.quad_vertex_positions[3];
+  renderer2d_data.quad_vertex_buffer_ptr->color = color;
+  renderer2d_data.quad_vertex_buffer_ptr->texcoord = {0.f, 1.f};
+  renderer2d_data.quad_vertex_buffer_ptr->texture_index = white_texture_index;
+  renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
+  ++renderer2d_data.quad_vertex_buffer_ptr;
+
+  renderer2d_data.quad_index_count += 6;
+
+  ++renderer2d_data.stats.quad_count;
+}
+void Renderer2D::DrawQuad(const glm::mat4&      transform,
+                          const Ref<Texture2D>& texture, float tilingFactor,
+                          glm::vec4 tint) {
+  SAMUI_PROFILE_FUNCTION();
+
+  if (renderer2d_data.quad_index_count >= Rendderer2DData::max_indices) {
+    FlushAndReset();
+  }
+
+  float texture_index = 0.f;
+
+  for (int i = 1; i < renderer2d_data.texture_slot_index; ++i) {
+    if (*renderer2d_data.texture_slots[i].get() == *texture.get()) {
+      texture_index = i;
+      break;
+    }
+  }
+
+  if (texture_index == 0.f) {
+    texture_index = (float)renderer2d_data.texture_slot_index;
+    renderer2d_data.texture_slots[renderer2d_data.texture_slot_index] = texture;
+    ++renderer2d_data.texture_slot_index;
+  }
+
+  renderer2d_data.quad_vertex_buffer_ptr->position =
+      transform * renderer2d_data.quad_vertex_positions[0];
+  renderer2d_data.quad_vertex_buffer_ptr->color = tint;
+  renderer2d_data.quad_vertex_buffer_ptr->texcoord = {0.f, 0.f};
+  renderer2d_data.quad_vertex_buffer_ptr->texture_index = texture_index;
+  renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
+  ++renderer2d_data.quad_vertex_buffer_ptr;
+
+  renderer2d_data.quad_vertex_buffer_ptr->position =
+      transform * renderer2d_data.quad_vertex_positions[1];
+  renderer2d_data.quad_vertex_buffer_ptr->color = tint;
+  renderer2d_data.quad_vertex_buffer_ptr->texcoord = {1.f, 0.f};
+  renderer2d_data.quad_vertex_buffer_ptr->texture_index = texture_index;
+  renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
+  ++renderer2d_data.quad_vertex_buffer_ptr;
+
+  renderer2d_data.quad_vertex_buffer_ptr->position =
+      transform * renderer2d_data.quad_vertex_positions[2];
+  renderer2d_data.quad_vertex_buffer_ptr->color = tint;
+  renderer2d_data.quad_vertex_buffer_ptr->texcoord = {1.f, 1.f};
+  renderer2d_data.quad_vertex_buffer_ptr->texture_index = texture_index;
+  renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
+  ++renderer2d_data.quad_vertex_buffer_ptr;
+
+  renderer2d_data.quad_vertex_buffer_ptr->position =
+      transform * renderer2d_data.quad_vertex_positions[3];
+  renderer2d_data.quad_vertex_buffer_ptr->color = tint;
+  renderer2d_data.quad_vertex_buffer_ptr->texcoord = {0.f, 1.f};
+  renderer2d_data.quad_vertex_buffer_ptr->texture_index = texture_index;
+  renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
+  ++renderer2d_data.quad_vertex_buffer_ptr;
+
+  renderer2d_data.quad_index_count += 6;
+
+  ++renderer2d_data.stats.quad_count;
+}
+void Renderer2D::DrawQuad(const glm::mat4&         transform,
+                          const Ref<SubTexture2D>& subtexture,
+                          float tilingFactor, glm::vec4 tint) {
+  SAMUI_PROFILE_FUNCTION();
+
+  if (renderer2d_data.quad_index_count >= Rendderer2DData::max_indices) {
+    FlushAndReset();
+  }
+
+  float       texture_index = 0.f;
+  const auto& texture = subtexture->GetTexture();
+  for (int i = 1; i < renderer2d_data.texture_slot_index; ++i) {
+    if (*renderer2d_data.texture_slots[i].get() == *texture.get()) {
+      texture_index = i;
+      break;
+    }
+  }
+  if (texture_index == 0.f) {
+    texture_index = (float)renderer2d_data.texture_slot_index;
+    renderer2d_data.texture_slots[renderer2d_data.texture_slot_index] = texture;
+    ++renderer2d_data.texture_slot_index;
+  }
+
+  const auto* texture_coords = subtexture->GetTexCoords();
+
+  renderer2d_data.quad_vertex_buffer_ptr->position =
+      transform * renderer2d_data.quad_vertex_positions[0];
+  renderer2d_data.quad_vertex_buffer_ptr->color = tint;
+  renderer2d_data.quad_vertex_buffer_ptr->texcoord = texture_coords[0];
+  renderer2d_data.quad_vertex_buffer_ptr->texture_index = texture_index;
+  renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
+  ++renderer2d_data.quad_vertex_buffer_ptr;
+
+  renderer2d_data.quad_vertex_buffer_ptr->position =
+      transform * renderer2d_data.quad_vertex_positions[1];
+  renderer2d_data.quad_vertex_buffer_ptr->color = tint;
+  renderer2d_data.quad_vertex_buffer_ptr->texcoord = texture_coords[1];
+  renderer2d_data.quad_vertex_buffer_ptr->texture_index = texture_index;
+  renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
+  ++renderer2d_data.quad_vertex_buffer_ptr;
+
+  renderer2d_data.quad_vertex_buffer_ptr->position =
+      transform * renderer2d_data.quad_vertex_positions[2];
+  renderer2d_data.quad_vertex_buffer_ptr->color = tint;
+  renderer2d_data.quad_vertex_buffer_ptr->texcoord = texture_coords[2];
+  renderer2d_data.quad_vertex_buffer_ptr->texture_index = texture_index;
+  renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
+  ++renderer2d_data.quad_vertex_buffer_ptr;
+
+  renderer2d_data.quad_vertex_buffer_ptr->position =
+      transform * renderer2d_data.quad_vertex_positions[3];
+  renderer2d_data.quad_vertex_buffer_ptr->color = tint;
+  renderer2d_data.quad_vertex_buffer_ptr->texcoord = texture_coords[3];
+  renderer2d_data.quad_vertex_buffer_ptr->texture_index = texture_index;
+  renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
+  ++renderer2d_data.quad_vertex_buffer_ptr;
+
+  renderer2d_data.quad_index_count += 6;
+
+  ++renderer2d_data.stats.quad_count;
+}
+
 void Renderer2D::ResetStats() {
   memset(&renderer2d_data.stats, 0, sizeof(renderer2d_data.stats));
 }

@@ -51,13 +51,24 @@ class SAMUI_API Renderer2D {
                               float     tilingFactor = 1.f,
                               glm::vec4 tint = glm::vec4(1.f));
   static void DrawRotatedQuad(const glm::vec2& pos, const glm::vec2& size,
-                              float rotation, const Ref<SubTexture2D>& subtexture,
-                              float     tilingFactor = 1.f,
-                              glm::vec4 tint = glm::vec4(1.f));
+                              float                    rotation,
+                              const Ref<SubTexture2D>& subtexture,
+                              float                    tilingFactor = 1.f,
+                              glm::vec4                tint = glm::vec4(1.f));
   static void DrawRotatedQuad(const glm::vec3& pos, const glm::vec2& size,
-                              float rotation, const Ref<SubTexture2D>& subtexture,
-                              float     tilingFactor = 1.f,
-                              glm::vec4 tint = glm::vec4(1.f));
+                              float                    rotation,
+                              const Ref<SubTexture2D>& subtexture,
+                              float                    tilingFactor = 1.f,
+                              glm::vec4                tint = glm::vec4(1.f));
+
+  static void DrawQuad(const glm::mat4& transform, const glm::vec4& color);
+  static void DrawQuad(const glm::mat4&      transform,
+                       const Ref<Texture2D>& texture, float tilingFactor = 1.f,
+                       glm::vec4 tint = glm::vec4(1.f));
+  static void DrawQuad(const glm::mat4&         transform,
+                       const Ref<SubTexture2D>& subtexture,
+                       float                    tilingFactor = 1.f,
+                       glm::vec4                tint = glm::vec4(1.f));
 
   struct Statistics {
     uint32_t draw_calls = 0;

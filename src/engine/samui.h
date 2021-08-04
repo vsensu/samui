@@ -33,6 +33,9 @@
 #include "rendering/orthographic_camera.h"
 #include "rendering/orthographic_camera_controller.h"
 
+#include "scene/scene.h"
+#include "scene/components.h"
+
 // clang-format on
 
 #endif

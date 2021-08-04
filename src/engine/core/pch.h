@@ -9,6 +9,7 @@
 #include <array>
 
 #ifdef SAMUI_PLATFORM_WINDOWS
+#define NOMINMAX    // Don't define min and max macros
 #include <Windows.h>
 #endif
 

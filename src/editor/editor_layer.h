@@ -17,11 +17,12 @@ class EditorLayer : public Layer {
  private:
   OrthographicCameraController camera_controller_;
 
-  glm::vec4        square_color_{glm::vec4(1.f)};
   Ref<FrameBuffer> frame_buffer_;
+  Ref<Scene>       active_scene_;
   ImVec2           last_viewport_size_;
   bool             viewport_focused_{false};
   bool             viewport_hovered_{false};
+  entt::entity     square_entity_;
 };
 
 }  // namespace samui
