@@ -1,8 +1,10 @@
+// clang-format off
 #include "buffer.h"
 
-#include "log/log.h"
-#include "opengl_buffer.h"
+#include <log/log.h>
+#include <backend/rendering/opengl/opengl_buffer.h>
 #include "renderer.h"
+// clang-format on
 
 namespace samui {
 Ref<VertexBuffer> VertexBuffer::Create(uint32_t size) {

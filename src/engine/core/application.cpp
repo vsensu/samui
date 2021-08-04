@@ -3,12 +3,12 @@
 
 #include <GLFW/glfw3.h>
 
-#include "../log/log.h"
+#include <log/log.h>
 #include "timestep.h"
-#include "../imgui/imgui_layer.h"
-#include "../render/buffer.h"
-#include "../render/renderer.h"
-#include "debug/instrumentor.h"
+#include <imgui/imgui_layer.h>
+#include <rendering/buffer.h>
+#include <rendering/renderer.h>
+#include <debug/instrumentor.h>
 // clang-format on
 
 namespace samui {

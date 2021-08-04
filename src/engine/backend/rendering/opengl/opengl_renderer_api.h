@@ -1,7 +1,9 @@
 #ifndef SAMUI_OPENGL_RENDERER_API_H_
 #define SAMUI_OPENGL_RENDERER_API_H_
 
-#include "renderer_api.h"
+// clang-format off
+#include <rendering/renderer_api.h>
+// clang-format on
 
 namespace samui {
 class SAMUI_API OpenGLRendererAPI : public RendererAPI {
@@ -11,7 +13,8 @@ class SAMUI_API OpenGLRendererAPI : public RendererAPI {
                    uint32_t height) override;
   void SetClearColor(const glm::vec4& color) override;
   void Clear() override;
-  void DrawIndexed(const samui::Ref<VertexArray>& vertex_array, uint32_t index_count = 0) override;
+  void DrawIndexed(const samui::Ref<VertexArray>& vertex_array,
+                   uint32_t                       index_count = 0) override;
 };
 }  // namespace samui
 

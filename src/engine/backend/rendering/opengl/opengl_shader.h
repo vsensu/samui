@@ -1,19 +1,20 @@
 #ifndef SAMUI_OPENGL_SHADER_H_
 #define SAMUI_OPENGL_SHADER_H_
 
-#include <glad/glad.h>
-
+// clang-format off
 #include <cassert>
 #include <fstream>
-#include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 #include <string>
 #include <unordered_map>
 
-#include "gl_errors.h"
-#include "shader.h"
+#include <glad/glad.h>
+#include <glm/gtc/type_ptr.hpp>
 
-#include "debug/instrumentor.h"
+#include "gl_errors.h"
+#include <rendering/shader.h>
+#include <debug/instrumentor.h>
+// clang-format on
 
 namespace samui {
 class SAMUI_API OpenGLShader : public Shader {
@@ -34,7 +35,8 @@ class SAMUI_API OpenGLShader : public Shader {
     glCheck(glUniform1i(GetUniformLocation(name), value));
   }
 
-  void SetIntArray(const std::string& name, int* value, uint32_t count) override {
+  void SetIntArray(const std::string& name, int* value,
+                   uint32_t count) override {
     SAMUI_PROFILE_FUNCTION();
     glCheck(glUniform1iv(GetUniformLocation(name), count, value));
   }

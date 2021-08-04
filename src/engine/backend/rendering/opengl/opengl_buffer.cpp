@@ -1,10 +1,12 @@
 #ifdef SAMUI_RENDER_OPENGL
 
+// clang-format off
 #include "opengl_buffer.h"
 
 #include <glad/glad.h>
 
-#include "../debug/instrumentor.h"
+#include <debug/instrumentor.h>
+// clang-format on
 
 namespace samui {
 // clang-format off

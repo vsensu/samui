@@ -17,18 +17,16 @@
 #include "imgui/imgui_layer.h"
 #include "core/timestep.h"
 
-#include "render/renderer.h"
-#include "render/renderer2d.h"
-#include "render/render_command.h"
-
-#include "render/buffer.h"
-#include "core/shader.h"
-#include "render/texture.h"
-#include "render/subtexture2d.h"
-#include "render/frame_buffer.h"
-
-#include "render/orthographic_camera.h"
-#include "render/orthographic_camera_controller.h"
+#include "rendering/renderer.h"
+#include "rendering/renderer2d.h"
+#include "rendering/render_command.h"
+#include "rendering/buffer.h"
+#include "rendering/shader.h"
+#include "rendering/texture.h"
+#include "rendering/subtexture2d.h"
+#include "rendering/frame_buffer.h"
+#include "rendering/orthographic_camera.h"
+#include "rendering/orthographic_camera_controller.h"
 
 #include "debug/instrumentor.h"
 

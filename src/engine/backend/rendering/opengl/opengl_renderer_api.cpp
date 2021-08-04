@@ -3,8 +3,8 @@
 
 #include <glad/glad.h>
 
-#include "../core/gl_errors.h"
-#include "debug/instrumentor.h"
+#include <debug/instrumentor.h>
+#include "gl_errors.h"
 // clang-format on
 
 namespace samui {

@@ -3,8 +3,10 @@
 
 #ifdef SAMUI_RENDER_OPENGL
 
-#include "buffer.h"
-#include "core/core.h"
+// clang-format off
+#include <core/core.h>
+#include <rendering/buffer.h>
+// clang-format on
 
 namespace samui {
 class SAMUI_API OpenGLVertexBuffer : public VertexBuffer {

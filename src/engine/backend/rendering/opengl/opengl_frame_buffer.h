@@ -1,7 +1,9 @@
 #ifndef SAMUI_OPENGL_FRAME_BUFFER_H_
 #define SAMUI_OPENGL_FRAME_BUFFER_H_
 
-#include "frame_buffer.h"
+// clang-format off
+#include <rendering/frame_buffer.h>
+//clang-format on
 
 namespace samui {
 class SAMUI_API OpenGLFrameBuffer : public FrameBuffer {

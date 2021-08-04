@@ -1,9 +1,11 @@
 #ifndef SAMUI_OPENGL_TEXTURE_H_
 #define SAMUI_OPENGL_TEXTURE_H_
 
+// clang-format off
 #include <glad/glad.h>
 
-#include "texture.h"
+#include <rendering/texture.h>
+// clang-format on
 
 namespace samui {
 class SAMUI_API OpenGLTexture2D : public Texture2D {

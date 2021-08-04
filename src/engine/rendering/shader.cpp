@@ -1,7 +1,9 @@
+// clang-format off
 #include "shader.h"
 
-#include "../render/renderer.h"
-#include "opengl_shader.h"
+#include "renderer.h"
+#include <backend/rendering/opengl/opengl_shader.h>
+// clang-format on
 
 namespace samui {
 

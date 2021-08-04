@@ -3,7 +3,9 @@
 
 #ifdef SAMUI_RENDER_OPENGL
 
-#include "graphics_context.h"
+// clang-format off
+#include <rendering/graphics_context.h>
+// clang-format on
 
 #include <GLFW/glfw3.h>
 

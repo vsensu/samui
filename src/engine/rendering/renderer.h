@@ -1,13 +1,15 @@
 #ifndef SAMUI_RENDERER_H_
 #define SAMUI_RENDERER_H_
 
+// clang-format off
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "core/core.h"
-#include "core/shader.h"
+#include <core/core.h>
+#include "shader.h"
 #include "orthographic_camera.h"
 #include "render_command.h"
+// clang-format on
 
 namespace samui {
 class SAMUI_API Renderer {

@@ -7,7 +7,7 @@
 #include <GLFW/glfw3.h>
 
 #include <core/window.h>
-#include <render/graphics_context.h>
+#include <rendering/graphics_context.h>
 // clang-format on
 
 namespace samui {

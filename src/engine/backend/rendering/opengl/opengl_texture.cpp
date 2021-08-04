@@ -1,9 +1,11 @@
+// clang-format off
 #include "opengl_texture.h"
 
 #include <stb_image/stb_image.h>
 
-#include "../debug/instrumentor.h"
-#include "../log/log.h"
+#include <log/log.h>
+#include <debug/instrumentor.h>
+// clang-format on
 
 namespace samui {
 OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
@@ -26,7 +28,8 @@ OpenGLTexture2D::OpenGLTexture2D(const std::string& path)
   stbi_set_flip_vertically_on_load(1);
   stbi_uc* data = nullptr;
   {
-    SAMUI_PROFILE_SCOPE("stbi_load OpenGLTexture2D::OpenGLTexture2D(const std::string& path)");
+    SAMUI_PROFILE_SCOPE(
+        "stbi_load OpenGLTexture2D::OpenGLTexture2D(const std::string& path)");
     data = stbi_load(path.c_str(), &width, &height, &channels, 0);
   }
   SAMUI_ENGINE_ASSERT(data, "Failed to load image:{0}", path);

@@ -1,12 +1,14 @@
+// clang-format off
 #include "renderer2d.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "../core/shader.h"
+#include "shader.h"
 #include "buffer.h"
-#include "debug/instrumentor.h"
 #include "render_command.h"
+#include <debug/instrumentor.h>
+// clang-format on
 
 namespace samui {
 struct QuadVertex {

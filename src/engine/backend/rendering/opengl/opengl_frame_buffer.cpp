@@ -1,6 +1,8 @@
+// clang-format off
 #include "opengl_frame_buffer.h"
 
 #include <glad/glad.h>
+// clang-format on
 
 namespace samui {
 

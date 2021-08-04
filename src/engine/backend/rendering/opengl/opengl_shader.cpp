@@ -1,8 +1,9 @@
+// clang-format off
 #include "opengl_shader.h"
 
-#include "log/log.h"
-#include "pch.h"
-#include "debug/instrumentor.h"
+#include <log/log.h>
+#include <debug/instrumentor.h>
+// clang-format on
 
 namespace samui {
 GLenum ShaderTypeFromString(const std::string& type) {
@@ -81,7 +82,7 @@ std::unordered_map<GLenum, std::string> OpenGLShader::PreProcess(
 
 void OpenGLShader::Compile(
     const std::unordered_map<GLenum, std::string>& shaderSources) {
-      SAMUI_PROFILE_FUNCTION();
+  SAMUI_PROFILE_FUNCTION();
   // Create Shader program
   GLuint program = glCreateProgram();
   SAMUI_ENGINE_ASSERT(shaderSources.size() < 3, "Only support 2 shaders now");
