@@ -1,5 +1,8 @@
+#ifdef SAMUI_PLATFORM_WINDOWS
+
 // clang-format off
-#include "windows_input.h"
+#include <core/core.h>
+#include <core/input.h>
 
 #include <GLFW/glfw3.h>
 
@@ -7,23 +10,21 @@
 // clang-format on
 
 namespace samui {
-Input* Input::instance_ = new WindowsInput();
-
-bool WindowsInput::IsKeyPressedImpl(int keycode) {
+bool Input::IsKeyPressed(int keycode) {
   auto* window = static_cast<GLFWwindow*>(
       Application::Get().GetWindow().GetNativeWindow());
   auto state = glfwGetKey(window, keycode);
   return state == GLFW_PRESS || state == GLFW_REPEAT;
 }
 
-bool WindowsInput::IsMouseButtonPressedImpl(int button) {
+bool Input::IsMouseButtonPressed(int button) {
   auto* window = static_cast<GLFWwindow*>(
       Application::Get().GetWindow().GetNativeWindow());
   auto state = glfwGetMouseButton(window, button);
   return state == GLFW_PRESS;
 }
 
-float WindowsInput::GetMouseXImpl() {
+float Input::GetMouseX() {
   auto* window = static_cast<GLFWwindow*>(
       Application::Get().GetWindow().GetNativeWindow());
   double xpos, ypos;
@@ -31,7 +32,7 @@ float WindowsInput::GetMouseXImpl() {
   return xpos;
 }
 
-float WindowsInput::GetMouseYImpl() {
+float Input::GetMouseY() {
   auto* window = static_cast<GLFWwindow*>(
       Application::Get().GetWindow().GetNativeWindow());
   double xpos, ypos;
@@ -40,3 +41,5 @@ float WindowsInput::GetMouseYImpl() {
 }
 
 }  // namespace samui
+
+#endif
