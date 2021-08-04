@@ -2,6 +2,7 @@
 #include "scene.h"
 
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "components.h"
 #include <rendering/renderer2d.h>
@@ -9,10 +10,13 @@
 
 namespace samui {
 
-Scene::Scene() {
-}
+Scene::Scene() {}
 
-entt::entity Scene::CreateEntity() { return registry_.create(); }
+Entity Scene::CreateEntity() {
+  auto entity = registry_.create();
+  AddComponent<TransformComponent>(entity, glm::identity<glm::mat4>());
+  return entity;
+}
 
 void Scene::OnUpdate(const Timestep& deltaTime) {
   auto view = registry_.view<TransformComponent, SpriteRendererComponent>();

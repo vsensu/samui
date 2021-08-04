@@ -21,10 +21,12 @@ void EditorLayer::OnAttach() {
   active_scene_ = std::make_shared<Scene>();
 
   square_entity_ = active_scene_->CreateEntity();
-  auto& registry = active_scene_->registry();
-  registry.emplace<TransformComponent>(square_entity_, glm::mat4(1.f));
-  registry.emplace<SpriteRendererComponent>(square_entity_,
-                                            glm::vec4{0.f, 1.f, 0.f, 1.f});
+  active_scene_->AddComponent<TransformComponent>(square_entity_,
+                                                  glm::mat4(1.f));
+  active_scene_->AddComponent<SpriteRendererComponent>(
+      square_entity_, glm::vec4{0.f, 1.f, 0.f, 1.f});
+
+  // active_scene_->HasComponent<TransformComponent>(square_entity_);
 }
 
 void EditorLayer::OnDetach() { SAMUI_PROFILE_FUNCTION(); }
