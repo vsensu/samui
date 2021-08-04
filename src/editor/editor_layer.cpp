@@ -23,7 +23,10 @@ void EditorLayer::OnDetach() { SAMUI_PROFILE_FUNCTION(); }
 
 void EditorLayer::OnUpdate(const Timestep& deltaTime) {
   SAMUI_PROFILE_FUNCTION();
-  camera_controller_.OnUpdate(deltaTime);
+
+  if (viewport_focused_) {
+    camera_controller_.OnUpdate(deltaTime);
+  }
 
   Renderer2D::ResetStats();
   {
@@ -44,6 +47,8 @@ void EditorLayer::OnUpdate(const Timestep& deltaTime) {
 }
 
 void EditorLayer::OnImGuiRender() {
+  ImGui::Begin("Main");
+
   auto stats = Renderer2D::GetStats();
   ImGui::Begin("Settings");
   ImGui::Text("Renderer2D Stats:");
@@ -54,6 +59,10 @@ void EditorLayer::OnImGuiRender() {
 
   ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0.f, 0.f});
   ImGui::Begin("Viewport");
+  viewport_focused_ = ImGui::IsWindowFocused();
+  viewport_hovered_ = ImGui::IsWindowHovered();
+  Application::Get().GetImGuiLayer()->BlockEvents(!viewport_focused_ ||
+                                                   !viewport_hovered_);
   const auto& viewport_size = ImGui::GetContentRegionAvail();
   if (viewport_size.x > 0 && viewport_size.y > 0) {
     if (viewport_size.x != last_viewport_size_.x ||
@@ -68,6 +77,8 @@ void EditorLayer::OnImGuiRender() {
   ImGui::Image((ImTextureID)texture_id, viewport_size, {0.f, 1.f}, {1.f, 0.f});
   ImGui::End();
   ImGui::PopStyleVar();
+
+  ImGui::End();
 }
 
 void EditorLayer::OnEvent(Event& event) { camera_controller_.OnEvent(event); }

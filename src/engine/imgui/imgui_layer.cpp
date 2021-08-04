@@ -47,6 +47,15 @@ void ImGuiLayer::OnDetach() {
   ImGui::DestroyContext();
 }
 
+void ImGuiLayer::OnEvent(Event& event) {
+  SAMUI_PROFILE_FUNCTION();
+  if (block_events_) {
+    ImGuiIO& io = ImGui::GetIO();
+    event.handled_ |= event.IsInCategory(EventCategoryMouse) & io.WantCaptureMouse;
+    event.handled_ |= event.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
+  }
+}
+
 void ImGuiLayer::Begin() {
   SAMUI_PROFILE_FUNCTION();
   // Start the Dear ImGui frame

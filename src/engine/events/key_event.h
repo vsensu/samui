@@ -7,7 +7,7 @@ namespace samui {
 
 class SAMUI_API KeyEvent : public Event {
  public:
-  EVENT_CLASS_CATEGORY(EventCategory::EventCategoryKeyBoard |
+  EVENT_CLASS_CATEGORY(EventCategory::EventCategoryKeyboard |
                        EventCategory::EventCategoryInput)
 
   inline int GetKeyCode() const { return key_code_; }
