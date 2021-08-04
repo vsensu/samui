@@ -1,15 +1,17 @@
 #ifdef SAMUI_PLATFORM_WINDOWS
 
+// clang-format off
 #include "windows_window.h"
 
-#include "../debug/instrumentor.h"
-#include "../events/application_event.h"
-#include "../events/key_event.h"
-#include "../events/mouse_event.h"
-#include "../log/log.h"
+#include <log/log.h>
+#include <debug/instrumentor.h>
+#include <events/application_event.h>
+#include <events/key_event.h>
+#include <events/mouse_event.h>
+// clang-format on
 
 #ifdef SAMUI_RENDER_OPENGL
-#include "render/opengl_context.h"
+#include <render/opengl_context.h>
 #endif
 
 namespace samui {

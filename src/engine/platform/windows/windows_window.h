@@ -3,10 +3,12 @@
 
 #ifdef SAMUI_PLATFORM_WINDOWS
 
+// clang-format off
 #include <GLFW/glfw3.h>
 
-#include "window.h"
-#include "render/graphics_context.h"
+#include <core/window.h>
+#include <render/graphics_context.h>
+// clang-format on
 
 namespace samui {
 class SAMUI_API WindowsWindow : public Window {
@@ -43,8 +45,8 @@ class SAMUI_API WindowsWindow : public Window {
     EventCallbackFunc EventCallback;
   };
 
-  GLFWwindow* window_;
-  GraphicsContext *graphics_context_;
+  GLFWwindow*      window_;
+  GraphicsContext* graphics_context_;
   // std::unique_ptr<GraphicsContext> context_;
   WindowData data_;
 };

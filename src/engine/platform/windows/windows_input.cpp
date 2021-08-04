@@ -1,8 +1,10 @@
+// clang-format off
 #include "windows_input.h"
 
 #include <GLFW/glfw3.h>
 
-#include "application.h"
+#include <core/application.h>
+// clang-format on
 
 namespace samui {
 Input* Input::instance_ = new WindowsInput();
