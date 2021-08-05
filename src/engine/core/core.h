@@ -29,8 +29,8 @@
 
 #define BIT(x) (1 << x)
 
-#include <functional>
-#define BIND_EVENT_FUNC(x) std::bind(&x, this, std::placeholders::_1)
+#include <utility>
+#define BIND_EVENT_FUNC(fn) [this](auto&& ... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); } 
 
 #include <memory>
 namespace samui {

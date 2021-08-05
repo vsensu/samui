@@ -2,6 +2,8 @@
 #define SAMUI_WINDOW_H_
 
 // clang-format off
+#include <functional>
+
 #include "core.h"
 #include <events/event.h>
 // clang-format on

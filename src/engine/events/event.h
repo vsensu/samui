@@ -3,6 +3,8 @@
 
 // clang-format off
 #include <core/core.h>
+
+#include <string>
 // clang-format on
 
 namespace samui {
