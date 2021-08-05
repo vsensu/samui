@@ -25,8 +25,6 @@ void EditorLayer::OnAttach() {
                                                   glm::mat4(1.f));
   active_scene_->AddComponent<SpriteRendererComponent>(
       square_entity_, glm::vec4{0.f, 1.f, 0.f, 1.f});
-
-  // active_scene_->HasComponent<TransformComponent>(square_entity_);
 }
 
 void EditorLayer::OnDetach() { SAMUI_PROFILE_FUNCTION(); }

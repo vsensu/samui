@@ -14,7 +14,6 @@ Scene::Scene() {}
 
 Entity Scene::CreateEntity() {
   auto entity = registry_.create();
-  AddComponent<TransformComponent>(entity, glm::identity<glm::mat4>());
   return entity;
 }
 
