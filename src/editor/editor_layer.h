@@ -15,6 +15,9 @@ class EditorLayer : public Layer {
   virtual void OnEvent(Event& event) override;
 
  private:
+  void OnImGuiFullScreenDocking();
+
+ private:
   OrthographicCameraController camera_controller_;
 
   Ref<FrameBuffer> frame_buffer_;
