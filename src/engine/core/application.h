@@ -28,6 +28,8 @@ class SAMUI_API Application {
 
   ImGuiLayer* GetImGuiLayer() { return imgui_layer_; }
 
+  void Close();
+
  private:
   void OnEvent(Event& e);
   bool OnWindowClose(WindowCloseEvent& event);

@@ -76,6 +76,12 @@ void Application::PushOverlay(Layer* layer) {
   layer->OnAttach();
 }
 
+void Application::Close()
+{
+  SAMUI_PROFILE_FUNCTION();
+  running_ = false;
+}
+
 void Application::OnEvent(Event& e) {
   SAMUI_PROFILE_FUNCTION();
   EventDispatcher dispatcher(e);
