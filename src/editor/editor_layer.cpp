@@ -21,8 +21,6 @@ void EditorLayer::OnAttach() {
   active_scene_ = std::make_shared<Scene>();
 
   square_entity_ = active_scene_->CreateEntity();
-  active_scene_->AddComponent<TransformComponent>(square_entity_,
-                                                  glm::mat4(1.f));
   active_scene_->AddComponent<SpriteRendererComponent>(
       square_entity_, glm::vec4{0.f, 1.f, 0.f, 1.f});
 }
@@ -63,9 +61,12 @@ void EditorLayer::OnImGuiRender() {
   ImGui::Text("Renderer2D Stats:");
   ImGui::Text("Draw Calls: %d", stats.draw_calls);
   ImGui::Text("Quads: %d", stats.quad_count);
-  auto& square_color_ = active_scene_->registry()
-                            .get<SpriteRendererComponent>(square_entity_)
-                            .color;
+  ImGui::Separator();
+  ImGui::Text("%s",
+              active_scene_->GetComponent<NameComponent>(square_entity_).name);
+  auto& square_color_ =
+      active_scene_->GetComponent<SpriteRendererComponent>(square_entity_)
+          .color;
   ImGui::ColorEdit4("square color", glm::value_ptr(square_color_));
   ImGui::End();
 

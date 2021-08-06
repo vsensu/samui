@@ -2,12 +2,18 @@
 #define SAMUI_COMPONENTS_H_
 
 // clang-format off
+#include <string>
+
 #include <glm/glm.hpp>
 
 #include <core/core.h>
 // clang-format on
 
 namespace samui {
+
+struct SAMUI_API NameComponent {
+  std::string name;
+};
 
 struct SAMUI_API TransformComponent {
   glm::mat4 transform{1.0f};
