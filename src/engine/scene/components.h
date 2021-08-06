@@ -10,6 +10,7 @@
 // clang-format on
 
 namespace samui {
+void foo_components();
 
 struct SAMUI_API NameComponent {
   std::string name;
@@ -21,6 +22,10 @@ struct SAMUI_API TransformComponent {
 
 struct SAMUI_API SpriteRendererComponent {
   glm::vec4 color{1.0f, 1.0f, 1.0f, 1.0f};
+};
+
+struct SAMUI_API CameraComponent {
+  glm::mat4 projection{1.0f};
 };
 
 }  // namespace samui

@@ -23,6 +23,14 @@ void EditorLayer::OnAttach() {
   square_entity_ = active_scene_->CreateEntity();
   active_scene_->AddComponent<SpriteRendererComponent>(
       square_entity_, glm::vec4{0.f, 1.f, 0.f, 1.f});
+
+  first_camera_ = active_scene_->CreateEntity("First Camera");
+  active_scene_->AddComponent<CameraComponent>(
+      first_camera_, glm::ortho(-16.f, 16.f, -9.f, 9.f, -1.f, 1.f));
+
+  second_camera_ = active_scene_->CreateEntity("Second Camera");
+  active_scene_->AddComponent<CameraComponent>(
+      second_camera_, glm::ortho(-1.f, 1.f, -1.f, 1.f, -1.f, 1.f));
 }
 
 void EditorLayer::OnDetach() { SAMUI_PROFILE_FUNCTION(); }
@@ -33,6 +41,9 @@ void EditorLayer::OnUpdate(const Timestep& deltaTime) {
   if (viewport_focused_) {
     camera_controller_.OnUpdate(deltaTime);
   }
+
+  // update scene logic
+  active_scene_->OnUpdate(deltaTime);
 
   Renderer2D::ResetStats();
   {
@@ -45,15 +56,30 @@ void EditorLayer::OnUpdate(const Timestep& deltaTime) {
     frame_buffer_->Bind();
     RenderCommand::Clear();
 
-    Renderer2D::BeginScene(camera_controller_.GetCamera());
-    active_scene_->OnUpdate(deltaTime);
-    Renderer2D::EndScene();
+    // Renderer2D::BeginScene(camera_controller_.GetCamera());
+
+    // render scene
+    if (main_camera_ != entt::null) {
+      Renderer2D::BeginScene(
+          active_scene_->GetComponent<CameraComponent>(main_camera_).projection,
+          active_scene_->GetComponent<TransformComponent>(main_camera_)
+              .transform);
+      auto view = active_scene_->registry()
+                      .view<TransformComponent, SpriteRendererComponent>();
+      view.each([](const auto& transform, const auto& sprite) {
+        Renderer2D::DrawQuad(transform.transform, sprite.color);
+      });
+      Renderer2D::EndScene();
+    }
+
+    // Renderer2D::EndScene();
 
     frame_buffer_->Unbind();
   }
 }
 
 void EditorLayer::OnImGuiRender() {
+  ImGui::ShowDemoWindow();
   ImGui::Begin("Main");
 
   auto stats = Renderer2D::GetStats();
@@ -62,13 +88,32 @@ void EditorLayer::OnImGuiRender() {
   ImGui::Text("Draw Calls: %d", stats.draw_calls);
   ImGui::Text("Quads: %d", stats.quad_count);
   ImGui::Separator();
+
   ImGui::Text("%s",
               active_scene_->GetComponent<NameComponent>(square_entity_).name);
   auto& square_color_ =
       active_scene_->GetComponent<SpriteRendererComponent>(square_entity_)
           .color;
   ImGui::ColorEdit4("square color", glm::value_ptr(square_color_));
+  ImGui::Separator();
+
+  auto cameras =
+      active_scene_->registry()
+          .view<CameraComponent, NameComponent, TransformComponent>();
+  static int          camera_index = 0;
+  auto                items = new const char*[cameras.size_hint()];
+  std::vector<Entity> camera_entities;
+  int                 index = 0;
+  cameras.each([&](const auto& camera, const auto& name,
+                                const auto& transform) {
+    items[index++] = name.name.c_str();
+    camera_entities.push_back(entt::to_entity(active_scene_->registry(), name));
+  });
+
+  ImGui::Combo("Main Camera", &camera_index, items, index);
+  main_camera_ = camera_entities[camera_index];
   ImGui::End();
+  delete[] items;
 
   ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0.f, 0.f});
   ImGui::Begin("Viewport");

@@ -22,7 +22,10 @@ class EditorLayer : public Layer {
   ImVec2           last_viewport_size_;
   bool             viewport_focused_{false};
   bool             viewport_hovered_{false};
-  entt::entity     square_entity_;
+  Entity           square_entity_;
+  Entity           main_camera_{entt::null};
+  Entity           first_camera_{entt::null};
+  Entity           second_camera_{entt::null};
 };
 
 }  // namespace samui

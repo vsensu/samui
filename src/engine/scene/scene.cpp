@@ -12,19 +12,14 @@ namespace samui {
 
 Scene::Scene() {}
 
-Entity Scene::CreateEntity() {
+Entity Scene::CreateEntity(const std::string& name) {
   auto entity = registry_.create();
-  AddComponent<NameComponent>(entity, "Entity");
+  AddComponent<NameComponent>(entity, name);
   AddComponent<TransformComponent>(entity, glm::mat4(1.0f));
   return entity;
 }
 
 void Scene::OnUpdate(const Timestep& deltaTime) {
-  auto view = registry_.view<TransformComponent, SpriteRendererComponent>();
-
-  view.each([](const auto& transform, const auto& sprite) {
-    Renderer2D::DrawQuad(transform.transform, sprite.color);
-  });
 }
 
 }  // namespace samui

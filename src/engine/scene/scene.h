@@ -2,8 +2,9 @@
 #define SAMUI_SCENE_H_
 
 // clang-format off
-#include <entt/entt.hpp>
+#include <string>
 
+#include <entt/entt.hpp>
 #include <core/core.h>
 #include <core/timestep.h>
 #include <log/log.h>
@@ -15,7 +16,7 @@ class SAMUI_API Scene {
  public:
   Scene();
 
-  Entity CreateEntity();
+  Entity CreateEntity(const std::string &name = "Entity");
 
   template <typename T, typename... Args>
   T& AddComponent(Entity entity, Args&&... args) {

@@ -106,6 +106,18 @@ void Renderer2D::Init() {
 
 void Renderer2D::Shutdown() { SAMUI_PROFILE_FUNCTION(); }
 
+void Renderer2D::BeginScene(const glm::mat4& projection,
+                            const glm::mat4& transform) {
+  renderer2d_data.texture_shader->Bind();
+  renderer2d_data.texture_shader->SetMat4("viewProj",
+                                          projection * glm::inverse(transform));
+  renderer2d_data.quad_vertex_buffer_ptr =
+      renderer2d_data.quad_vertex_buffer_base;
+
+  renderer2d_data.quad_index_count = 0;
+  renderer2d_data.texture_slot_index = 1;
+}
+
 void Renderer2D::BeginScene(const OrthographicCamera& camera) {
   SAMUI_PROFILE_FUNCTION();
   renderer2d_data.texture_shader->Bind();
