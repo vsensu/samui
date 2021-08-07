@@ -23,6 +23,9 @@ class SAMUI_API ImGuiLayer : public Layer {
   void BlockEvents(bool block) { block_events_ = block; }
 
  private:
+  void SetDarkThemeColors();
+
+ private:
   bool block_events_{true};
 };
 

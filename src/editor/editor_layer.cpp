@@ -207,10 +207,14 @@ void EditorLayer::OnImGuiFullScreenDocking() {
 
   // Submit the DockSpace
   ImGuiIO& io = ImGui::GetIO();
+  auto &style = ImGui::GetStyle();
+  float min_size_x = style.WindowMinSize.x;
+  style.WindowMinSize.x = 370.f; 
   if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable) {
     ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
     ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
   }
+  style.WindowMinSize.x = min_size_x;
 
   if (ImGui::BeginMenuBar()) {
     if (ImGui::BeginMenu("File")) {
