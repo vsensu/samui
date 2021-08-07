@@ -25,8 +25,17 @@ struct SAMUI_API SpriteRendererComponent {
 };
 
 struct SAMUI_API CameraComponent {
-  glm::mat4 projection{1.0f};
+  float     aspect_ratio{1.0f};
+  float     size{10.f};
+  float     z_near{-1.f};
+  float     z_far{1.f};
+  glm::mat4 projection{1.f};
 };
+
+namespace CameraUtils {
+glm::mat4 SAMUI_API get_projection(float aspect_ratio, float size, float z_near,
+                         float z_far);
+}  // namespace CameraUtils
 
 }  // namespace samui
 

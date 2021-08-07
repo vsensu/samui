@@ -25,12 +25,13 @@ void EditorLayer::OnAttach() {
       square_entity_, glm::vec4{0.f, 1.f, 0.f, 1.f});
 
   first_camera_ = active_scene_->CreateEntity("First Camera");
-  active_scene_->AddComponent<CameraComponent>(
-      first_camera_, glm::ortho(-16.f, 16.f, -9.f, 9.f, -1.f, 1.f));
+  active_scene_->AddComponent<CameraComponent>(first_camera_,
+                                               CameraComponent{});
+  // first_camera_, glm::ortho(-16.f, 16.f, -9.f, 9.f, -1.f, 1.f), 1, 1.f);
 
   second_camera_ = active_scene_->CreateEntity("Second Camera");
-  active_scene_->AddComponent<CameraComponent>(
-      second_camera_, glm::ortho(-1.f, 1.f, -1.f, 1.f, -1.f, 1.f));
+  active_scene_->AddComponent<CameraComponent>(second_camera_);
+  // second_camera_, glm::ortho(-1.f, 1.f, -1.f, 1.f, -1.f, 1.f), 1, 1.f);
 }
 
 void EditorLayer::OnDetach() { SAMUI_PROFILE_FUNCTION(); }
@@ -60,8 +61,11 @@ void EditorLayer::OnUpdate(const Timestep& deltaTime) {
 
     // render scene
     if (main_camera_ != entt::null) {
+      auto& camera_comp =
+          active_scene_->GetComponent<CameraComponent>(main_camera_);
       Renderer2D::BeginScene(
-          active_scene_->GetComponent<CameraComponent>(main_camera_).projection,
+          CameraUtils::get_projection(camera_comp.aspect_ratio, camera_comp.size, camera_comp.z_near, camera_comp.z_far),
+          // active_scene_->GetComponent<CameraComponent>(main_camera_).projection,
           active_scene_->GetComponent<TransformComponent>(main_camera_)
               .transform);
       auto view = active_scene_->registry()
@@ -129,6 +133,9 @@ void EditorLayer::OnImGuiRender() {
         viewport_size.y != last_viewport_size_.y) {
       frame_buffer_->Resize(viewport_size.x, viewport_size.y);
       camera_controller_.OnResize(viewport_size.x, viewport_size.y);
+      auto & camera_comp = active_scene_->GetComponent<CameraComponent>(main_camera_);
+      camera_comp.aspect_ratio = viewport_size.x / viewport_size.y;
+      // main_camera_.OnResize();
     }
   }
   last_viewport_size_ = viewport_size;
