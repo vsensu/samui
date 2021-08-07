@@ -19,7 +19,8 @@ Entity Scene::CreateEntity(const std::string& name) {
   return entity;
 }
 
-void Scene::OnUpdate(const Timestep& deltaTime) {
-}
+void Scene::DestroyEntity(Entity entity) { registry_.destroy(entity); }
+
+void Scene::OnUpdate(const Timestep& deltaTime) {}
 
 }  // namespace samui

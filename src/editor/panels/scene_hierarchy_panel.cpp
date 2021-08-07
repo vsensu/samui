@@ -85,40 +85,101 @@ void SceneHierarchyPanel::OnImGuiRender() {
     selected_entity_ = entt::null;
   }
 
+  if (selected_entity_ == entt::null) {
+    // Right-click on blank space
+    if (ImGui::BeginPopupContextWindow(0, 1, false)) {
+      if (ImGui::MenuItem("Create Empty Entity")) {
+        scene_->CreateEntity("Empty Entity");
+      }
+      ImGui::EndPopup();
+    }
+  }
+
+  else {
+    // Right click on entity
+    if (ImGui::BeginPopupContextWindow()) {
+      if (ImGui::MenuItem("Delete Entity")) {
+        scene_->DestroyEntity(selected_entity_);
+        selected_entity_ = entt::null;
+      }
+      ImGui::EndPopup();
+    }
+  }
   ImGui::End();
 
   ImGui::Begin("Inspector");
   if (selected_entity_ != entt::null) {
-    // Draw Property
-    if (scene_->HasComponent<NameComponent>(selected_entity_)) {
-      auto& name_comp = scene_->GetComponent<NameComponent>(selected_entity_);
-      char  buff[256];
-      memset(buff, 0, sizeof(buff));
-      strcpy(buff, name_comp.name.c_str());
-      if (ImGui::InputText("Name", buff, sizeof(buff))) {
-        name_comp.name = buff;
-      }
+    DrawProperties(selected_entity_);
+
+    if (ImGui::Button("Add Component")) {
+      ImGui::OpenPopup("AddComponent");
     }
 
-    if (scene_->HasComponent<TransformComponent>(selected_entity_)) {
-      auto& transform_comp =
-          scene_->GetComponent<TransformComponent>(selected_entity_);
+    if (ImGui::BeginPopup("AddComponent")) {
+      if (ImGui::MenuItem("Camera")) {
+        scene_->AddComponent<CameraComponent>(selected_entity_);
+        ImGui::CloseCurrentPopup();
+      }
+
+      if (ImGui::MenuItem("Sprite Renderer")) {
+        scene_->AddComponent<SpriteRendererComponent>(selected_entity_);
+        ImGui::CloseCurrentPopup();
+      }
+
+      ImGui::EndPopup();
+    }
+  }
+
+  ImGui::End();
+}
+
+void SceneHierarchyPanel::DrawProperties(Entity entity) {
+  const ImGuiTreeNodeFlags treeNodeFlags =
+      ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
+
+  // Draw Property
+  if (scene_->HasComponent<NameComponent>(entity)) {
+    auto& name_comp = scene_->GetComponent<NameComponent>(entity);
+    char  buff[256];
+    memset(buff, 0, sizeof(buff));
+    strcpy(buff, name_comp.name.c_str());
+    if (ImGui::InputText("Name", buff, sizeof(buff))) {
+      name_comp.name = buff;
+    }
+  }
+
+  if (scene_->HasComponent<TransformComponent>(entity)) {
+    bool open = ImGui::TreeNodeEx((void*)typeid(entity).hash_code(),
+                                  treeNodeFlags, "Transform");
+    if (open) {
+      auto& transform_comp = scene_->GetComponent<TransformComponent>(entity);
       DrawVec3Control("Position", transform_comp.translation);
       auto rotation = glm::degrees(transform_comp.rotation);
       DrawVec3Control("Rotation", rotation);
       transform_comp.rotation = glm::radians(rotation);
       DrawVec3Control("Scale", transform_comp.scale, 1.f);
+
+      ImGui::TreePop();
+    }
+  }
+
+  if (scene_->HasComponent<CameraComponent>(entity)) {
+    bool open = ImGui::TreeNodeEx((void*)typeid(entity).hash_code(),
+                                  treeNodeFlags, "Camera");
+    ImGui::SameLine();
+    if (ImGui::Button("...")) {
+      ImGui::OpenPopup("ComponentSettings");
+    }
+    bool remove_component = false;
+    if (ImGui::BeginPopup("ComponentSettings")) {
+      if (ImGui::MenuItem("Remove Component")) {
+        bool remove_component = true;
+      }
+      ImGui::EndPopup();
     }
 
-    if (scene_->HasComponent<SpriteRendererComponent>(selected_entity_)) {
-      auto& sprite_comp =
-          scene_->GetComponent<SpriteRendererComponent>(selected_entity_);
-      ImGui::ColorEdit4("Sprite Color", glm::value_ptr(sprite_comp.color));
-    }
-
-    if (scene_->HasComponent<CameraComponent>(selected_entity_)) {
-      auto& camera_comp =
-          scene_->GetComponent<CameraComponent>(selected_entity_);
+    if (open) {
+      auto& camera_comp = scene_->GetComponent<CameraComponent>(entity);
       if (camera_comp.projection_type ==
           CameraComponent::ProjectionType::Orthographic) {
         ImGui::Text("Orthographic");
@@ -133,10 +194,41 @@ void SceneHierarchyPanel::OnImGuiRender() {
         ImGui::DragFloat("Far Clip", &camera_comp.pers_far);
       }
       ImGui::Checkbox("Fixed Aspect Ratio", &camera_comp.fixed_aspect_ratio);
+
+      ImGui::TreePop();
+    }
+
+    if (remove_component) {
+      scene_->RemoveComponent<CameraComponent>(entity);
     }
   }
 
-  ImGui::End();
+  if (scene_->HasComponent<SpriteRendererComponent>(entity)) {
+    bool open = ImGui::TreeNodeEx((void*)typeid(entity).hash_code(),
+                                  treeNodeFlags, "Sprite Renderer");
+    ImGui::SameLine();
+    if (ImGui::Button("...")) {
+      ImGui::OpenPopup("ComponentSettings");
+    }
+    bool remove_component = false;
+    if (ImGui::BeginPopup("ComponentSettings")) {
+      if (ImGui::MenuItem("Remove Component")) {
+        remove_component = true;
+      }
+      ImGui::EndPopup();
+    }
+
+    if (open) {
+      auto& sprite_comp = scene_->GetComponent<SpriteRendererComponent>(entity);
+      ImGui::ColorEdit4("Sprite Color", glm::value_ptr(sprite_comp.color));
+
+      ImGui::TreePop();
+    }
+
+    if (remove_component) {
+      scene_->RemoveComponent<SpriteRendererComponent>(entity);
+    }
+  }
 }
 
 }  // namespace samui

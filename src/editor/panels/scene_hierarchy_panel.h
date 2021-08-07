@@ -12,6 +12,9 @@ class SceneHierarchyPanel {
   void OnImGuiRender();
 
  private:
+  void DrawProperties(Entity entity);
+
+ private:
   Ref<Scene> scene_;
   Entity     selected_entity_{entt::null};
 };
