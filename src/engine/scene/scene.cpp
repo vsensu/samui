@@ -15,7 +15,7 @@ Scene::Scene() {}
 Entity Scene::CreateEntity(const std::string& name) {
   auto entity = registry_.create();
   AddComponent<NameComponent>(entity, name);
-  AddComponent<TransformComponent>(entity, glm::mat4(1.0f));
+  AddComponent<TransformComponent>(entity);
   return entity;
 }
 

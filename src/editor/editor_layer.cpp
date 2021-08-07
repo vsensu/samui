@@ -83,11 +83,11 @@ void EditorLayer::OnUpdate(const Timestep& deltaTime) {
           projection,
           // active_scene_->GetComponent<CameraComponent>(main_camera_).projection,
           active_scene_->GetComponent<TransformComponent>(main_camera_)
-              .transform);
+              .transform());
       auto view = active_scene_->registry()
                       .view<TransformComponent, SpriteRendererComponent>();
       view.each([](const auto& transform, const auto& sprite) {
-        Renderer2D::DrawQuad(transform.transform, sprite.color);
+        Renderer2D::DrawQuad(transform.transform(), sprite.color);
       });
       Renderer2D::EndScene();
     }
@@ -103,7 +103,7 @@ void EditorLayer::OnImGuiRender() {
 
   // settings pannel begine
   auto stats = Renderer2D::GetStats();
-  ImGui::Begin("Settings");
+  ImGui::Begin("Stats");
   ImGui::Text("Renderer2D Stats:");
   ImGui::Text("Draw Calls: %d", stats.draw_calls);
   ImGui::Text("Quads: %d", stats.quad_count);

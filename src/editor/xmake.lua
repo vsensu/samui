@@ -8,6 +8,7 @@ target("editor")
     end
     add_includedirs("$(projectdir)/deps/headeronly", "$(projectdir)/deps/src", "$(projectdir)/src/engine/")
     add_includedirs("$(projectdir)/deps/src/glad/include")
+    add_includedirs("$(projectdir)/deps/src/imgui-docking")
     add_includedirs("$(projectdir)/src/engine/entt-3.8.1/single_include")
     add_files("**.cpp")
     add_packages("spdlog", "glfw", "glm")

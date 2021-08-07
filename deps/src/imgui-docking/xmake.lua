@@ -1,3 +1,4 @@
 target("imgui")
     set_kind("shared")
-    add_files("*.cpp")
+    add_defines("IMGUI_BUILD_DLL")
+    add_files("**.cpp")

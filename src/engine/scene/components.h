@@ -5,6 +5,8 @@
 #include <string>
 
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <core/core.h>
 // clang-format on
@@ -17,7 +19,21 @@ struct SAMUI_API NameComponent {
 };
 
 struct SAMUI_API TransformComponent {
-  glm::mat4 transform{1.0f};
+  glm::vec3 translation{glm::zero<glm::vec3>()};
+  glm::vec3 rotation{glm::zero<glm::vec3>()};
+  glm::vec3 scale{glm::vec3(1.f)};
+
+  glm::mat4 transform() const {
+    auto rot = glm::rotate(glm::identity<glm::mat4>(), rotation.x,
+                           glm::vec3(1.f, 0.f, 0.f)) *
+               glm::rotate(glm::identity<glm::mat4>(), rotation.y,
+                           glm::vec3(0.f, 1.f, 0.f)) *
+               glm::rotate(glm::identity<glm::mat4>(), rotation.z,
+                           glm::vec3(0.f, 0.f, 1.f));
+
+    return glm::translate(glm::identity<glm::mat4>(), translation) * rot *
+           glm::scale(glm::identity<glm::mat4>(), scale);
+  }
 };
 
 struct SAMUI_API SpriteRendererComponent {

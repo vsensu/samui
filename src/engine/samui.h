@@ -19,7 +19,8 @@
 
 #include "layer/layer.h"
 
-#include "imgui/imgui.h"
+#include <imgui/imgui.h>
+#include <imgui/imgui_internal.h>
 #include "imgui/imgui_layer.h"
 
 #include "rendering/renderer.h"
