@@ -20,9 +20,13 @@ void EditorLayer::OnAttach() {
 
   active_scene_ = std::make_shared<Scene>();
 
-  square_entity_ = active_scene_->CreateEntity();
+  square_entity_ = active_scene_->CreateEntity("Green Square");
   active_scene_->AddComponent<SpriteRendererComponent>(
       square_entity_, glm::vec4{0.f, 1.f, 0.f, 1.f});
+
+  auto red_square = active_scene_->CreateEntity("Red Square");
+  active_scene_->AddComponent<SpriteRendererComponent>(
+      red_square, glm::vec4{1.f, 0.f, 0.f, 1.f});
 
   first_camera_ = active_scene_->CreateEntity("First Camera");
   active_scene_->AddComponent<CameraComponent>(first_camera_,
@@ -30,7 +34,8 @@ void EditorLayer::OnAttach() {
   // first_camera_, glm::ortho(-16.f, 16.f, -9.f, 9.f, -1.f, 1.f), 1, 1.f);
 
   second_camera_ = active_scene_->CreateEntity("Second Camera");
-  active_scene_->AddComponent<CameraComponent>(second_camera_);
+  active_scene_->AddComponent<CameraComponent>(second_camera_).projection_type =
+      CameraComponent::ProjectionType::Perspective;
   // second_camera_, glm::ortho(-1.f, 1.f, -1.f, 1.f, -1.f, 1.f), 1, 1.f);
 
   scene_hierarchy_panel_ = std::make_shared<SceneHierarchyPanel>(active_scene_);
@@ -65,8 +70,17 @@ void EditorLayer::OnUpdate(const Timestep& deltaTime) {
     if (main_camera_ != entt::null) {
       auto& camera_comp =
           active_scene_->GetComponent<CameraComponent>(main_camera_);
+      auto projection =
+          camera_comp.projection_type ==
+                  CameraComponent::ProjectionType::Orthographic
+              ? CameraUtils::get_orthographic_projection(
+                    camera_comp.aspect_ratio, camera_comp.ortho_size,
+                    camera_comp.ortho_near, camera_comp.ortho_far)
+              : CameraUtils::get_perspective_projection(
+                    camera_comp.aspect_ratio, camera_comp.pers_fov,
+                    camera_comp.pers_near, camera_comp.pers_far);
       Renderer2D::BeginScene(
-          CameraUtils::get_projection(camera_comp.aspect_ratio, camera_comp.size, camera_comp.z_near, camera_comp.z_far),
+          projection,
           // active_scene_->GetComponent<CameraComponent>(main_camera_).projection,
           active_scene_->GetComponent<TransformComponent>(main_camera_)
               .transform);
@@ -93,14 +107,6 @@ void EditorLayer::OnImGuiRender() {
   ImGui::Text("Renderer2D Stats:");
   ImGui::Text("Draw Calls: %d", stats.draw_calls);
   ImGui::Text("Quads: %d", stats.quad_count);
-  ImGui::Separator();
-
-  ImGui::Text("%s",
-              active_scene_->GetComponent<NameComponent>(square_entity_).name);
-  auto& square_color_ =
-      active_scene_->GetComponent<SpriteRendererComponent>(square_entity_)
-          .color;
-  ImGui::ColorEdit4("square color", glm::value_ptr(square_color_));
   ImGui::Separator();
 
   auto cameras =
@@ -135,8 +141,11 @@ void EditorLayer::OnImGuiRender() {
         viewport_size.y != last_viewport_size_.y) {
       frame_buffer_->Resize(viewport_size.x, viewport_size.y);
       camera_controller_.OnResize(viewport_size.x, viewport_size.y);
-      auto & camera_comp = active_scene_->GetComponent<CameraComponent>(main_camera_);
-      camera_comp.aspect_ratio = viewport_size.x / viewport_size.y;
+      auto& camera_comp =
+          active_scene_->GetComponent<CameraComponent>(main_camera_);
+      if (!camera_comp.fixed_aspect_ratio) {
+        camera_comp.aspect_ratio = viewport_size.x / viewport_size.y;
+      }
       // main_camera_.OnResize();
     }
   }

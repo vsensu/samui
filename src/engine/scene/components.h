@@ -25,16 +25,29 @@ struct SAMUI_API SpriteRendererComponent {
 };
 
 struct SAMUI_API CameraComponent {
-  float     aspect_ratio{1.0f};
-  float     size{10.f};
-  float     z_near{-1.f};
-  float     z_far{1.f};
+  enum class ProjectionType { Orthographic = 0, Perspective = 1 };
+
+  ProjectionType projection_type = ProjectionType::Orthographic;
+  float          aspect_ratio{1.0f};
+  bool           fixed_aspect_ratio{false};
+
+  float ortho_size{10.f};
+  float ortho_near{-1.f};
+  float ortho_far{1.f};
+
+  float pers_fov{45.f};
+  float pers_near{0.01f};
+  float pers_far{1000.f};
+
   glm::mat4 projection{1.f};
 };
 
 namespace CameraUtils {
-glm::mat4 SAMUI_API get_projection(float aspect_ratio, float size, float z_near,
-                         float z_far);
+glm::mat4 SAMUI_API get_orthographic_projection(float aspect_ratio, float size,
+                                                float z_near, float z_far);
+
+glm::mat4 SAMUI_API get_perspective_projection(float aspect_ratio, float fov,
+                                               float z_near, float z_far);
 }  // namespace CameraUtils
 
 }  // namespace samui
