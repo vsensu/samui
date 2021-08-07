@@ -3,6 +3,8 @@
 
 #include <samui.h>
 
+#include "panels/scene_hierarchy_panel.h"
+
 namespace samui {
 class EditorLayer : public Layer {
  public:
@@ -29,6 +31,8 @@ class EditorLayer : public Layer {
   Entity           main_camera_{entt::null};
   Entity           first_camera_{entt::null};
   Entity           second_camera_{entt::null};
+
+  Ref<SceneHierarchyPanel> scene_hierarchy_panel_;
 };
 
 }  // namespace samui

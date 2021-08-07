@@ -32,6 +32,8 @@ void EditorLayer::OnAttach() {
   second_camera_ = active_scene_->CreateEntity("Second Camera");
   active_scene_->AddComponent<CameraComponent>(second_camera_);
   // second_camera_, glm::ortho(-1.f, 1.f, -1.f, 1.f, -1.f, 1.f), 1, 1.f);
+
+  scene_hierarchy_panel_ = std::make_shared<SceneHierarchyPanel>(active_scene_);
 }
 
 void EditorLayer::OnDetach() { SAMUI_PROFILE_FUNCTION(); }
@@ -145,6 +147,10 @@ void EditorLayer::OnImGuiRender() {
   ImGui::End();
   ImGui::PopStyleVar();
   // scene pannel end
+
+  // scene hierarchy pannel begin
+  scene_hierarchy_panel_->OnImGuiRender();
+  // scene hierarchy pannel end
 }
 
 void EditorLayer::OnEvent(Event& event) { camera_controller_.OnEvent(event); }
