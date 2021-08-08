@@ -46,6 +46,8 @@ class EditorLayer : public Layer {
   ImGuizmo::OPERATION gizmos_op_{ImGuizmo::TRANSLATE};
 
   EditorCamera editor_camera_;
+
+  glm::vec2 viewport_bounds_[2];
 };
 
 }  // namespace samui

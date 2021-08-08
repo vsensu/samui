@@ -11,6 +11,8 @@ GLenum FrameBufferTextureFormatToGL(FrameBufferTextureFormat format) {
   switch (format) {
     case FrameBufferTextureFormat::RGBA:
       return GL_RGBA;
+    case FrameBufferTextureFormat::RED_INTEGER:
+      return GL_RED;
     case FrameBufferTextureFormat::Depth24_Stencil8:
       return GL_DEPTH24_STENCIL8;
   }
@@ -46,7 +48,7 @@ void AttachColorTexture(uint32_t id, int samples, GLenum format, uint32_t width,
                             height, GL_FALSE);
   } else {
     glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format,
-     GL_UNSIGNED_BYTE, nullptr);
+                 GL_UNSIGNED_BYTE, nullptr);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -175,6 +177,15 @@ void OpenGLFrameBuffer::Resize(uint32_t width, uint32_t height) {
   spec_.width = width;
   spec_.height = height;
   Invalidate();
+}
+
+int OpenGLFrameBuffer::ReadPixel(uint32_t attachment_index, int x,
+                                 int y) const {
+  SAMUI_ENGINE_ASSERT(attachment_index < color_attachments_.size());
+  glReadBuffer(GL_COLOR_ATTACHMENT0 + attachment_index);
+  int pixel;
+  glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, &pixel);
+  return pixel;
 }
 
 }  // namespace samui

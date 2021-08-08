@@ -81,7 +81,7 @@ void EditorLayer::OnAttach() {
 
   FrameBufferSpecification spec;
   spec.attachments = {
-      FrameBufferTextureFormat::RGBA, FrameBufferTextureFormat::RGBA,
+      FrameBufferTextureFormat::RGBA, FrameBufferTextureFormat::RED_INTEGER,
       FrameBufferTextureFormat::RGBA, FrameBufferTextureFormat::RGBA,
       FrameBufferTextureFormat::Depth};
   spec.width = 1280;
@@ -93,6 +93,9 @@ void EditorLayer::OnAttach() {
   scene_hierarchy_panel_ = std::make_shared<SceneHierarchyPanel>(active_scene_);
 
   editor_camera_ = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
+
+  viewport_bounds_[0] = {0.f, 0.f};
+  viewport_bounds_[1] = {0.f, 0.f};
 }
 
 void EditorLayer::OnDetach() { SAMUI_PROFILE_FUNCTION(); }
@@ -150,6 +153,20 @@ void EditorLayer::OnUpdate(const Timestep& deltaTime) {
 
     // Renderer2D::EndScene();
 
+    auto [mx, my] = ImGui::GetMousePos();
+    mx -= viewport_bounds_[0].x;
+    my -= viewport_bounds_[0].y;
+    glm::vec2 viewport_size = viewport_bounds_[1] - viewport_bounds_[0];
+    my = viewport_size.y - my;
+    int mouse_x = (int)mx;
+    int mouse_y = (int)my;
+
+    if (mouse_x >= 0 && mouse_y >= 0 && mouse_x < viewport_size.x &&
+        mouse_y < viewport_size.y) {
+      int pixel = frame_buffer_->ReadPixel(1, mouse_x, mouse_y);
+      SAMUI_ENGINE_INFO("entity: {0}", pixel);
+    }
+
     frame_buffer_->Unbind();
   }
 }
@@ -194,6 +211,8 @@ void EditorLayer::OnImGuiRender() {
   // scene pannel begin
   ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0.f, 0.f});
   ImGui::Begin("Viewport");
+  // auto viewport_offset = ImGui::GetCursorPos();
+
   viewport_focused_ = ImGui::IsWindowFocused();
   viewport_hovered_ = ImGui::IsWindowHovered();
   Application::Get().GetImGuiLayer()->BlockEvents(!viewport_focused_ &&
@@ -220,6 +239,15 @@ void EditorLayer::OnImGuiRender() {
       frame_buffer_->GetColorAttachmentRenderID(color_attachment_index);
   // flip y
   ImGui::Image((ImTextureID)texture_id, viewport_size, {0.f, 1.f}, {1.f, 0.f});
+
+  auto window_size = ImGui::GetWindowSize();
+  auto min_bound = ImGui::GetWindowPos();
+  // min_bound.x += viewport_offset.x;
+  // min_bound.y += viewport_offset.y;
+
+  ImVec2 max_bound = {min_bound.x + window_size.x, min_bound.y + window_size.y};
+  viewport_bounds_[0] = {min_bound.x, min_bound.y};
+  viewport_bounds_[1] = {max_bound.x, max_bound.y};
 
   // Draw Gizmos
   Entity selected_entity = scene_hierarchy_panel_->GetSelectedEntity();
