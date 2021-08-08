@@ -7,22 +7,104 @@
 
 namespace samui {
 
+GLenum FrameBufferTextureFormatToGL(FrameBufferTextureFormat format) {
+  switch (format) {
+    case FrameBufferTextureFormat::RGBA:
+      return GL_RGBA;
+    case FrameBufferTextureFormat::Depth24_Stencil8:
+      return GL_DEPTH24_STENCIL8;
+  }
+  return GL_NONE;
+}
+
+bool IsDepthFormat(FrameBufferTextureFormat format) {
+  switch (format) {
+    case FrameBufferTextureFormat::Depth24_Stencil8:
+      return true;
+  }
+
+  return false;
+}
+
+GLenum TextureTarget(bool multisampled) {
+  return multisampled ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D;
+}
+
+void BindTexture(bool multisampled, uint32_t texture_id) {
+  glBindTexture(TextureTarget(multisampled), texture_id);
+}
+
+void CreateTextures(bool multisampled, uint32_t* outID, uint32_t count) {
+  glGenTextures(count, outID);
+}
+
+void AttachColorTexture(uint32_t id, int samples, GLenum format, uint32_t width,
+                        uint32_t height, int index) {
+  bool multisampled = samples > 1;
+  if (multisampled) {
+    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, format, width,
+                            height, GL_FALSE);
+  } else {
+    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format,
+     GL_UNSIGNED_BYTE, nullptr);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  }
+
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + index,
+                         TextureTarget(multisampled), id, 0);
+}
+
+void AttachDepthTexture(uint32_t id, int samples, GLenum format,
+                        GLenum attachmentType, uint32_t width,
+                        uint32_t height) {
+  bool multisampled = samples > 1;
+  if (multisampled) {
+    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, format, width,
+                            height, GL_FALSE);
+  } else {
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, width, height, 0,
+                 GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, NULL);
+
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  }
+
+  glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentType,
+                         TextureTarget(multisampled), id, 0);
+}
+
 OpenGLFrameBuffer::OpenGLFrameBuffer(const FrameBufferSpecification& spec)
     : spec_(spec) {
+  for (auto attachment : spec.attachments) {
+    if (!IsDepthFormat(attachment.format)) {
+      color_attachments_spec_.push_back(attachment);
+    } else {
+      depth_attachment_spec_ = attachment;
+    }
+  }
+
   Invalidate();
 }
 
 OpenGLFrameBuffer::~OpenGLFrameBuffer() {
   glDeleteFramebuffers(1, &buffer_id_);
-  glDeleteTextures(1, &texture_);
-  glDeleteTextures(1, &depth_);
+  glDeleteTextures(color_attachments_.size(), color_attachments_.data());
+  glDeleteTextures(1, &depth_attachment_);
 }
 
 void OpenGLFrameBuffer::Invalidate() {
   if (buffer_id_) {
     glDeleteFramebuffers(1, &buffer_id_);
-    glDeleteTextures(1, &texture_);
-    glDeleteTextures(1, &depth_);
+    glDeleteTextures(color_attachments_.size(), color_attachments_.data());
+    glDeleteTextures(1, &depth_attachment_);
   }
 
   // 一个完整的帧缓冲需要满足以下的条件：
@@ -33,26 +115,38 @@ void OpenGLFrameBuffer::Invalidate() {
   glGenFramebuffers(1, &buffer_id_);
   glBindFramebuffer(GL_FRAMEBUFFER, buffer_id_);
 
-  // 为帧缓冲创建一个纹理和创建一个普通的纹理差不多，主要的区别就是，
-  // 我们将维度设置为了屏幕大小（尽管这不是必须的），并且我们给纹理的data参数传递了NULL。
-  // 对于这个纹理，我们仅仅分配了内存而没有填充它。填充这个纹理将会在我们渲染到帧缓冲之后来进行。
-  // 同样注意我们并不关心环绕方式或多级渐远纹理，我们在大多数情况下都不会需要它们。
-  glGenTextures(1, &texture_);
-  glBindTexture(GL_TEXTURE_2D, texture_);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, spec_.width, spec_.height, 0, GL_RGB,
-               GL_UNSIGNED_BYTE, NULL);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  // 现在我们已经创建好一个纹理了，要做的最后一件事就是将它附加到帧缓冲上了
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
-                         texture_, 0);
+  bool multi_sample = spec_.samples > 1;
 
-  glGenTextures(1, &depth_);
-  glBindTexture(GL_TEXTURE_2D, depth_);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, spec_.width, spec_.height,
-               0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, NULL);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
-                         GL_TEXTURE_2D, depth_, 0);
+  if (!color_attachments_spec_.empty()) {
+    color_attachments_.resize(color_attachments_spec_.size());
+    CreateTextures(multi_sample, color_attachments_.data(),
+                   color_attachments_.size());
+
+    for (std::size_t i = 0; i < color_attachments_.size(); ++i) {
+      BindTexture(multi_sample, color_attachments_[i]);
+      auto format =
+          FrameBufferTextureFormatToGL(color_attachments_spec_[i].format);
+      AttachColorTexture(color_attachments_[i], spec_.samples, format,
+                         spec_.width, spec_.height, i);
+    }
+  }
+
+  if (depth_attachment_spec_.format != FrameBufferTextureFormat::None) {
+    CreateTextures(multi_sample, &depth_attachment_, 1);
+    BindTexture(multi_sample, depth_attachment_);
+    auto format = FrameBufferTextureFormatToGL(depth_attachment_spec_.format);
+    AttachDepthTexture(depth_attachment_, spec_.samples, format,
+                       GL_DEPTH_STENCIL_ATTACHMENT, spec_.width, spec_.height);
+  }
+
+  if (color_attachments_.size() > 1) {
+    SAMUI_ENGINE_ASSERT(color_attachments_.size() <= 4);
+    GLenum buffers[4] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1,
+                         GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3};
+    glDrawBuffers(color_attachments_.size(), buffers);
+  } else if (color_attachments_.size() == 0) {
+    glDrawBuffers(0, nullptr);
+  }
 
   SAMUI_ENGINE_ASSERT(
       glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE,

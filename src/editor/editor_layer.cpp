@@ -80,6 +80,10 @@ void EditorLayer::OnAttach() {
   camera_controller_.SetZoomLevel(5.f);
 
   FrameBufferSpecification spec;
+  spec.attachments = {
+      FrameBufferTextureFormat::RGBA, FrameBufferTextureFormat::RGBA,
+      FrameBufferTextureFormat::RGBA, FrameBufferTextureFormat::RGBA,
+      FrameBufferTextureFormat::Depth};
   spec.width = 1280;
   spec.height = 720;
   frame_buffer_ = FrameBuffer::Create(spec);
@@ -180,6 +184,11 @@ void EditorLayer::OnImGuiRender() {
     main_camera_ = camera_entities[camera_index];
     delete[] items;
   }
+
+  static int color_attachment_index = 0;
+  ImGui::DragInt("Color Attachment", &color_attachment_index, 1, 0,
+                 frame_buffer_->ColorAttachmentCount() - 1);
+
   ImGui::End();  // settings pannel end
 
   // scene pannel begin
@@ -207,7 +216,8 @@ void EditorLayer::OnImGuiRender() {
     }
   }
   last_viewport_size_ = viewport_size;
-  uint32_t texture_id = frame_buffer_->GetColorAttachmentRenderID();
+  uint32_t texture_id =
+      frame_buffer_->GetColorAttachmentRenderID(color_attachment_index);
   // flip y
   ImGui::Image((ImTextureID)texture_id, viewport_size, {0.f, 1.f}, {1.f, 0.f});
 
