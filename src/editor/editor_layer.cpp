@@ -87,6 +87,8 @@ void EditorLayer::OnAttach() {
   active_scene_ = std::make_shared<Scene>();
 
   scene_hierarchy_panel_ = std::make_shared<SceneHierarchyPanel>(active_scene_);
+
+  editor_camera_ = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
 }
 
 void EditorLayer::OnDetach() { SAMUI_PROFILE_FUNCTION(); }
@@ -97,6 +99,8 @@ void EditorLayer::OnUpdate(const Timestep& deltaTime) {
   if (viewport_focused_) {
     camera_controller_.OnUpdate(deltaTime);
   }
+
+  editor_camera_.OnUpdate(deltaTime);
 
   // update scene logic
   active_scene_->OnUpdate(deltaTime);
@@ -115,30 +119,30 @@ void EditorLayer::OnUpdate(const Timestep& deltaTime) {
     // Renderer2D::BeginScene(camera_controller_.GetCamera());
 
     // render scene
-    if (main_camera_ != entt::null) {
-      auto& camera_comp =
-          active_scene_->GetComponent<CameraComponent>(main_camera_);
-      auto projection =
-          camera_comp.projection_type ==
-                  CameraComponent::ProjectionType::Orthographic
-              ? CameraUtils::get_orthographic_projection(
-                    camera_comp.aspect_ratio, camera_comp.ortho_size,
-                    camera_comp.ortho_near, camera_comp.ortho_far)
-              : CameraUtils::get_perspective_projection(
-                    camera_comp.aspect_ratio, camera_comp.pers_fov,
-                    camera_comp.pers_near, camera_comp.pers_far);
-      Renderer2D::BeginScene(
-          projection,
-          // active_scene_->GetComponent<CameraComponent>(main_camera_).projection,
-          active_scene_->GetComponent<TransformComponent>(main_camera_)
-              .transform());
-      auto view = active_scene_->registry()
-                      .view<TransformComponent, SpriteRendererComponent>();
-      view.each([](const auto& transform, const auto& sprite) {
-        Renderer2D::DrawQuad(transform.transform(), sprite.color);
-      });
-      Renderer2D::EndScene();
-    }
+    // if (main_camera_ != entt::null) {
+    // auto& camera_comp =
+    //     active_scene_->GetComponent<CameraComponent>(main_camera_);
+    // auto projection =
+    //     camera_comp.projection_type ==
+    //             CameraComponent::ProjectionType::Orthographic
+    //         ? CameraUtils::get_orthographic_projection(
+    //               camera_comp.aspect_ratio, camera_comp.ortho_size,
+    //               camera_comp.ortho_near, camera_comp.ortho_far)
+    //         : CameraUtils::get_perspective_projection(
+    //               camera_comp.aspect_ratio, camera_comp.pers_fov,
+    //               camera_comp.pers_near, camera_comp.pers_far);
+    Renderer2D::BeginScene(editor_camera_.GetViewProjection());
+    // projection,
+    // active_scene_->GetComponent<TransformComponent>(main_camera_)
+    // .transform());
+    auto view = active_scene_->registry()
+                    .view<TransformComponent, SpriteRendererComponent>();
+    view.each([](const auto& transform, const auto& sprite) {
+      Renderer2D::DrawQuad(transform.transform(), sprite.color);
+    });
+
+    Renderer2D::EndScene();
+    // }
 
     // Renderer2D::EndScene();
 
@@ -199,6 +203,7 @@ void EditorLayer::OnImGuiRender() {
         }
       }
       // main_camera_.OnResize();
+      editor_camera_.SetViewportSize(viewport_size.x, viewport_size.y);
     }
   }
   last_viewport_size_ = viewport_size;
@@ -214,15 +219,19 @@ void EditorLayer::OnImGuiRender() {
     ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y,
                       ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
 
-    // Camera
-    const auto& camera_comp =
-        active_scene_->GetComponent<CameraComponent>(main_camera_);
-    const auto& projection = CameraUtils::get_perspective_projection(
-        camera_comp.aspect_ratio, camera_comp.pers_fov, camera_comp.pers_near,
-        camera_comp.pers_far);
-    glm::mat4 camera_view = glm::inverse(
-        active_scene_->GetComponent<TransformComponent>(main_camera_)
-            .transform());
+    // Camera Runtime
+    // const auto& camera_comp =
+    // active_scene_->GetComponent<CameraComponent>(main_camera_);
+    // const auto& projection = CameraUtils::get_perspective_projection(
+    // camera_comp.aspect_ratio, camera_comp.pers_fov, camera_comp.pers_near,
+    // camera_comp.pers_far);
+    // glm::mat4 camera_view = glm::inverse(
+    // active_scene_->GetComponent<TransformComponent>(main_camera_)
+    // .transform());
+
+    // Editor camera
+    const glm::mat4& projection = editor_camera_.GetProjection();
+    glm::mat4        camera_view = editor_camera_.GetViewMatrix();
 
     // Entity
     auto& trans_comp =
@@ -259,6 +268,7 @@ void EditorLayer::OnImGuiRender() {
 
 void EditorLayer::OnEvent(Event& event) {
   camera_controller_.OnEvent(event);
+  editor_camera_.OnEvent(event);
   EventDispatcher dispatcher(event);
   dispatcher.Dispatch<KeyPressedEvent>(
       BIND_EVENT_FUNC(EditorLayer::OnKeyPressed));

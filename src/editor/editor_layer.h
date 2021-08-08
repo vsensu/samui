@@ -1,9 +1,12 @@
 #ifndef SAMUI_EDITOR_LAYER_H_
 #define SAMUI_EDITOR_LAYER_H_
 
+// clang-format off
 #include <samui.h>
 
 #include "panels/scene_hierarchy_panel.h"
+#include "editor_camera.h"
+// clang-format on
 
 namespace samui {
 class EditorLayer : public Layer {
@@ -41,6 +44,8 @@ class EditorLayer : public Layer {
   Ref<SceneHierarchyPanel> scene_hierarchy_panel_;
 
   ImGuizmo::OPERATION gizmos_op_{ImGuizmo::TRANSLATE};
+
+  EditorCamera editor_camera_;
 };
 
 }  // namespace samui
