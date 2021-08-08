@@ -144,6 +144,16 @@ void SceneHierarchyPanel::OnImGuiRender() {
       if (ImGui::MenuItem("Create Empty Entity")) {
         scene_->CreateEntity("Empty Entity");
       }
+
+      if (ImGui::MenuItem("Create Camera")) {
+        auto camera_entity = scene_->CreateEntity("Camera");
+        scene_->AddComponent<CameraComponent>(camera_entity);
+      }
+
+      if (ImGui::MenuItem("Create Sprite")) {
+        auto sprite_entity = scene_->CreateEntity("Sprite");
+        scene_->AddComponent<SpriteRendererComponent>(sprite_entity);
+      }
       ImGui::EndPopup();
     }
   }
