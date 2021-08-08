@@ -39,6 +39,8 @@ class EditorLayer : public Layer {
   Entity           second_camera_{entt::null};
 
   Ref<SceneHierarchyPanel> scene_hierarchy_panel_;
+
+  ImGuizmo::OPERATION gizmos_op_{ImGuizmo::TRANSLATE};
 };
 
 }  // namespace samui

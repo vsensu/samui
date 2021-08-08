@@ -22,6 +22,7 @@
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
 #include "imgui/imgui_layer.h"
+#include "ImGuizmo/ImGuizmo.h"
 
 #include "rendering/renderer.h"
 #include "rendering/renderer2d.h"
@@ -39,6 +40,11 @@
 #include "scene/serialization.h"
 
 #include "utils/platform_utils.h"
+
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
 
 // clang-format on
 
