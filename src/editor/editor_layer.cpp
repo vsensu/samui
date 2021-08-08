@@ -20,24 +20,6 @@ void EditorLayer::OnAttach() {
 
   active_scene_ = std::make_shared<Scene>();
 
-  square_entity_ = active_scene_->CreateEntity("Green Square");
-  active_scene_->AddComponent<SpriteRendererComponent>(
-      square_entity_, glm::vec4{0.f, 1.f, 0.f, 1.f});
-
-  auto red_square = active_scene_->CreateEntity("Red Square");
-  active_scene_->AddComponent<SpriteRendererComponent>(
-      red_square, glm::vec4{1.f, 0.f, 0.f, 1.f});
-
-  first_camera_ = active_scene_->CreateEntity("First Camera");
-  active_scene_->AddComponent<CameraComponent>(first_camera_,
-                                               CameraComponent{});
-  // first_camera_, glm::ortho(-16.f, 16.f, -9.f, 9.f, -1.f, 1.f), 1, 1.f);
-
-  second_camera_ = active_scene_->CreateEntity("Second Camera");
-  active_scene_->AddComponent<CameraComponent>(second_camera_).projection_type =
-      CameraComponent::ProjectionType::Perspective;
-  // second_camera_, glm::ortho(-1.f, 1.f, -1.f, 1.f, -1.f, 1.f), 1, 1.f);
-
   scene_hierarchy_panel_ = std::make_shared<SceneHierarchyPanel>(active_scene_);
 }
 
@@ -112,21 +94,23 @@ void EditorLayer::OnImGuiRender() {
   auto cameras =
       active_scene_->registry()
           .view<CameraComponent, NameComponent, TransformComponent>();
-  static int          camera_index = 0;
-  auto                items = new const char*[cameras.size_hint()];
-  std::vector<Entity> camera_entities;
-  int                 index = 0;
-  cameras.each([&](const auto& camera, const auto& name,
-                   const auto& transform) {
-    items[index++] = name.name.c_str();
-    camera_entities.push_back(entt::to_entity(active_scene_->registry(), name));
-  });
+  if (cameras.size_hint() > 0) {
+    static int          camera_index = 0;
+    auto                items = new const char*[cameras.size_hint()];
+    std::vector<Entity> camera_entities;
+    int                 index = 0;
+    cameras.each(
+        [&](const auto& camera, const auto& name, const auto& transform) {
+          items[index++] = name.name.c_str();
+          camera_entities.push_back(
+              entt::to_entity(active_scene_->registry(), name));
+        });
 
-  ImGui::Combo("Main Camera", &camera_index, items, index);
-  main_camera_ = camera_entities[camera_index];
-  ImGui::End();
-  // settings pannel end
-  delete[] items;
+    ImGui::Combo("Main Camera", &camera_index, items, index);
+    main_camera_ = camera_entities[camera_index];
+    delete[] items;
+  }
+  ImGui::End();  // settings pannel end
 
   // scene pannel begin
   ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0.f, 0.f});
@@ -141,10 +125,12 @@ void EditorLayer::OnImGuiRender() {
         viewport_size.y != last_viewport_size_.y) {
       frame_buffer_->Resize(viewport_size.x, viewport_size.y);
       camera_controller_.OnResize(viewport_size.x, viewport_size.y);
-      auto& camera_comp =
-          active_scene_->GetComponent<CameraComponent>(main_camera_);
-      if (!camera_comp.fixed_aspect_ratio) {
-        camera_comp.aspect_ratio = viewport_size.x / viewport_size.y;
+      if (main_camera_ != entt::null) {
+        auto& camera_comp =
+            active_scene_->GetComponent<CameraComponent>(main_camera_);
+        if (!camera_comp.fixed_aspect_ratio) {
+          camera_comp.aspect_ratio = viewport_size.x / viewport_size.y;
+        }
       }
       // main_camera_.OnResize();
     }
@@ -207,9 +193,9 @@ void EditorLayer::OnImGuiFullScreenDocking() {
 
   // Submit the DockSpace
   ImGuiIO& io = ImGui::GetIO();
-  auto &style = ImGui::GetStyle();
-  float min_size_x = style.WindowMinSize.x;
-  style.WindowMinSize.x = 370.f; 
+  auto&    style = ImGui::GetStyle();
+  float    min_size_x = style.WindowMinSize.x;
+  style.WindowMinSize.x = 370.f;
   if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable) {
     ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
     ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
@@ -222,6 +208,14 @@ void EditorLayer::OnImGuiFullScreenDocking() {
       // other windows, which we can't undo at the moment without finer window
       // depth/z control.
       // ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen);
+      if (ImGui::MenuItem("Load")) {
+        Serialization::DeserializeScene(*active_scene_, "example.samui");
+      }
+
+      if (ImGui::MenuItem("Save")) {
+        Serialization::SerializeScene(*active_scene_, "example.samui");
+      }
+
       if (ImGui::MenuItem("Exit")) {
         Application::Get().Close();
       }

@@ -32,7 +32,7 @@ class SAMUI_API Scene {
   }
 
   template <typename T>
-  bool HasComponent(Entity entity) {
+  bool HasComponent(Entity entity) const {
     return registry_.any_of<T>(entity);
   }
 

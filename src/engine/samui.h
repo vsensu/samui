@@ -37,6 +37,8 @@
 #include "scene/scene.h"
 #include "scene/components.h"
 
+#include "scene/serialization.h"
+
 // clang-format on
 
 #endif
