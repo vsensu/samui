@@ -28,6 +28,9 @@ target("engine")
     add_deps("src_example", "glad", "stb_image")
     add_deps("imgui")
     add_links("lib_example")
+    if is_plat("windows") then 
+        add_links("Comdlg32")
+    end
     after_build(function (target)
         local target_dir = path.join(target:targetdir(), "engine")
         if not os.isdir(target_dir) then

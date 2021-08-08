@@ -11,6 +11,8 @@ class SceneHierarchyPanel {
 
   void OnImGuiRender();
 
+  void SetScene(Ref<Scene> scene);
+
  private:
   void DrawProperties(Entity entity);
 

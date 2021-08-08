@@ -168,6 +168,11 @@ void SceneHierarchyPanel::OnImGuiRender() {
   ImGui::End();
 }
 
+void SceneHierarchyPanel::SetScene(Ref<Scene> scene) {
+  scene_ = scene;
+  selected_entity_ = entt::null;
+}
+
 void SceneHierarchyPanel::DrawProperties(Entity entity) {
   const ImGuiTreeNodeFlags treeNodeFlags =
       ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap;

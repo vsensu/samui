@@ -148,7 +148,12 @@ void EditorLayer::OnImGuiRender() {
   // scene hierarchy pannel end
 }
 
-void EditorLayer::OnEvent(Event& event) { camera_controller_.OnEvent(event); }
+void EditorLayer::OnEvent(Event& event) {
+  camera_controller_.OnEvent(event);
+  EventDispatcher dispatcher(event);
+  dispatcher.Dispatch<KeyPressedEvent>(
+      BIND_EVENT_FUNC(EditorLayer::OnKeyPressed));
+}
 
 void EditorLayer::OnImGuiFullScreenDocking() {
   static bool               p_open = true;
@@ -208,12 +213,17 @@ void EditorLayer::OnImGuiFullScreenDocking() {
       // other windows, which we can't undo at the moment without finer window
       // depth/z control.
       // ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen);
-      if (ImGui::MenuItem("Load")) {
-        Serialization::DeserializeScene(*active_scene_, "example.samui");
+
+      if (ImGui::MenuItem("New", "Ctrl+N")) {
+        NewScene();
       }
 
-      if (ImGui::MenuItem("Save")) {
-        Serialization::SerializeScene(*active_scene_, "example.samui");
+      if (ImGui::MenuItem("Open", "Ctrl+O")) {
+        LoadScene();
+      }
+
+      if (ImGui::MenuItem("Save", "Ctrl+Shift+S")) {
+        SaveSceneAs();
       }
 
       if (ImGui::MenuItem("Exit")) {
@@ -226,6 +236,62 @@ void EditorLayer::OnImGuiFullScreenDocking() {
   }
 
   ImGui::End();
+}
+
+void EditorLayer::NewScene() {
+  main_camera_ = entt::null;
+  active_scene_ = std::make_shared<Scene>();
+  scene_hierarchy_panel_->SetScene(active_scene_);
+}
+
+void EditorLayer::LoadScene() {
+  auto filepath = DialogUtils::OpenFile("Samui Scene(*.samui)\0*.samui\0");
+  if (!filepath.empty()) {
+    main_camera_ = entt::null;
+    active_scene_ = std::make_shared<Scene>();
+    scene_hierarchy_panel_->SetScene(active_scene_);
+
+    Serialization::DeserializeScene(*active_scene_, filepath);
+  }
+}
+
+void EditorLayer::SaveSceneAs() {
+  auto filepath = DialogUtils::SaveFile("Samui Scene(*.samui)\0*.samui\0");
+  if (!filepath.empty()) {
+    Serialization::SerializeScene(*active_scene_, filepath);
+  }
+}
+
+bool EditorLayer::OnKeyPressed(KeyPressedEvent& event) {
+  if (event.GetRepeatCount() > 0) return false;
+
+  bool ctrl_pressed = Input::IsKeyPressed(SAMUI_KEY_LEFT_CONTROL) ||
+                      Input::IsKeyPressed(SAMUI_KEY_RIGHT_CONTROL);
+
+  bool shift_pressed = Input::IsKeyPressed(SAMUI_KEY_LEFT_SHIFT) ||
+                       Input::IsKeyPressed(SAMUI_KEY_RIGHT_SHIFT);
+
+  switch (event.GetKeyCode()) {
+    case SAMUI_KEY_N: {
+      if (ctrl_pressed) {
+        NewScene();
+      }
+    } break;
+    case SAMUI_KEY_O: {
+      if (ctrl_pressed) {
+        LoadScene();
+      }
+    } break;
+    case SAMUI_KEY_S: {
+      if (ctrl_pressed && shift_pressed) {
+        SaveSceneAs();
+      }
+    } break;
+    default:
+      return false;
+  }
+
+  return true;
 }
 
 }  // namespace samui

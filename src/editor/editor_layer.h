@@ -19,6 +19,12 @@ class EditorLayer : public Layer {
  private:
   void OnImGuiFullScreenDocking();
 
+  void NewScene();
+  void LoadScene();
+  void SaveSceneAs();
+
+  bool OnKeyPressed(KeyPressedEvent& event);
+
  private:
   OrthographicCameraController camera_controller_;
 
