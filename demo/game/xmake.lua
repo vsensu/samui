@@ -1,5 +1,6 @@
 target("game")
     set_kind("binary")
+    set_languages("c99", "cxx20")
     add_defines("ENTT_API_IMPORT")
     add_includedirs("$(projectdir)/deps/headeronly", "$(projectdir)/deps/src", "$(projectdir)/src/engine/")
     add_includedirs("$(projectdir)/deps/src/glad/include")
