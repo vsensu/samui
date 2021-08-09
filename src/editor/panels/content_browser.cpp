@@ -32,11 +32,18 @@ void ContentBrowser::OnImGuiRender() {
   ImGui::Columns(column_count, 0, false);
 
   for (const auto& dir_entry : std::filesystem::directory_iterator(path_)) {
-    const auto&    path = dir_entry.path().filename();
+    const auto& path = dir_entry.path().filename();
+
+    ImGui::PushID(path.string().c_str());
     Ref<Texture2D> icon = dir_entry.is_directory() ? folder_icon_ : file_icon_;
     ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
     ImGui::ImageButton((ImTextureID)icon->GetTextureID(),
                        ImVec2(thumbnail_size, thumbnail_size), {0, 1}, {1, 0});
+    if (ImGui::BeginDragDropSource()) {
+        auto abs_path = std::filesystem::absolute(dir_entry.path());
+        ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", abs_path.string().c_str(), abs_path.string().size());
+        ImGui::EndDragDropSource();
+    }
     ImGui::PopStyleColor();
     if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0)) {
       if (dir_entry.is_directory()) {
@@ -45,6 +52,7 @@ void ContentBrowser::OnImGuiRender() {
     }
     ImGui::TextWrapped(path.string().c_str());
     ImGui::NextColumn();
+    ImGui::PopID();
   }
 
   ImGui::Columns(1);

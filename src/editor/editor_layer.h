@@ -2,6 +2,8 @@
 #define SAMUI_EDITOR_LAYER_H_
 
 // clang-format off
+#include <filesystem>
+
 #include <samui.h>
 
 #include "panels/scene_hierarchy_panel.h"
@@ -24,7 +26,8 @@ class EditorLayer : public Layer {
   void OnImGuiFullScreenDocking();
 
   void NewScene();
-  void LoadScene();
+  void OpenScene();
+  void OpenScene(const std::filesystem::path& path);
   void SaveSceneAs();
 
   bool OnKeyPressed(KeyPressedEvent& event);

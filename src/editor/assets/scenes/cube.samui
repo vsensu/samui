@@ -1,0 +1,63 @@
+Scene: Untitled
+Entites:
+  - Entity: 123456789
+    NameComponent:
+      Name: Green Square
+    TransformComponent:
+      Translation: [0, 0.5, 0]
+      Rotation: [1.57079637, 0, 0]
+      Scale: [1, 1, 1]
+    SpriteRendererComponent:
+      Color: [0, 1, 0, 1]
+  - Entity: 123456789
+    NameComponent:
+      Name: Red Square
+    TransformComponent:
+      Translation: [0, 0, 0.5]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    SpriteRendererComponent:
+      Color: [1, 0, 0, 1]
+  - Entity: 123456789
+    NameComponent:
+      Name: First Camera
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    CameraComponent:
+      ProjectionType: 0
+      AspectRatio: 1
+      PerspectiveFOV: 45
+      PerspectiveNear: 0.00999999978
+      PerspectiveFar: 1000
+      OrthographicSize: 10
+      OrthographicNear: -1
+      OrthographicFar: 1
+      FixedAspectRatio: false
+  - Entity: 123456789
+    NameComponent:
+      Name: Second Camera
+    TransformComponent:
+      Translation: [2.20000005, 8.10000038, 3.9000001]
+      Rotation: [-1.27932644, 0.178023577, 0.219911486]
+      Scale: [1, 1, 1]
+    CameraComponent:
+      ProjectionType: 1
+      AspectRatio: 0.740853667
+      PerspectiveFOV: 45
+      PerspectiveNear: 0.00999999978
+      PerspectiveFar: 1000
+      OrthographicSize: 10
+      OrthographicNear: -1
+      OrthographicFar: 1
+      FixedAspectRatio: false
+  - Entity: 123456789
+    NameComponent:
+      Name: Pink
+    TransformComponent:
+      Translation: [0.5, 0, 0]
+      Rotation: [0, 1.57079637, 0]
+      Scale: [1, 1, 1]
+    SpriteRendererComponent:
+      Color: [0.922779918, 0.416854262, 0.698141515, 1]

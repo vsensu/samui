@@ -259,6 +259,16 @@ void EditorLayer::OnImGuiRender() {
   viewport_bounds_[0] = {min_bound.x, min_bound.y};
   viewport_bounds_[1] = {max_bound.x, max_bound.y};
 
+  if (ImGui::BeginDragDropTarget()) {
+    if (const ImGuiPayload* payload =
+            ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM")) {
+      const char* path = (const char*)payload->Data;
+      OpenScene(path);
+    }
+
+    ImGui::EndDragDropTarget();
+  }
+
   // Draw Gizmos
   Entity selected_entity = scene_hierarchy_panel_->GetSelectedEntity();
   if (selected_entity != entt::null) {
@@ -390,7 +400,7 @@ void EditorLayer::OnImGuiFullScreenDocking() {
       }
 
       if (ImGui::MenuItem("Open", "Ctrl+O")) {
-        LoadScene();
+        OpenScene();
       }
 
       if (ImGui::MenuItem("Save", "Ctrl+Shift+S")) {
@@ -415,15 +425,19 @@ void EditorLayer::NewScene() {
   scene_hierarchy_panel_->SetScene(active_scene_);
 }
 
-void EditorLayer::LoadScene() {
+void EditorLayer::OpenScene() {
   auto filepath = DialogUtils::OpenFile("Samui Scene(*.samui)\0*.samui\0");
   if (!filepath.empty()) {
-    main_camera_ = entt::null;
-    active_scene_ = std::make_shared<Scene>();
-    scene_hierarchy_panel_->SetScene(active_scene_);
-
-    Serialization::DeserializeScene(*active_scene_, filepath);
+    OpenScene(filepath);
   }
+}
+
+void EditorLayer::OpenScene(const std::filesystem::path& path) {
+  main_camera_ = entt::null;
+  active_scene_ = std::make_shared<Scene>();
+  scene_hierarchy_panel_->SetScene(active_scene_);
+
+  Serialization::DeserializeScene(*active_scene_, path.string());
 }
 
 void EditorLayer::SaveSceneAs() {
@@ -450,7 +464,7 @@ bool EditorLayer::OnKeyPressed(KeyPressedEvent& event) {
     } break;
     case SAMUI_KEY_O: {
       if (ctrl_pressed) {
-        LoadScene();
+        OpenScene();
       }
     } break;
     case SAMUI_KEY_S: {
@@ -475,7 +489,8 @@ bool EditorLayer::OnKeyPressed(KeyPressedEvent& event) {
 }
 
 bool EditorLayer::OnMouseButtonPressed(MouseButtonPressedEvent& event) {
-  if (hovered_entity_ != entt::null && !ImGuizmo::IsOver() && !Input::IsKeyPressed(SAMUI_KEY_LEFT_CONTROL)) {
+  if (hovered_entity_ != entt::null && !ImGuizmo::IsOver() &&
+      !Input::IsKeyPressed(SAMUI_KEY_LEFT_CONTROL)) {
     scene_hierarchy_panel_->SetSelectedEntity(hovered_entity_);
     return false;
   }
