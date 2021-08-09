@@ -1,10 +1,13 @@
 #ifndef SAMUI_RENDERER2D_H_
 #define SAMUI_RENDERER2D_H_
 
-#include "core/core.h"
+// clang-format off
+#include <core/core.h>
 #include "orthographic_camera.h"
 #include "subtexture2d.h"
 #include "texture.h"
+#include <scene/components.h>
+// clang-format on
 
 namespace samui {
 
@@ -14,7 +17,8 @@ class SAMUI_API Renderer2D {
   static void Shutdown();
 
   static void BeginScene(const glm::mat4& view_proj);
-  static void BeginScene(const glm::mat4& projection, const glm::mat4& transform);
+  static void BeginScene(const glm::mat4& projection,
+                         const glm::mat4& transform);
   static void BeginScene(const OrthographicCamera& camera);
   static void EndScene();
   static void Flush();
@@ -63,14 +67,17 @@ class SAMUI_API Renderer2D {
                               float                    tilingFactor = 1.f,
                               glm::vec4                tint = glm::vec4(1.f));
 
-  static void DrawQuad(const glm::mat4& transform, const glm::vec4& color);
+  static void DrawQuad(const glm::mat4& transform, const glm::vec4& color, int entity_id = -1);
   static void DrawQuad(const glm::mat4&      transform,
                        const Ref<Texture2D>& texture, float tilingFactor = 1.f,
-                       glm::vec4 tint = glm::vec4(1.f));
+                       glm::vec4 tint = glm::vec4(1.f), int entity_id = -1);
   static void DrawQuad(const glm::mat4&         transform,
                        const Ref<SubTexture2D>& subtexture,
                        float                    tilingFactor = 1.f,
                        glm::vec4                tint = glm::vec4(1.f));
+
+  static void DrawSprite(const glm::mat4&               transform,
+                         const SpriteRendererComponent& sprite, int entity_id = -1);
 
   struct Statistics {
     uint32_t draw_calls = 0;

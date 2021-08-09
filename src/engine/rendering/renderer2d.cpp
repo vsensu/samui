@@ -17,6 +17,10 @@ struct QuadVertex {
   glm::vec2 texcoord;
   float     texture_index;
   float     tiling_factor;
+
+  // #ifdef SAMUI_EDITOR
+  int entity_id{-1};
+  // #endif
 };
 
 struct Rendderer2DData {
@@ -55,6 +59,7 @@ void Renderer2D::Init() {
       {"TexCoord", ShaderDataType::Float2},
       {"TexIndex", ShaderDataType::Float},
       {"TilingFactor", ShaderDataType::Float},
+      {"EntityID", ShaderDataType::Int},
   });
   renderer2d_data.quad_vertex_array->AddVertexBuffer(
       renderer2d_data.quad_vertex_buffer);
@@ -569,7 +574,7 @@ void Renderer2D::DrawRotatedQuad(const glm::vec3& pos, const glm::vec2& size,
   ++renderer2d_data.stats.quad_count;
 }
 
-void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color) {
+void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color, int entity_id) {
   SAMUI_PROFILE_FUNCTION();
 
   if (renderer2d_data.quad_index_count >= Rendderer2DData::max_indices) {
@@ -585,6 +590,7 @@ void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color) {
   renderer2d_data.quad_vertex_buffer_ptr->texcoord = {0.f, 0.f};
   renderer2d_data.quad_vertex_buffer_ptr->texture_index = white_texture_index;
   renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
+  renderer2d_data.quad_vertex_buffer_ptr->entity_id = entity_id;
   ++renderer2d_data.quad_vertex_buffer_ptr;
 
   renderer2d_data.quad_vertex_buffer_ptr->position =
@@ -593,6 +599,7 @@ void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color) {
   renderer2d_data.quad_vertex_buffer_ptr->texcoord = {1.f, 0.f};
   renderer2d_data.quad_vertex_buffer_ptr->texture_index = white_texture_index;
   renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
+  renderer2d_data.quad_vertex_buffer_ptr->entity_id = entity_id;
   ++renderer2d_data.quad_vertex_buffer_ptr;
 
   renderer2d_data.quad_vertex_buffer_ptr->position =
@@ -601,6 +608,7 @@ void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color) {
   renderer2d_data.quad_vertex_buffer_ptr->texcoord = {1.f, 1.f};
   renderer2d_data.quad_vertex_buffer_ptr->texture_index = white_texture_index;
   renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
+  renderer2d_data.quad_vertex_buffer_ptr->entity_id = entity_id;
   ++renderer2d_data.quad_vertex_buffer_ptr;
 
   renderer2d_data.quad_vertex_buffer_ptr->position =
@@ -609,6 +617,7 @@ void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color) {
   renderer2d_data.quad_vertex_buffer_ptr->texcoord = {0.f, 1.f};
   renderer2d_data.quad_vertex_buffer_ptr->texture_index = white_texture_index;
   renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
+  renderer2d_data.quad_vertex_buffer_ptr->entity_id = entity_id;
   ++renderer2d_data.quad_vertex_buffer_ptr;
 
   renderer2d_data.quad_index_count += 6;
@@ -617,7 +626,7 @@ void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color) {
 }
 void Renderer2D::DrawQuad(const glm::mat4&      transform,
                           const Ref<Texture2D>& texture, float tilingFactor,
-                          glm::vec4 tint) {
+                          glm::vec4 tint, int entity_id) {
   SAMUI_PROFILE_FUNCTION();
 
   if (renderer2d_data.quad_index_count >= Rendderer2DData::max_indices) {
@@ -645,6 +654,7 @@ void Renderer2D::DrawQuad(const glm::mat4&      transform,
   renderer2d_data.quad_vertex_buffer_ptr->texcoord = {0.f, 0.f};
   renderer2d_data.quad_vertex_buffer_ptr->texture_index = texture_index;
   renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
+  renderer2d_data.quad_vertex_buffer_ptr->entity_id = entity_id;
   ++renderer2d_data.quad_vertex_buffer_ptr;
 
   renderer2d_data.quad_vertex_buffer_ptr->position =
@@ -653,6 +663,7 @@ void Renderer2D::DrawQuad(const glm::mat4&      transform,
   renderer2d_data.quad_vertex_buffer_ptr->texcoord = {1.f, 0.f};
   renderer2d_data.quad_vertex_buffer_ptr->texture_index = texture_index;
   renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
+  renderer2d_data.quad_vertex_buffer_ptr->entity_id = entity_id;
   ++renderer2d_data.quad_vertex_buffer_ptr;
 
   renderer2d_data.quad_vertex_buffer_ptr->position =
@@ -661,6 +672,7 @@ void Renderer2D::DrawQuad(const glm::mat4&      transform,
   renderer2d_data.quad_vertex_buffer_ptr->texcoord = {1.f, 1.f};
   renderer2d_data.quad_vertex_buffer_ptr->texture_index = texture_index;
   renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
+  renderer2d_data.quad_vertex_buffer_ptr->entity_id = entity_id;
   ++renderer2d_data.quad_vertex_buffer_ptr;
 
   renderer2d_data.quad_vertex_buffer_ptr->position =
@@ -669,6 +681,7 @@ void Renderer2D::DrawQuad(const glm::mat4&      transform,
   renderer2d_data.quad_vertex_buffer_ptr->texcoord = {0.f, 1.f};
   renderer2d_data.quad_vertex_buffer_ptr->texture_index = texture_index;
   renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
+  renderer2d_data.quad_vertex_buffer_ptr->entity_id = entity_id;
   ++renderer2d_data.quad_vertex_buffer_ptr;
 
   renderer2d_data.quad_index_count += 6;
@@ -735,6 +748,13 @@ void Renderer2D::DrawQuad(const glm::mat4&         transform,
   renderer2d_data.quad_index_count += 6;
 
   ++renderer2d_data.stats.quad_count;
+}
+
+void Renderer2D::DrawSprite(const glm::mat4&               transform,
+                            const SpriteRendererComponent& sprite,
+                            int                            entity_id) {
+  SAMUI_PROFILE_FUNCTION();
+  DrawQuad(transform, sprite.color, entity_id);
 }
 
 void Renderer2D::ResetStats() {

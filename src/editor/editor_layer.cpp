@@ -143,11 +143,13 @@ void EditorLayer::OnUpdate(const Timestep& deltaTime) {
     // projection,
     // active_scene_->GetComponent<TransformComponent>(main_camera_)
     // .transform());
-    auto view = active_scene_->registry()
-                    .view<TransformComponent, SpriteRendererComponent>();
-    view.each([](const auto& transform, const auto& sprite) {
-      Renderer2D::DrawQuad(transform.transform(), sprite.color);
-    });
+    auto group = active_scene_->registry()
+                     .group<TransformComponent, SpriteRendererComponent>();
+    for (auto entity : group) {
+      auto& transform = group.get<TransformComponent>(entity);
+      auto& sprite = group.get<SpriteRendererComponent>(entity);
+      Renderer2D::DrawSprite(transform.transform(), sprite, (int)entity);
+    }
 
     Renderer2D::EndScene();
     // }
@@ -165,7 +167,7 @@ void EditorLayer::OnUpdate(const Timestep& deltaTime) {
     if (mouse_x >= 0 && mouse_y >= 0 && mouse_x < viewport_size.x &&
         mouse_y < viewport_size.y) {
       int pixel = frame_buffer_->ReadPixel(1, mouse_x, mouse_y);
-      SAMUI_ENGINE_INFO("entity: {0}", pixel);
+      hovered_entity_ = (pixel == -1 ? entt::null : (Entity)pixel);
     }
 
     frame_buffer_->Unbind();
@@ -206,6 +208,12 @@ void EditorLayer::OnImGuiRender() {
   static int color_attachment_index = 0;
   ImGui::DragInt("Color Attachment", &color_attachment_index, 1, 0,
                  frame_buffer_->ColorAttachmentCount() - 1);
+
+  if (hovered_entity_ != entt::null) {
+    ImGui::Text(
+        "Hovered Entity: %s",
+        active_scene_->GetComponent<NameComponent>(hovered_entity_).name);
+  }
 
   ImGui::End();  // settings pannel end
 

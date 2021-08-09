@@ -48,6 +48,8 @@ class EditorLayer : public Layer {
   EditorCamera editor_camera_;
 
   glm::vec2 viewport_bounds_[2];
+
+  Entity hovered_entity_{entt::null};
 };
 
 }  // namespace samui

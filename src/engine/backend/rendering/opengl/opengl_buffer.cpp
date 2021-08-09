@@ -124,11 +124,26 @@ void OpenGLVertexArray::AddVertexBuffer(
   uint32_t    index = 0;
   const auto& layout = buffer->GetLayout();
   for (const auto& elem : layout) {
-    // 定义OpenGL如何理解该顶点数据
-    glVertexAttribPointer(index, ShaderDataTypeCount(elem.Type),
-                          ShaderDataTypeToOpenGLBaseType(elem.Type),
-                          elem.Normalized ? GL_TRUE : GL_FALSE,
-                          layout.GetStride(), (const void*)elem.Offset);
+    switch (elem.Type) {
+      case ShaderDataType::Bool:
+      case ShaderDataType::Int:
+      case ShaderDataType::Int2:
+      case ShaderDataType::Int3:
+      case ShaderDataType::Int4:
+        // 定义OpenGL如何理解该顶点数据
+        glVertexAttribIPointer(index, ShaderDataTypeCount(elem.Type),
+                               ShaderDataTypeToOpenGLBaseType(elem.Type),
+                               layout.GetStride(), (const void*)elem.Offset);
+        break;
+      default:
+        // 定义OpenGL如何理解该顶点数据
+        glVertexAttribPointer(index, ShaderDataTypeCount(elem.Type),
+                              ShaderDataTypeToOpenGLBaseType(elem.Type),
+                              elem.Normalized ? GL_TRUE : GL_FALSE,
+                              layout.GetStride(), (const void*)elem.Offset);
+
+        break;
+    }
 
     // 启用顶点属性 顶点属性默认是禁用的
     glEnableVertexAttribArray(index);
