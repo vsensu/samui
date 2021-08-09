@@ -319,6 +319,8 @@ void EditorLayer::OnEvent(Event& event) {
   EventDispatcher dispatcher(event);
   dispatcher.Dispatch<KeyPressedEvent>(
       BIND_EVENT_FUNC(EditorLayer::OnKeyPressed));
+  dispatcher.Dispatch<MouseButtonPressedEvent>(
+      BIND_EVENT_FUNC(EditorLayer::OnMouseButtonPressed));
 }
 
 void EditorLayer::OnImGuiFullScreenDocking() {
@@ -464,6 +466,15 @@ bool EditorLayer::OnKeyPressed(KeyPressedEvent& event) {
     } break;
     default:
       return false;
+  }
+
+  return true;
+}
+
+bool EditorLayer::OnMouseButtonPressed(MouseButtonPressedEvent& event) {
+  if (hovered_entity_ != entt::null && !ImGuizmo::IsOver() && !Input::IsKeyPressed(SAMUI_KEY_LEFT_CONTROL)) {
+    scene_hierarchy_panel_->SetSelectedEntity(hovered_entity_);
+    return false;
   }
 
   return true;

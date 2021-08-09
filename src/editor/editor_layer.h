@@ -27,6 +27,7 @@ class EditorLayer : public Layer {
   void SaveSceneAs();
 
   bool OnKeyPressed(KeyPressedEvent& event);
+  bool OnMouseButtonPressed(MouseButtonPressedEvent& event);
 
  private:
   OrthographicCameraController camera_controller_;

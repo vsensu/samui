@@ -127,6 +127,7 @@ void WindowsWindow::Init(const WindowProps& props) {
         switch (action) {
           case GLFW_PRESS: {
             MouseButtonPressedEvent event(button);
+            data.EventCallback(event);
             break;
           }
           case GLFW_RELEASE: {

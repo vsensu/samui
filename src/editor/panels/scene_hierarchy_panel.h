@@ -14,6 +14,7 @@ class SceneHierarchyPanel {
   void SetScene(Ref<Scene> scene);
 
   Entity GetSelectedEntity() const { return selected_entity_; }
+  void SetSelectedEntity(Entity entity) { selected_entity_ = entity; }
 
  private:
   void DrawProperties(Entity entity);
