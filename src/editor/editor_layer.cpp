@@ -91,6 +91,7 @@ void EditorLayer::OnAttach() {
   active_scene_ = std::make_shared<Scene>();
 
   scene_hierarchy_panel_ = std::make_shared<SceneHierarchyPanel>(active_scene_);
+  content_browser_ = std::make_shared<ContentBrowser>();
 
   editor_camera_ = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
 
@@ -311,6 +312,8 @@ void EditorLayer::OnImGuiRender() {
   // scene hierarchy pannel begin
   scene_hierarchy_panel_->OnImGuiRender();
   // scene hierarchy pannel end
+
+  content_browser_->OnImGuiRender();
 }
 
 void EditorLayer::OnEvent(Event& event) {

@@ -5,6 +5,7 @@
 #include <samui.h>
 
 #include "panels/scene_hierarchy_panel.h"
+#include "panels/content_browser.h"
 #include "editor_camera.h"
 // clang-format on
 
@@ -43,6 +44,7 @@ class EditorLayer : public Layer {
   Entity           second_camera_{entt::null};
 
   Ref<SceneHierarchyPanel> scene_hierarchy_panel_;
+  Ref<ContentBrowser>      content_browser_;
 
   ImGuizmo::OPERATION gizmos_op_{ImGuizmo::TRANSLATE};
 
