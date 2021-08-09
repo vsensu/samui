@@ -122,6 +122,7 @@ void EditorLayer::OnUpdate(const Timestep& deltaTime) {
     SAMUI_PROFILE_SCOPE("Render Draw(CPU)");
     frame_buffer_->Bind();
     RenderCommand::Clear();
+    frame_buffer_->ClearAttachment(1, -1);
 
     // Renderer2D::BeginScene(camera_controller_.GetCamera());
 

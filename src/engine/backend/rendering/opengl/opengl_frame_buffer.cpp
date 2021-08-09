@@ -7,14 +7,28 @@
 
 namespace samui {
 
-GLenum FrameBufferTextureFormatToGL(FrameBufferTextureFormat format) {
+GLenum FrameBufferTextureFormatToGLInternalFormat(
+    FrameBufferTextureFormat format) {
+  switch (format) {
+    case FrameBufferTextureFormat::RGBA:
+      return GL_RGBA8;
+    case FrameBufferTextureFormat::RED_INTEGER:
+      return GL_R32I;
+    case FrameBufferTextureFormat::Depth24_Stencil8:
+      return GL_DEPTH24_STENCIL8;
+  }
+  return GL_NONE;
+}
+
+GLenum FrameBufferTextureFormatToGLStorageFormat(
+    FrameBufferTextureFormat format) {
   switch (format) {
     case FrameBufferTextureFormat::RGBA:
       return GL_RGBA;
     case FrameBufferTextureFormat::RED_INTEGER:
-      return GL_RED;
+      return GL_RED_INTEGER;
     case FrameBufferTextureFormat::Depth24_Stencil8:
-      return GL_DEPTH24_STENCIL8;
+      return GL_DEPTH_STENCIL;
   }
   return GL_NONE;
 }
@@ -40,14 +54,18 @@ void CreateTextures(bool multisampled, uint32_t* outID, uint32_t count) {
   glGenTextures(count, outID);
 }
 
-void AttachColorTexture(uint32_t id, int samples, GLenum format, uint32_t width,
+void AttachColorTexture(uint32_t id, int samples,
+                        FrameBufferTextureFormat format, uint32_t width,
                         uint32_t height, int index) {
   bool multisampled = samples > 1;
   if (multisampled) {
-    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, format, width,
-                            height, GL_FALSE);
+    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples,
+                            FrameBufferTextureFormatToGLInternalFormat(format),
+                            width, height, GL_FALSE);
   } else {
-    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format,
+    glTexImage2D(GL_TEXTURE_2D, 0,
+                 FrameBufferTextureFormatToGLInternalFormat(format), width,
+                 height, 0, FrameBufferTextureFormatToGLStorageFormat(format),
                  GL_UNSIGNED_BYTE, nullptr);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -61,16 +79,19 @@ void AttachColorTexture(uint32_t id, int samples, GLenum format, uint32_t width,
                          TextureTarget(multisampled), id, 0);
 }
 
-void AttachDepthTexture(uint32_t id, int samples, GLenum format,
-                        GLenum attachmentType, uint32_t width,
-                        uint32_t height) {
+void AttachDepthTexture(uint32_t id, int samples,
+                        FrameBufferTextureFormat format, GLenum attachmentType,
+                        uint32_t width, uint32_t height) {
   bool multisampled = samples > 1;
   if (multisampled) {
-    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, format, width,
-                            height, GL_FALSE);
+    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples,
+                            FrameBufferTextureFormatToGLInternalFormat(format),
+                            width, height, GL_FALSE);
   } else {
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, width, height, 0,
-                 GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0,
+                 FrameBufferTextureFormatToGLInternalFormat(format), width,
+                 height, 0, FrameBufferTextureFormatToGLStorageFormat(format),
+                 GL_UNSIGNED_INT_24_8, NULL);
 
     // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -126,18 +147,17 @@ void OpenGLFrameBuffer::Invalidate() {
 
     for (std::size_t i = 0; i < color_attachments_.size(); ++i) {
       BindTexture(multi_sample, color_attachments_[i]);
-      auto format =
-          FrameBufferTextureFormatToGL(color_attachments_spec_[i].format);
-      AttachColorTexture(color_attachments_[i], spec_.samples, format,
-                         spec_.width, spec_.height, i);
+      AttachColorTexture(color_attachments_[i], spec_.samples,
+                         color_attachments_spec_[i].format, spec_.width,
+                         spec_.height, i);
     }
   }
 
   if (depth_attachment_spec_.format != FrameBufferTextureFormat::None) {
     CreateTextures(multi_sample, &depth_attachment_, 1);
     BindTexture(multi_sample, depth_attachment_);
-    auto format = FrameBufferTextureFormatToGL(depth_attachment_spec_.format);
-    AttachDepthTexture(depth_attachment_, spec_.samples, format,
+    AttachDepthTexture(depth_attachment_, spec_.samples,
+                       depth_attachment_spec_.format,
                        GL_DEPTH_STENCIL_ATTACHMENT, spec_.width, spec_.height);
   }
 
@@ -186,6 +206,13 @@ int OpenGLFrameBuffer::ReadPixel(uint32_t attachment_index, int x,
   int pixel;
   glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, &pixel);
   return pixel;
+}
+
+void OpenGLFrameBuffer::ClearAttachment(uint32_t    attachment_index,
+                                        int value) {
+  SAMUI_ENGINE_ASSERT(attachment_index < color_attachments_.size());
+
+  glClearBufferiv(GL_COLOR, attachment_index, (const GLint*)&value);
 }
 
 }  // namespace samui

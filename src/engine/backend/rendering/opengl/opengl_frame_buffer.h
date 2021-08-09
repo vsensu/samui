@@ -35,6 +35,8 @@ class SAMUI_API OpenGLFrameBuffer : public FrameBuffer {
     return spec_;
   }
 
+  virtual void ClearAttachment(uint32_t attachment_index, int value) override;
+
  private:
   uint32_t                 buffer_id_{0};
   FrameBufferSpecification spec_;
