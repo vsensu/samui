@@ -15,3 +15,12 @@ target("editor")
     add_packages("spdlog", "glfw", "glm", "yaml-cpp")
     add_deps("engine", "glad", "imgui")
     -- add_links("user32", "gdi32", "shell32")
+
+    after_build(function (target)
+        local target_dir = path.join(target:targetdir(), "editor")
+        if not os.isdir(target_dir) then
+            os.mkdir(target_dir)
+        end
+        print("[build] copy editor assets ...")
+        os.cp("$(projectdir)/src/editor/assets/", target_dir)
+    end)

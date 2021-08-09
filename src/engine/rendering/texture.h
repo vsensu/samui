@@ -16,6 +16,8 @@ class SAMUI_API Texture {
   virtual void Bind(uint8_t slot = 0) = 0;
 
   virtual bool operator==(const Texture& other) const = 0;
+
+  virtual uint32_t GetTextureID() const = 0;
 };
 
 class SAMUI_API Texture2D : public Texture {

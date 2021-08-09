@@ -2,6 +2,8 @@
 #define SAMUI_CONTENT_BROWSER_H_
 
 // clang-format off
+#include <samui.h>
+
 #include <filesystem>
 // clang-format on
 
@@ -14,6 +16,9 @@ class ContentBrowser {
 
  private:
   std::filesystem::path path_;
+
+  Ref<Texture2D> folder_icon_;
+  Ref<Texture2D> file_icon_;
 };
 }  // namespace samui
 

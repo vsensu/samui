@@ -23,6 +23,8 @@ class SAMUI_API OpenGLTexture2D : public Texture2D {
            static_cast<const OpenGLTexture2D&>(other).texture_id_;
   }
 
+  virtual uint32_t GetTextureID() const override { return texture_id_; }
+
   static unsigned int GetOpenGLTextureEnum(uint8_t slot);
 
  private:
