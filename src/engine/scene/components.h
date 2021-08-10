@@ -9,6 +9,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <core/core.h>
+#include <rendering/texture.h>
 // clang-format on
 
 namespace samui {
@@ -37,7 +38,9 @@ struct SAMUI_API TransformComponent {
 };
 
 struct SAMUI_API SpriteRendererComponent {
-  glm::vec4 color{1.0f, 1.0f, 1.0f, 1.0f};
+  glm::vec4      color{1.0f, 1.0f, 1.0f, 1.0f};
+  Ref<Texture2D> texture{0};
+  float          tiling_factor{1.0f};
 };
 
 struct SAMUI_API CameraComponent {

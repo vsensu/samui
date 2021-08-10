@@ -249,6 +249,25 @@ void SceneHierarchyPanel::DrawProperties(Entity entity) {
   DrawComponent<SpriteRendererComponent>(
       "Sprite Renderer", *scene_, entity, [](auto& component) {
         ImGui::ColorEdit4("Sprite Color", glm::value_ptr(component.color));
+        if (component.texture != nullptr) {
+          ImGui::Image((ImTextureID)component.texture->GetTextureID(),
+                       ImVec2(128, 128), {0, 1}, {1, 0});
+        } else {
+          ImGui::Image((ImTextureID)1, ImVec2(128, 128), {0, 1}, {1, 0});
+        }
+
+        if (ImGui::BeginDragDropTarget()) {
+          if (const ImGuiPayload* payload =
+                  ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM")) {
+            const char* path = (const char*)payload->Data;
+            component.texture = Texture2D::Create(path);
+          }
+
+          ImGui::EndDragDropTarget();
+        }
+
+        ImGui::DragFloat("Tiling Factor", &component.tiling_factor, 0.1f, 0.f,
+                         100.f);
       });
 }
 

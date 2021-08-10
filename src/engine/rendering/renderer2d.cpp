@@ -574,7 +574,8 @@ void Renderer2D::DrawRotatedQuad(const glm::vec3& pos, const glm::vec2& size,
   ++renderer2d_data.stats.quad_count;
 }
 
-void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color, int entity_id) {
+void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color,
+                          int entity_id) {
   SAMUI_PROFILE_FUNCTION();
 
   if (renderer2d_data.quad_index_count >= Rendderer2DData::max_indices) {
@@ -754,7 +755,11 @@ void Renderer2D::DrawSprite(const glm::mat4&               transform,
                             const SpriteRendererComponent& sprite,
                             int                            entity_id) {
   SAMUI_PROFILE_FUNCTION();
-  DrawQuad(transform, sprite.color, entity_id);
+  if (sprite.texture != nullptr) {
+    DrawQuad(transform, sprite.texture, sprite.tiling_factor, sprite.color, entity_id);
+  } else {
+    DrawQuad(transform, sprite.color, entity_id);
+  }
 }
 
 void Renderer2D::ResetStats() {
