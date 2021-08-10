@@ -123,7 +123,7 @@ void EditorLayer::OnUpdate(const Timestep& deltaTime) {
     SAMUI_PROFILE_SCOPE("Render Draw(CPU)");
     frame_buffer_->Bind();
     RenderCommand::Clear();
-    frame_buffer_->ClearAttachment(1, -1);
+    frame_buffer_->ClearAttachment(1, static_cast<uint32_t>(entt::null));
 
     // Renderer2D::BeginScene(camera_controller_.GetCamera());
 
@@ -149,7 +149,7 @@ void EditorLayer::OnUpdate(const Timestep& deltaTime) {
     for (auto entity : group) {
       auto& transform = group.get<TransformComponent>(entity);
       auto& sprite = group.get<SpriteRendererComponent>(entity);
-      Renderer2D::DrawSprite(transform.transform(), sprite, (int)entity);
+      Renderer2D::DrawSprite(transform.transform(), sprite, entity);
     }
 
     Renderer2D::EndScene();

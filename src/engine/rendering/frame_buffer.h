@@ -37,11 +37,11 @@ class SAMUI_API FrameBuffer {
   virtual void     Bind() = 0;
   virtual void     Unbind() = 0;
   virtual void     Resize(uint32_t width, uint32_t height) = 0;
-  virtual int      ReadPixel(uint32_t attachment_index, int x, int y) const = 0;
+  virtual uint32_t ReadPixel(uint32_t attachment_index, int x, int y) const = 0;
   virtual uint32_t GetColorAttachmentRenderID(uint32_t index = 0) const = 0;
   virtual uint32_t ColorAttachmentCount() const = 0;
   virtual const FrameBufferSpecification& GetSpecification() const = 0;
-  virtual void ClearAttachment(uint32_t attachment_index, int value) = 0;
+  virtual void ClearAttachment(uint32_t attachment_index, uint32_t value) = 0;
 
   static Ref<FrameBuffer> Create(const FrameBufferSpecification& spec);
 };

@@ -19,7 +19,7 @@ struct QuadVertex {
   float     tiling_factor;
 
   // #ifdef SAMUI_EDITOR
-  int entity_id{-1};
+  uint32_t entity_id{entt::null};
   // #endif
 };
 
@@ -202,6 +202,7 @@ void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec2& size,
 void Renderer2D::DrawQuad(const glm::vec2& pos, const glm::vec2& size,
                           const Ref<SubTexture2D>& subtexture,
                           float tilingFactor, glm::vec4 tint) {
+  SAMUI_PROFILE_FUNCTION();
   DrawQuad({pos.x, pos.y, 0.f}, size, subtexture, tilingFactor, tint);
 }
 
@@ -217,6 +218,7 @@ void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec2& size,
 
 void Renderer2D::DrawRotatedQuad(const glm::vec2& pos, const glm::vec2& size,
                                  float rotation, const glm::vec4& color) {
+  SAMUI_PROFILE_FUNCTION();
   DrawRotatedQuad({pos.x, pos.y, 0.f}, size, rotation, color);
 }
 
@@ -234,6 +236,7 @@ void Renderer2D::DrawRotatedQuad(const glm::vec3& pos, const glm::vec2& size,
 void Renderer2D::DrawRotatedQuad(const glm::vec2& pos, const glm::vec2& size,
                                  float rotation, const Ref<Texture2D>& texture,
                                  float tilingFactor, glm::vec4 tint) {
+  SAMUI_PROFILE_FUNCTION();
   DrawRotatedQuad({pos.x, pos.y, 0.f}, size, rotation, texture, tilingFactor,
                   tint);
 }
@@ -253,6 +256,7 @@ void Renderer2D::DrawRotatedQuad(const glm::vec2& pos, const glm::vec2& size,
                                  float                    rotation,
                                  const Ref<SubTexture2D>& subtexture,
                                  float tilingFactor, glm::vec4 tint) {
+  SAMUI_PROFILE_FUNCTION();
   DrawRotatedQuad({pos.x, pos.y, 0.f}, size, rotation, subtexture, tilingFactor,
                   tint);
 }
@@ -270,13 +274,14 @@ void Renderer2D::DrawRotatedQuad(const glm::vec3& pos, const glm::vec2& size,
 }
 
 void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color,
-                          int entity_id) {
+                          entt::entity entity_id) {
   SAMUI_PROFILE_FUNCTION();
-  DrawQuad(transform, nullptr, 1.f, color, entity_id);
+  DrawQuad(transform, static_cast<const Ref<Texture2D>&>(nullptr), 1.f, color,
+           entity_id);
 }
 void Renderer2D::DrawQuad(const glm::mat4&      transform,
                           const Ref<Texture2D>& texture, float tilingFactor,
-                          glm::vec4 tint, int entity_id) {
+                          glm::vec4 tint, entt::entity entity_id) {
   SAMUI_PROFILE_FUNCTION();
 
   if (renderer2d_data.quad_index_count >= Rendderer2DData::max_indices) {
@@ -310,7 +315,8 @@ void Renderer2D::DrawQuad(const glm::mat4&      transform,
     renderer2d_data.quad_vertex_buffer_ptr->texcoord = tex_coords[i];
     renderer2d_data.quad_vertex_buffer_ptr->texture_index = texture_index;
     renderer2d_data.quad_vertex_buffer_ptr->tiling_factor = tilingFactor;
-    renderer2d_data.quad_vertex_buffer_ptr->entity_id = entity_id;
+    renderer2d_data.quad_vertex_buffer_ptr->entity_id =
+        static_cast<uint32_t>(entity_id);
     ++renderer2d_data.quad_vertex_buffer_ptr;
   }
 
@@ -319,15 +325,16 @@ void Renderer2D::DrawQuad(const glm::mat4&      transform,
 }
 void Renderer2D::DrawQuad(const glm::mat4&         transform,
                           const Ref<SubTexture2D>& subtexture,
-                          float tilingFactor, glm::vec4 tint) {
+                          float tilingFactor, glm::vec4 tint,
+                          entt::entity entity_id) {
   SAMUI_PROFILE_FUNCTION();
   const auto& texture = subtexture->GetTexture();
-  DrawQuad(transform, texture, tilingFactor, tint);
+  DrawQuad(transform, texture, tilingFactor, tint, entity_id);
 }
 
 void Renderer2D::DrawSprite(const glm::mat4&               transform,
                             const SpriteRendererComponent& sprite,
-                            int                            entity_id) {
+                            entt::entity                   entity_id) {
   SAMUI_PROFILE_FUNCTION();
   if (sprite.texture != nullptr) {
     DrawQuad(transform, sprite.texture, sprite.tiling_factor, sprite.color,

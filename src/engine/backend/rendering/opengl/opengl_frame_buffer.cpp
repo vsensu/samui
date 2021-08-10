@@ -13,7 +13,7 @@ GLenum FrameBufferTextureFormatToGLInternalFormat(
     case FrameBufferTextureFormat::RGBA:
       return GL_RGBA8;
     case FrameBufferTextureFormat::RED_INTEGER:
-      return GL_R32I;
+      return GL_R32UI;
     case FrameBufferTextureFormat::Depth24_Stencil8:
       return GL_DEPTH24_STENCIL8;
   }
@@ -199,20 +199,20 @@ void OpenGLFrameBuffer::Resize(uint32_t width, uint32_t height) {
   Invalidate();
 }
 
-int OpenGLFrameBuffer::ReadPixel(uint32_t attachment_index, int x,
-                                 int y) const {
+uint32_t OpenGLFrameBuffer::ReadPixel(uint32_t attachment_index, int x,
+                                      int y) const {
   SAMUI_ENGINE_ASSERT(attachment_index < color_attachments_.size());
   glReadBuffer(GL_COLOR_ATTACHMENT0 + attachment_index);
   int pixel;
-  glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, &pixel);
+  glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_UNSIGNED_INT, &pixel);
   return pixel;
 }
 
-void OpenGLFrameBuffer::ClearAttachment(uint32_t    attachment_index,
-                                        int value) {
+void OpenGLFrameBuffer::ClearAttachment(uint32_t attachment_index,
+                                        uint32_t value) {
   SAMUI_ENGINE_ASSERT(attachment_index < color_attachments_.size());
 
-  glClearBufferiv(GL_COLOR, attachment_index, (const GLint*)&value);
+  glClearBufferuiv(GL_COLOR, attachment_index, (const GLuint*)&value);
 }
 
 }  // namespace samui

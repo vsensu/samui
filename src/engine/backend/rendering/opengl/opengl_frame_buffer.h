@@ -21,7 +21,7 @@ class SAMUI_API OpenGLFrameBuffer : public FrameBuffer {
   virtual void     Unbind() override;
   virtual void     Resize(uint32_t width, uint32_t height) override;
 
-  virtual int      ReadPixel(uint32_t attachment_index, int x, int y) const override;
+  virtual uint32_t      ReadPixel(uint32_t attachment_index, int x, int y) const override;
   virtual uint32_t GetColorAttachmentRenderID(uint32_t index = 0) const override {
     SAMUI_ENGINE_ASSERT(index < color_attachments_.size());
     return color_attachments_[index];
@@ -35,7 +35,7 @@ class SAMUI_API OpenGLFrameBuffer : public FrameBuffer {
     return spec_;
   }
 
-  virtual void ClearAttachment(uint32_t attachment_index, int value) override;
+  virtual void ClearAttachment(uint32_t attachment_index, uint32_t value) override;
 
  private:
   uint32_t                 buffer_id_{0};
