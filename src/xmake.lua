@@ -1,1 +1,1 @@
-includes("engine", "editor")
+includes("engine", "editor", "tools")

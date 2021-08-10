@@ -1,5 +1,5 @@
 -- project
-set_project("samui")
+set_project("samui_engine")
 
 -- set project version
 set_version("1.0.0", {build = "%Y%m%d%H%M"})
