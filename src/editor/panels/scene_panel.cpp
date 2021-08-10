@@ -22,6 +22,11 @@ ScenePanel::ScenePanel(const Ref<Scene>& scene, EditorLayer* parent)
   editor_camera_ = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
 }
 
+void ScenePanel::SetScene(const Ref<Scene>& scene) {
+  scene_ = scene;
+  hovered_entity_ = entt::null;
+}
+
 void ScenePanel::OnUpdate(const Timestep& deltaTime) {
   editor_camera_.OnUpdate(deltaTime);
 }

@@ -158,6 +158,10 @@ void Renderer2D::EndScene() {
 
 void Renderer2D::Flush() {
   SAMUI_PROFILE_FUNCTION();
+  if(renderer2d_data.quad_index_count == 0) {
+    return;
+  }
+  
   for (uint32_t i = 0; i < renderer2d_data.texture_slot_index; ++i) {
     renderer2d_data.texture_slots[i]->Bind(i);
   }

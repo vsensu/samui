@@ -14,6 +14,8 @@ class ScenePanel {
  public:
   ScenePanel(const Ref<Scene>& scene, EditorLayer* parent);
 
+  void SetScene(const Ref<Scene>& scene);
+
   void OnUpdate(const Timestep& deltaTime);
   void RenderScene();
   void OnImGuiRender();

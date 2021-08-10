@@ -28,7 +28,7 @@ void EditorLayer::OnUpdate(const Timestep& deltaTime) {
   active_scene_->OnUpdate(deltaTime);
   scene_panel_->OnUpdate(deltaTime);
 
-  RenderCommand::Clear();
+  // RenderCommand::Clear();
   scene_panel_->RenderScene();
 }
 
@@ -169,6 +169,7 @@ void EditorLayer::NewScene() {
   main_camera_ = entt::null;
   active_scene_ = std::make_shared<Scene>();
   scene_hierarchy_panel_->SetScene(active_scene_);
+  scene_panel_->SetScene(active_scene_);
 }
 
 void EditorLayer::OpenScene() {
@@ -182,6 +183,7 @@ void EditorLayer::OpenScene(const std::filesystem::path& path) {
   main_camera_ = entt::null;
   active_scene_ = std::make_shared<Scene>();
   scene_hierarchy_panel_->SetScene(active_scene_);
+  scene_panel_->SetScene(active_scene_);
 
   Serialization::DeserializeScene(*active_scene_, path.string());
 }
