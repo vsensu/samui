@@ -7,7 +7,7 @@ target("editor")
     elseif is_mode("release") then
         add_defines("SAMUI_RELEASE")
     end
-    add_includedirs("$(projectdir)/deps/headeronly", "$(projectdir)/deps/src", "$(projectdir)/src/engine/")
+    add_includedirs("$(projectdir)/deps/headeronly", "$(projectdir)/deps/src", "$(projectdir)/src/engine", "$(projectdir)/src/editor")
     add_includedirs("$(projectdir)/deps/src/glad/include")
     add_includedirs("$(projectdir)/deps/src/imgui-docking")
     add_includedirs("$(projectdir)/src/engine/entt-3.8.1/single_include")

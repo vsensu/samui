@@ -6,9 +6,10 @@
 
 #include <samui.h>
 
-#include "panels/scene_hierarchy_panel.h"
-#include "panels/content_browser.h"
-#include "editor_camera.h"
+#include <panels/scene_hierarchy_panel.h>
+#include <panels/content_browser.h>
+#include <panels/scene_panel.h>
+// #include "editor_camera.h"
 // clang-format on
 
 namespace samui {
@@ -22,13 +23,15 @@ class EditorLayer : public Layer {
   virtual void OnImGuiRender() override;
   virtual void OnEvent(Event& event) override;
 
- private:
-  void OnImGuiFullScreenDocking();
-
   void NewScene();
   void OpenScene();
   void OpenScene(const std::filesystem::path& path);
   void SaveSceneAs();
+
+  Entity GetSelectedEntity();
+
+ private:
+  void OnImGuiFullScreenDocking();
 
   bool OnKeyPressed(KeyPressedEvent& event);
   bool OnMouseButtonPressed(MouseButtonPressedEvent& event);
@@ -36,26 +39,16 @@ class EditorLayer : public Layer {
  private:
   OrthographicCameraController camera_controller_;
 
-  Ref<FrameBuffer> frame_buffer_;
-  Ref<Scene>       active_scene_;
-  ImVec2           last_viewport_size_;
-  bool             viewport_focused_{false};
-  bool             viewport_hovered_{false};
-  Entity           square_entity_;
-  Entity           main_camera_{entt::null};
-  Entity           first_camera_{entt::null};
-  Entity           second_camera_{entt::null};
+  Ref<Scene> active_scene_;
+
+  Entity square_entity_;
+  Entity main_camera_{entt::null};
+  Entity first_camera_{entt::null};
+  Entity second_camera_{entt::null};
 
   Ref<SceneHierarchyPanel> scene_hierarchy_panel_;
   Ref<ContentBrowser>      content_browser_;
-
-  ImGuizmo::OPERATION gizmos_op_{ImGuizmo::TRANSLATE};
-
-  EditorCamera editor_camera_;
-
-  glm::vec2 viewport_bounds_[2];
-
-  Entity hovered_entity_{entt::null};
+  Ref<ScenePanel>          scene_panel_;
 };
 
 }  // namespace samui
