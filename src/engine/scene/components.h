@@ -25,12 +25,7 @@ struct SAMUI_API TransformComponent {
   glm::vec3 scale{glm::vec3(1.f)};
 
   glm::mat4 transform() const {
-    auto rot = glm::rotate(glm::identity<glm::mat4>(), rotation.x,
-                           glm::vec3(1.f, 0.f, 0.f)) *
-               glm::rotate(glm::identity<glm::mat4>(), rotation.y,
-                           glm::vec3(0.f, 1.f, 0.f)) *
-               glm::rotate(glm::identity<glm::mat4>(), rotation.z,
-                           glm::vec3(0.f, 0.f, 1.f));
+    auto rot = glm::mat4_cast(glm::quat(rotation));
 
     return glm::translate(glm::identity<glm::mat4>(), translation) * rot *
            glm::scale(glm::identity<glm::mat4>(), scale);
