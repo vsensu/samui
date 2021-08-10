@@ -222,6 +222,13 @@ void EditorLayer::OnImGuiRender() {
   ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0.f, 0.f});
   ImGui::Begin("Viewport");
   // auto viewport_offset = ImGui::GetCursorPos();
+  auto viewport_min_region = ImGui::GetWindowContentRegionMin();
+  auto viewport_max_region = ImGui::GetWindowContentRegionMax();
+  auto viewport_offset = ImGui::GetWindowPos();
+  viewport_bounds_[0] = {viewport_min_region.x + viewport_offset.x,
+                         viewport_min_region.y + viewport_offset.y};
+  viewport_bounds_[1] = {viewport_max_region.x + viewport_offset.x,
+                         viewport_max_region.y + viewport_offset.y};
 
   viewport_focused_ = ImGui::IsWindowFocused();
   viewport_hovered_ = ImGui::IsWindowHovered();
@@ -250,15 +257,6 @@ void EditorLayer::OnImGuiRender() {
   // flip y
   ImGui::Image((ImTextureID)texture_id, viewport_size, {0.f, 1.f}, {1.f, 0.f});
 
-  auto window_size = ImGui::GetWindowSize();
-  auto min_bound = ImGui::GetWindowPos();
-  // min_bound.x += viewport_offset.x;
-  // min_bound.y += viewport_offset.y;
-
-  ImVec2 max_bound = {min_bound.x + window_size.x, min_bound.y + window_size.y};
-  viewport_bounds_[0] = {min_bound.x, min_bound.y};
-  viewport_bounds_[1] = {max_bound.x, max_bound.y};
-
   if (ImGui::BeginDragDropTarget()) {
     if (const ImGuiPayload* payload =
             ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM")) {
@@ -274,8 +272,9 @@ void EditorLayer::OnImGuiRender() {
   if (selected_entity != entt::null) {
     ImGuizmo::SetOrthographic(false);
     ImGuizmo::SetDrawlist();
-    ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y,
-                      ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
+    ImGuizmo::SetRect(viewport_bounds_[0].x, viewport_bounds_[0].y,
+                      viewport_bounds_[1].x - viewport_bounds_[0].x,
+                      viewport_bounds_[1].y - viewport_bounds_[0].y);
 
     // Camera Runtime
     // const auto& camera_comp =
