@@ -21,18 +21,17 @@ OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 }
 
-OpenGLTexture2D::OpenGLTexture2D(const std::string& path)
+OpenGLTexture2D::OpenGLTexture2D(const std::filesystem::path& path)
     : path_(path), internal_format_(0) {
   SAMUI_PROFILE_FUNCTION();
   int width, height, channels;
   stbi_set_flip_vertically_on_load(1);
   stbi_uc* data = nullptr;
   {
-    SAMUI_PROFILE_SCOPE(
-        "stbi_load OpenGLTexture2D::OpenGLTexture2D(const std::string& path)");
-    data = stbi_load(path.c_str(), &width, &height, &channels, 0);
+    SAMUI_PROFILE_SCOPE("stbi_load");
+    data = stbi_load(path.string().c_str(), &width, &height, &channels, 0);
   }
-  SAMUI_ENGINE_ASSERT(data, "Failed to load image:{0}", path);
+  SAMUI_ENGINE_ASSERT(data, "Failed to load image:{0}", path.string());
   width_ = width;
   height_ = height;
 
@@ -41,7 +40,8 @@ OpenGLTexture2D::OpenGLTexture2D(const std::string& path)
   } else if (channels == 3) {
     internal_format_ = GL_RGB;
   }
-  SAMUI_ENGINE_ASSERT(internal_format_, "Format not supported!");
+  SAMUI_ENGINE_ASSERT(internal_format_, "Format not supported! channels: {0}",
+                      channels);
 
   // 创建纹理对象
   glGenTextures(1, &texture_id_);

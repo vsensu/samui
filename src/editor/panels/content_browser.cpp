@@ -40,9 +40,11 @@ void ContentBrowser::OnImGuiRender() {
     ImGui::ImageButton((ImTextureID)icon->GetTextureID(),
                        ImVec2(thumbnail_size, thumbnail_size), {0, 1}, {1, 0});
     if (ImGui::BeginDragDropSource()) {
-        auto abs_path = std::filesystem::absolute(dir_entry.path());
-        ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", abs_path.string().c_str(), abs_path.string().size());
-        ImGui::EndDragDropSource();
+      auto           abs_path = std::filesystem::absolute(dir_entry.path());
+      const wchar_t* path = abs_path.c_str();
+      ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", path,
+                                (wcslen(path) + 1) * sizeof(wchar_t));
+      ImGui::EndDragDropSource();
     }
     ImGui::PopStyleColor();
     if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0)) {

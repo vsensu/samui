@@ -15,7 +15,7 @@ Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height) {
   return nullptr;
 }
 
-Ref<Texture2D> Texture2D::Create(const char* path) {
+Ref<Texture2D> Texture2D::Create(const std::filesystem::path &path) {
   switch (Renderer::GetAPI()) {
     case RendererAPI::API::OpenGL:
       return std::make_shared<OpenGLTexture2D>(path);

@@ -259,7 +259,7 @@ void SceneHierarchyPanel::DrawProperties(Entity entity) {
         if (ImGui::BeginDragDropTarget()) {
           if (const ImGuiPayload* payload =
                   ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM")) {
-            const char* path = (const char*)payload->Data;
+            const wchar_t* path = (const wchar_t*)payload->Data;
             component.texture = Texture2D::Create(path);
           }
 

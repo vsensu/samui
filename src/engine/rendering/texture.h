@@ -1,7 +1,11 @@
 #ifndef SAMUI_TEXTURE_H_
 #define SAMUI_TEXTURE_H_
 
+// clang-format off
+#include <filesystem>
+
 #include "core/core.h"
+// clang-format on
 
 namespace samui {
 class SAMUI_API Texture {
@@ -23,7 +27,7 @@ class SAMUI_API Texture {
 class SAMUI_API Texture2D : public Texture {
  public:
   static Ref<Texture2D> Create(uint32_t width, uint32_t height);
-  static Ref<Texture2D> Create(const char* path);
+  static Ref<Texture2D> Create(const std::filesystem::path &path);
 };
 }  // namespace samui
 
