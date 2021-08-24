@@ -7,10 +7,14 @@ target("editor")
     elseif is_mode("release") then
         add_defines("SAMUI_RELEASE")
     end
-    add_includedirs("$(projectdir)/deps/headeronly", "$(projectdir)/deps/src", "$(projectdir)/src/engine", "$(projectdir)/src/editor")
-    add_includedirs("$(projectdir)/deps/src/glad/include")
-    add_includedirs("$(projectdir)/deps/src/imgui-docking")
-    add_includedirs("$(projectdir)/src/engine/entt-3.8.1/single_include")
+
+    add_includedirs("$(projectdir)/src")
+    add_includedirs("$(projectdir)/src/engine")
+    add_includedirs("$(projectdir)/src/editor")
+    add_includedirs("$(projectdir)/src/deps/entt-3.8.1/single_include")
+    add_includedirs("$(projectdir)/src/deps/glad/include")
+    add_includedirs("$(projectdir)/src/deps/imgui-docking")
+
     add_files("**.cpp")
     add_packages("spdlog", "glfw", "glm", "yaml-cpp")
     add_deps("engine", "glad", "imgui")

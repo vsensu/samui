@@ -1,7 +1,7 @@
 // clang-format off
 #include "opengl_texture.h"
 
-#include <stb_image/stb_image.h>
+#include <stb_image.h>
 
 #include <log/log.h>
 #include <debug/instrumentor.h>

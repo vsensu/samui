@@ -3,8 +3,8 @@
 
 #include <cstdint>
 
-#include "core/core.h"
-#include "log/log.h"
+#include <core/core.h>
+#include <log/log.h>
 
 namespace samui {
 

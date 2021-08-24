@@ -1,12 +1,14 @@
 // clang-format off
-#include <samui.h>
-
 #include <iostream>
 #include <string>
 // clang-format on
 
 int main(int argc, char* argv[]) {
-  SAMUI_ENGINE_ASSERT(argc == 2, "Usage: samui <project name>");
+  if (argc != 2) {
+    std::cerr << "Usage: samui <project name>\n";
+    return 0;
+  }
+
   std::cout << argv[1] << '\n';
   return 0;
 }
