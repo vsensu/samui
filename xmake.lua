@@ -14,7 +14,7 @@ if is_plat("windows") then
 end
 
 -- include project sources
-includes("deps", "src", "test", "demo")
+includes("deps", "src", "test", "demo", "templates")
 
 task("ie")
     on_run("scripts/tasks/init_env")
@@ -45,5 +45,13 @@ task("vsc")
     set_menu {
         usage = "xmake vsc",
         description = "generate compile_commands.json for vscode",
+        options = {}
+    }
+
+task("mksdk")
+    on_run("scripts/tasks/make_sdk")
+    set_menu {
+        usage = "xmake mksdk",
+        description = "generate engine sdk",
         options = {}
     }
