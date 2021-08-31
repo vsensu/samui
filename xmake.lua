@@ -55,3 +55,19 @@ task("mksdk")
         description = "generate engine sdk",
         options = {}
     }
+
+task("insdk")
+    on_run("scripts/tasks/install_sdk")
+    set_menu {
+        usage = "xmake insdk",
+        description = "install engine sdk",
+        options = {}
+    }
+
+task("misdk")
+    on_run("scripts/tasks/make_install_sdk")
+    set_menu {
+        usage = "xmake misdk",
+        description = "make and install engine sdk",
+        options = {}
+    }

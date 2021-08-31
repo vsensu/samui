@@ -49,4 +49,5 @@ function main(...)
     end
 
     os.execv("python ", {"scripts/tasks/make_sdk.py", "build/config.txt"})
+    os.cp("$(projectdir)/scripts", "$(env SAMUI)")
 end
