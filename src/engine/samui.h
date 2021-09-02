@@ -41,13 +41,6 @@
 
 #include "utils/platform_utils.h"
 
-#define GLM_ENABLE_EXPERIMENTAL
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/matrix_decompose.hpp>
-#include <glm/gtx/quaternion.hpp>
-
 // clang-format on
 
 #endif

@@ -39,3 +39,6 @@ build/
 .vscode/
 
 !deps/libs/**/*.lib
+
+# xmake vistual studio
+vsxmake*
