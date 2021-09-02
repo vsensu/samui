@@ -71,3 +71,11 @@ task("misdk")
         description = "make and install engine sdk",
         options = {}
     }
+
+task("vs")
+    on_run("scripts/tasks/vs_project")
+    set_menu {
+        usage = "xmake vs",
+        description = "generate visual studio project",
+        options = {}
+    }

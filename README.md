@@ -38,4 +38,5 @@ clang-format -style=Google -dump-config > .clang-format
 ```
 xmake project -k [vsxmake2010|vsxmake2013|vsxmake2015|..] -m "debug;release"
 xmake project -k vsxmake -m "debug;release"
+xmake project -k vsxmake
 ```
