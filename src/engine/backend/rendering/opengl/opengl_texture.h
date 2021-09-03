@@ -25,7 +25,11 @@ class SAMUI_API OpenGLTexture2D : public Texture2D {
 
   virtual uint32_t GetTextureID() const override { return texture_id_; }
 
-  static unsigned int GetOpenGLTextureEnum(uint8_t slot);
+  static unsigned int   GetOpenGLTextureEnum(uint8_t slot);
+  static Ref<Texture2D> Combine(const std::vector<Ref<Texture2D>>& textures,
+                                uint16_t cell_width, uint16_t cell_height,
+                                uint16_t rows, uint16_t columns);
+  static ImageInfo* LoadFile(const std::filesystem::path& path);
 
  private:
   std::filesystem::path path_;

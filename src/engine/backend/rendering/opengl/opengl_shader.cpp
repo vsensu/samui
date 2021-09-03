@@ -35,6 +35,65 @@ OpenGLShader::OpenGLShader(const std::string& vertex_shader,
   Compile(shader_sources);
 }
 
+void OpenGLShader::Bind() { glUseProgram(shaderProgram); }
+
+GLint OpenGLShader::GetUniformLocation(const std::string& name) {
+  return glGetUniformLocation(shaderProgram, name.c_str());
+}
+
+void OpenGLShader::SetInt(const std::string& name, int value) {
+  SAMUI_PROFILE_FUNCTION();
+  glCheck(glUniform1i(GetUniformLocation(name), value));
+}
+
+void OpenGLShader::SetIntArray(const std::string& name, int* value,
+                               uint32_t count) {
+  SAMUI_PROFILE_FUNCTION();
+  glCheck(glUniform1iv(GetUniformLocation(name), count, value));
+}
+
+void OpenGLShader::SetUInt(const std::string& name, unsigned int value) {
+  SAMUI_PROFILE_FUNCTION();
+  glCheck(glUniform1ui(GetUniformLocation(name), value));
+}
+
+void OpenGLShader::SetFloat(const std::string& name, float value) {
+  SAMUI_PROFILE_FUNCTION();
+  glCheck(glUniform1f(GetUniformLocation(name), value));
+}
+
+void OpenGLShader::SetFloat2(const std::string& name, const glm::vec2& value) {
+  SAMUI_PROFILE_FUNCTION();
+  glCheck(glUniform2fv(GetUniformLocation(name), 1, glm::value_ptr(value)));
+}
+
+void OpenGLShader::SetFloat3(const std::string& name, const glm::vec3& value) {
+  SAMUI_PROFILE_FUNCTION();
+  glCheck(glUniform3fv(GetUniformLocation(name), 1, glm::value_ptr(value)));
+}
+
+void OpenGLShader::SetInt3(const std::string& name, const glm::ivec3& value) {
+  SAMUI_PROFILE_FUNCTION();
+  glCheck(glUniform3iv(GetUniformLocation(name), 1, glm::value_ptr(value)));
+}
+
+void OpenGLShader::SetFloat4(const std::string& name, const glm::vec4& value) {
+  SAMUI_PROFILE_FUNCTION();
+  glCheck(glUniform4fv(GetUniformLocation(name), 1, glm::value_ptr(value)));
+}
+
+void OpenGLShader::SetMat3(const std::string& name, const glm::mat3& value) {
+  SAMUI_PROFILE_FUNCTION();
+  glCheck(glUniformMatrix3fv(GetUniformLocation(name), 1, GL_FALSE,
+                             glm::value_ptr(value)));
+}
+
+void OpenGLShader::SetMat4(const std::string& name, const glm::mat4& value) {
+  SAMUI_PROFILE_FUNCTION();
+  glCheck(glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE,
+                             glm::value_ptr(value)));
+}
+
 std::string OpenGLShader::ReadFile(const std::string& filepath) {
   SAMUI_PROFILE_FUNCTION();
   std::string   result;

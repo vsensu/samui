@@ -12,7 +12,7 @@ namespace samui {
 class SAMUI_API OpenGLVertexBuffer : public VertexBuffer {
  public:
   OpenGLVertexBuffer(uint32_t size);
-  OpenGLVertexBuffer(float* vertices, uint32_t size);
+  OpenGLVertexBuffer(const void* vertices, uint32_t size);
   virtual ~OpenGLVertexBuffer();
   void Bind() override;
   void UnBind() override;
@@ -29,7 +29,7 @@ class SAMUI_API OpenGLVertexBuffer : public VertexBuffer {
 
 class SAMUI_API OpenGLIndexBuffer : public IndexBuffer {
  public:
-  OpenGLIndexBuffer(uint32_t* indices, uint32_t size);
+  OpenGLIndexBuffer(const uint32_t* indices, uint32_t size);
   virtual ~OpenGLIndexBuffer();
   uint32_t GetCount() const { return count_; }
   void     Bind() override;

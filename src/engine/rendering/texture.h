@@ -24,11 +24,23 @@ class SAMUI_API Texture {
   virtual uint32_t GetTextureID() const = 0;
 };
 
+struct SAMUI_API ImageInfo {
+  void* data;
+  int   width, height, channels;
+};
+
 class SAMUI_API Texture2D : public Texture {
  public:
   static Ref<Texture2D> Create(uint32_t width, uint32_t height);
-  static Ref<Texture2D> Create(const std::filesystem::path &path);
+  static Ref<Texture2D> Create(const std::filesystem::path& path);
+
+  static Ref<Texture2D> Combine(const std::vector<Ref<Texture2D>>& textures,
+                                uint16_t cell_width, uint16_t cell_height,
+                                uint16_t rows, uint16_t columns);
+
+  static ImageInfo* LoadFile(const std::filesystem::path& path);
 };
+
 }  // namespace samui
 
 #endif  // SAMUI_TEXTURE_H_

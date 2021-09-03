@@ -24,64 +24,30 @@ class SAMUI_API OpenGLShader : public Shader {
   OpenGLShader(const std::string& vertex_shader,
                const std::string& fragment_shader);
 
-  void Bind() override { glUseProgram(shaderProgram); }
+  void Bind() override;
 
-  inline auto GetUniformLocation(const std::string& name) {
-    return glGetUniformLocation(shaderProgram, name.c_str());
-  }
+  GLint GetUniformLocation(const std::string& name);
 
-  void SetInt(const std::string& name, int value) override {
-    SAMUI_PROFILE_FUNCTION();
-    glCheck(glUniform1i(GetUniformLocation(name), value));
-  }
+  void SetInt(const std::string& name, int value) override;
 
   void SetIntArray(const std::string& name, int* value,
-                   uint32_t count) override {
-    SAMUI_PROFILE_FUNCTION();
-    glCheck(glUniform1iv(GetUniformLocation(name), count, value));
-  }
+                   uint32_t count) override;
 
-  void SetUInt(const std::string& name, unsigned int value) override {
-    SAMUI_PROFILE_FUNCTION();
-    glCheck(glUniform1ui(GetUniformLocation(name), value));
-  }
+  void SetUInt(const std::string& name, unsigned int value) override;
 
-  void SetFloat(const std::string& name, float value) override {
-    SAMUI_PROFILE_FUNCTION();
-    glCheck(glUniform1f(GetUniformLocation(name), value));
-  }
+  void SetFloat(const std::string& name, float value) override;
 
-  void SetFloat2(const std::string& name, const glm::vec2& value) override {
-    SAMUI_PROFILE_FUNCTION();
-    glCheck(glUniform2fv(GetUniformLocation(name), 1, glm::value_ptr(value)));
-  }
+  void SetFloat2(const std::string& name, const glm::vec2& value) override;
 
-  void SetFloat3(const std::string& name, const glm::vec3& value) override {
-    SAMUI_PROFILE_FUNCTION();
-    glCheck(glUniform3fv(GetUniformLocation(name), 1, glm::value_ptr(value)));
-  }
+  void SetFloat3(const std::string& name, const glm::vec3& value) override;
 
-  void SetInt3(const std::string& name, const glm::ivec3& value) override {
-    SAMUI_PROFILE_FUNCTION();
-    glCheck(glUniform3iv(GetUniformLocation(name), 1, glm::value_ptr(value)));
-  }
+  void SetInt3(const std::string& name, const glm::ivec3& value) override;
 
-  void SetFloat4(const std::string& name, const glm::vec4& value) override {
-    SAMUI_PROFILE_FUNCTION();
-    glCheck(glUniform4fv(GetUniformLocation(name), 1, glm::value_ptr(value)));
-  }
+  void SetFloat4(const std::string& name, const glm::vec4& value) override;
 
-  void SetMat3(const std::string& name, const glm::mat3& value) override {
-    SAMUI_PROFILE_FUNCTION();
-    glCheck(glUniformMatrix3fv(GetUniformLocation(name), 1, GL_FALSE,
-                               glm::value_ptr(value)));
-  }
+  void SetMat3(const std::string& name, const glm::mat3& value) override;
 
-  void SetMat4(const std::string& name, const glm::mat4& value) override {
-    SAMUI_PROFILE_FUNCTION();
-    glCheck(glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE,
-                               glm::value_ptr(value)));
-  }
+  void SetMat4(const std::string& name, const glm::mat4& value) override;
 
  private:
   std::string                             ReadFile(const std::string& filepath);

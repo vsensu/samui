@@ -22,6 +22,10 @@ static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type) {
     case ShaderDataType::Int2:    return GL_INT;
     case ShaderDataType::Int3:    return GL_INT;
     case ShaderDataType::Int4:    return GL_INT;
+    case ShaderDataType::UInt:    return GL_UNSIGNED_INT;
+    case ShaderDataType::UInt2:    return GL_UNSIGNED_INT;
+    case ShaderDataType::UInt3:    return GL_UNSIGNED_INT;
+    case ShaderDataType::UInt4:    return GL_UNSIGNED_INT;
     case ShaderDataType::Bool:    return GL_BOOL;
   }
 
@@ -38,7 +42,7 @@ OpenGLVertexBuffer::OpenGLVertexBuffer(uint32_t size) {
   glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
 }
 
-OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size) {
+OpenGLVertexBuffer::OpenGLVertexBuffer(const void* vertices, uint32_t size) {
   SAMUI_PROFILE_FUNCTION();
   glGenBuffers(1, &buffer_id_);
   Bind();
@@ -67,7 +71,7 @@ void OpenGLVertexBuffer::SetData(const void* data, uint32_t size) {
 }
 
 // IndexBuffer-------------------------------------------------------------------
-OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indices, uint32_t count)
+OpenGLIndexBuffer::OpenGLIndexBuffer(const uint32_t* indices, uint32_t count)
     : count_(count) {
   SAMUI_PROFILE_FUNCTION();
   glGenBuffers(1, &buffer_id_);

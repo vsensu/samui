@@ -13,7 +13,7 @@ enum class ShaderDataType {
   None= 0,
   Float, Float2, Float3, Float4,
   Mat3, Mat4,
-  Int, Int2, Int3, Int4,
+  Int, Int2, Int3, Int4, UInt, UInt2, UInt3, UInt4,
   Bool
 };
 
@@ -29,6 +29,10 @@ constexpr uint32_t ShaderDataTypeCount(ShaderDataType type) {
     case ShaderDataType::Int2:    return 2;
     case ShaderDataType::Int3:    return 3;
     case ShaderDataType::Int4:    return 4;
+    case ShaderDataType::UInt:     return 1;
+    case ShaderDataType::UInt2:    return 2;
+    case ShaderDataType::UInt3:    return 3;
+    case ShaderDataType::UInt4:    return 4;
     case ShaderDataType::Bool:    return 1;
   }
 }
@@ -45,6 +49,10 @@ constexpr uint32_t ShaderDataTypeSize(ShaderDataType type) {
     case ShaderDataType::Int2:    return 4 * 2;
     case ShaderDataType::Int3:    return 4 * 3;
     case ShaderDataType::Int4:    return 4 * 4;
+    case ShaderDataType::UInt:     return 4;
+    case ShaderDataType::UInt2:    return 4 * 2;
+    case ShaderDataType::UInt3:    return 4 * 3;
+    case ShaderDataType::UInt4:    return 4 * 4;
     case ShaderDataType::Bool:    return 1;
   }
 
@@ -126,7 +134,7 @@ class SAMUI_API VertexBuffer : public Buffer {
   virtual void SetData(const void* data, uint32_t size) = 0;
 
   static Ref<VertexBuffer> Create(uint32_t size);
-  static Ref<VertexBuffer> Create(float* vertices, uint32_t size);
+  static Ref<VertexBuffer> Create(const void* vertices, uint32_t size);
 };
 
 class SAMUI_API IndexBuffer : public Buffer {
@@ -135,7 +143,7 @@ class SAMUI_API IndexBuffer : public Buffer {
 
   virtual uint32_t GetCount() const = 0;
 
-  static Ref<IndexBuffer> Create(uint32_t* indices, uint32_t count);
+  static Ref<IndexBuffer> Create(const uint32_t* indices, uint32_t count);
 };
 
 class SAMUI_API VertexArray {

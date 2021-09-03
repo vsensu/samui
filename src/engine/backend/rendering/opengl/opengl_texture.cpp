@@ -84,4 +84,46 @@ void OpenGLTexture2D::Bind(uint8_t slot) {
   glBindTexture(GL_TEXTURE_2D, texture_id_);
 }
 
+Ref<Texture2D> OpenGLTexture2D::Combine(
+    const std::vector<Ref<Texture2D>>& textures, uint16_t cell_width,
+    uint16_t cell_height, uint16_t rows, uint16_t columns) {
+  SAMUI_PROFILE_FUNCTION();
+  // uint16_t width = cell_width * columns;
+  // uint16_t height = cell_height * rows;
+  // auto     texture = std::make_shared<OpenGLTexture2D>(width, height);
+
+  // uint32_t bpp = texture->internal_format_ == GL_RGBA ? 4 : 3;
+  // SAMUI_ENGINE_ASSERT(size == width_ * height_ * bpp,
+  //                     "data must be entire texture!");
+
+  // unsigned char* texture_data =
+  //     new unsigned char[cell_width * cell_height * textures.size() * bpp];
+  // for (int i = 0; i < textures.size(); ++i) {
+  //   // TODO: Combine
+
+  //   // unsigned char* data =
+  //   // stbi_load(textures[i].c_str(), &w, &h, &nrChannels, 0);
+  //   // memcpy(texture_data + i * 16 * 16 * 3, data, 16 * 16 * 3);
+  //   // if (data) {
+  //   // stbi_image_free(data);
+  //   // }
+  // }
+  // glTexImage2D(GL_TEXTURE_2D, 0 /*mipmap*/, texture->internal_format_, width,
+  //              height, 0 /*legacy*/, texture->internal_format_,
+  //              GL_UNSIGNED_BYTE, texture_data);
+  // glGenerateMipmap(GL_TEXTURE_2D);
+
+  return nullptr;
+}
+
+ImageInfo* OpenGLTexture2D::LoadFile(const std::filesystem::path& path) {
+  SAMUI_PROFILE_FUNCTION();
+
+  ImageInfo* info = new ImageInfo();
+  stbi_set_flip_vertically_on_load(1);
+  info->data = stbi_load(path.string().c_str(), &info->width, &info->height,
+                         &info->channels, 0);
+  return info;
+}
+
 }  // namespace samui
