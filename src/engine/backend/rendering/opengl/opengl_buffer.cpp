@@ -134,6 +134,10 @@ void OpenGLVertexArray::AddVertexBuffer(
       case ShaderDataType::Int2:
       case ShaderDataType::Int3:
       case ShaderDataType::Int4:
+      case ShaderDataType::UInt:
+      case ShaderDataType::UInt2:
+      case ShaderDataType::UInt3:
+      case ShaderDataType::UInt4:
         // 定义OpenGL如何理解该顶点数据
         glVertexAttribIPointer(index, ShaderDataTypeCount(elem.Type),
                                ShaderDataTypeToOpenGLBaseType(elem.Type),
