@@ -6,14 +6,17 @@ import os.path
 import pathlib
 import os
 import shutil
+import json
 
+# 读取数据
 config_path = sys.argv[1]
-project_dir = ""
-build_dir = ""
-
 with open(config_path, 'r') as f:
-    project_dir = f.readline().rstrip('\n')
-    build_dir = f.readline().rstrip('\n')
+    sdk_config = json.load(f)
+
+project_dir = sdk_config["project_dir"] 
+platforms = sdk_config["platforms"]
+archs = sdk_config["archs"]
+modes = sdk_config["modes"]
 
 source_dir = os.path.join(project_dir, "src")
 target_dir = os.path.join(project_dir, "build", "sdk")
@@ -21,7 +24,6 @@ assets_dir = os.path.join(project_dir, "src", "engine", "assets")
 templates_dir = os.path.join(project_dir, "templates")
 
 print("project_dir: " + project_dir)
-print("build_dir: " + build_dir)
 print("source_dir: " + source_dir)
 print("target_dir: " + target_dir)
 
@@ -63,8 +65,12 @@ _, header_files = run_fast_scandir(source_dir, [".h", ".hpp"])
 copy_files(header_files, source_dir, os.path.join(target_dir, "include"))
 
 # copy libs
-_, lib_files = run_fast_scandir(build_dir, [".dll", ".lib"])
-copy_files(lib_files, build_dir, os.path.join(target_dir, "lib"))
+for plat in platforms:
+    for arch in archs:
+        for mode in modes:
+            build_dir = os.path.join(project_dir, "build", plat, arch, mode)
+            _, lib_files = run_fast_scandir(build_dir, [".dll", ".lib"])
+            copy_files(lib_files, build_dir, os.path.join(target_dir, "lib", plat, arch, mode))
 
 # copy assets
 assets_target_dir = os.path.join(target_dir, "engine", "assets")
