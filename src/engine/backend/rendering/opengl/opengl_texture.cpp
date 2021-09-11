@@ -8,8 +8,30 @@
 // clang-format on
 
 namespace samui {
-OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
-    : width_(width), height_(height), internal_format_(GL_RGBA) {
+// clang-format off
+static GLenum TextureFormatToOpenGLBaseType(TextureFormat format) {
+  switch (format) {
+    case TextureFormat::RGB:   return GL_RGB;
+    case TextureFormat::RGBA:   return GL_RGBA;
+  }
+
+  SAMUI_ENGINE_ASSERT(false, "Unkown TextureFormat");
+  return 0;
+}
+
+static uint8_t TextureFormatChannels(TextureFormat format) {
+  switch (format) {
+    case TextureFormat::RGB:   return 3;
+    case TextureFormat::RGBA:   return 4;
+  }
+
+  SAMUI_ENGINE_ASSERT(false, "Unkown TextureFormat");
+  return 0;
+}
+// clang-format on
+
+OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height, TextureFormat format)
+    : width_(width), height_(height), internal_format_(TextureFormatToOpenGLBaseType(format)), format_(format) {
   SAMUI_PROFILE_FUNCTION();
   // 创建纹理对象
   glGenTextures(1, &texture_id_);
@@ -69,9 +91,10 @@ unsigned int OpenGLTexture2D::GetOpenGLTextureEnum(uint8_t slot) {
 
 void OpenGLTexture2D::SetData(void* data, uint32_t size) {
   SAMUI_PROFILE_FUNCTION();
-  uint32_t bpp = internal_format_ == GL_RGBA ? 4 : 3;
+  uint32_t bpp = TextureFormatChannels(format_);
   SAMUI_ENGINE_ASSERT(size == width_ * height_ * bpp,
-                      "data must be entire texture!");
+                      "{0}!={1} data must be entire texture!", size,
+                      width_ * height_ * bpp);
   glTexImage2D(GL_TEXTURE_2D, 0 /*mipmap*/, internal_format_, width_, height_,
                0 /*legacy*/, internal_format_, GL_UNSIGNED_BYTE, data);
   glGenerateMipmap(GL_TEXTURE_2D);

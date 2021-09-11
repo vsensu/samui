@@ -10,7 +10,7 @@
 namespace samui {
 class SAMUI_API OpenGLTexture2D : public Texture2D {
  public:
-  OpenGLTexture2D(uint32_t width, uint32_t height);
+  OpenGLTexture2D(uint32_t width, uint32_t height, TextureFormat format = TextureFormat::RGBA);
   OpenGLTexture2D(const std::filesystem::path& path);
   virtual ~OpenGLTexture2D();
 
@@ -37,6 +37,7 @@ class SAMUI_API OpenGLTexture2D : public Texture2D {
   uint32_t              height_{0};
   unsigned              texture_id_;
   GLenum                internal_format_;
+  TextureFormat         format_;
 };
 
 }  // namespace samui

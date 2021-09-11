@@ -6,10 +6,10 @@
 // clang-format on
 
 namespace samui {
-Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height) {
+Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height, TextureFormat format) {
   switch (Renderer::GetAPI()) {
     case RendererAPI::API::OpenGL:
-      return std::make_shared<OpenGLTexture2D>(width, height);
+      return std::make_shared<OpenGLTexture2D>(width, height, format);
   }
   SAMUI_ENGINE_ASSERT(false, "Unsupported Render API");
   return nullptr;

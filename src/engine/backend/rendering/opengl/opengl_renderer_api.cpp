@@ -36,6 +36,6 @@ void OpenGLRendererAPI::DrawIndexed(const samui::Ref<VertexArray>& vertex_array,
   uint32_t count = index_count == 0 ? vertex_array->GetIndexBuffer()->GetCount()
                                     : index_count;
   glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
-  glBindTexture(GL_TEXTURE_2D, 0);
+  // glBindTexture(GL_TEXTURE_2D, 0);
 }
 }  // namespace samui
