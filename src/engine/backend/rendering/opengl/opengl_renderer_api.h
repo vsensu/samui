@@ -16,6 +16,9 @@ class SAMUI_API OpenGLRendererAPI : public RendererAPI {
   void DrawIndexed(const samui::Ref<VertexArray>& vertex_array,
                    uint32_t                       index_count = 0) override;
   virtual void SetDepthTestEnable(bool enable) override;
+  virtual void SetCullFaceEnable(bool enable) override;
+  virtual void SetCullFace(CullFaceType cull_face) override;
+  virtual void SetFrontFace(FaceVertexOrder face_vertex_order) override;
 };
 }  // namespace samui
 

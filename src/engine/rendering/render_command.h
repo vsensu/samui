@@ -27,6 +27,18 @@ class SAMUI_API RenderCommand {
     renderer_api_->SetDepthTestEnable(enable);
   }
 
+  inline static void SetCullFaceEnable(bool enable) {
+    renderer_api_->SetCullFaceEnable(enable);
+  }
+
+  inline static void SetCullFace(CullFaceType cull_face) {
+    renderer_api_->SetCullFace(cull_face);
+  }
+
+  inline static void SetFrontFace(FaceVertexOrder face_vertex_order) {
+    renderer_api_->SetFrontFace(face_vertex_order);
+  }
+
  private:
   static RendererAPI* renderer_api_;
 };

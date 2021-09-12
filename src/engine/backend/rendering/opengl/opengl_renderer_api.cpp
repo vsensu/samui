@@ -47,4 +47,37 @@ void OpenGLRendererAPI::SetDepthTestEnable(bool enable) {
   }
 }
 
+void OpenGLRendererAPI::SetCullFaceEnable(bool enable) {
+  if (enable) {
+    glEnable(GL_CULL_FACE);
+  } else {
+    glDisable(GL_CULL_FACE);
+  }
+}
+
+void OpenGLRendererAPI::SetCullFace(CullFaceType cull_face) {
+  switch (cull_face) {
+    case CullFaceType::Front:
+      glCullFace(GL_FRONT);
+      break;
+    case CullFaceType::Back:
+      glCullFace(GL_BACK);
+      break;
+    case CullFaceType::FrontAndBack:
+      glCullFace(GL_FRONT_AND_BACK);
+      break;
+  }
+}
+
+void OpenGLRendererAPI::SetFrontFace(FaceVertexOrder face_vertex_order) {
+  switch (face_vertex_order) {
+    case FaceVertexOrder::Clockwise:
+      glFrontFace(GL_CW);
+      break;
+    case FaceVertexOrder::CounterClockwise:
+      glFrontFace(GL_CCW);
+      break;
+  }
+}
+
 }  // namespace samui
