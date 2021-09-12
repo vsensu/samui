@@ -82,6 +82,11 @@ void Application::Close()
   running_ = false;
 }
 
+void Application::SetInputMode(InputMode mode)
+{
+  window_->SetInputMode(mode);
+}
+
 void Application::OnEvent(Event& e) {
   SAMUI_PROFILE_FUNCTION();
   EventDispatcher dispatcher(e);

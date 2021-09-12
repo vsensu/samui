@@ -35,6 +35,16 @@ WindowsWindow::~WindowsWindow() {
   Shutdown();
 }
 
+void WindowsWindow::SetInputMode(InputMode mode)
+{
+  if(mode == InputMode::GameOnly) {
+    glfwSetInputMode(window_, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+  }
+  else {
+     glfwSetInputMode(window_, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+  }
+}
+
 void WindowsWindow::Init(const WindowProps& props) {
   SAMUI_PROFILE_FUNCTION();
 

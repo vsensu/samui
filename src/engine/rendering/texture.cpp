@@ -36,10 +36,10 @@ Ref<Texture2D> Texture2D::Combine(const std::vector<Ref<Texture2D>>& textures,
   return nullptr;
 }
 
-ImageInfo* Texture2D::LoadFile(const std::filesystem::path& path) {
+ImageInfo* Texture2D::LoadFile(const std::filesystem::path& path, bool flip_vertically) {
   switch (Renderer::GetAPI()) {
     case RendererAPI::API::OpenGL:
-      return OpenGLTexture2D::LoadFile(path);
+      return OpenGLTexture2D::LoadFile(path, flip_vertically);
   }
   SAMUI_ENGINE_ASSERT(false, "Unsupported Render API");
   return nullptr;

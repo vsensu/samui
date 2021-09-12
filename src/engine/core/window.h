@@ -9,6 +9,14 @@
 // clang-format on
 
 namespace samui {
+
+enum class SAMUI_API InputMode 
+{
+  GameAndUI,
+  GameOnly,
+  UIOnly
+};
+
 struct WindowProps {
   std::string  Title;
   unsigned int Width;
@@ -37,6 +45,8 @@ class SAMUI_API Window {
   virtual bool IsVSync() const = 0;
 
   virtual void* GetNativeWindow() const = 0;
+
+  virtual void SetInputMode(InputMode mode) = 0;
 
   static std::unique_ptr<Window> Create(const WindowProps& props = WindowProps());
 };

@@ -23,6 +23,10 @@ class SAMUI_API RenderCommand {
     renderer_api_->DrawIndexed(vertex_array,index_count);
   }
 
+  inline static void SetDepthTestEnable(bool enable) { 
+    renderer_api_->SetDepthTestEnable(enable);
+  }
+
  private:
   static RendererAPI* renderer_api_;
 };

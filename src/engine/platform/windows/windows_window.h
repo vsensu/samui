@@ -31,6 +31,8 @@ class SAMUI_API WindowsWindow : public Window {
 
   void* GetNativeWindow() const override { return window_; }
 
+  void SetInputMode(InputMode mode) override;
+
  private:
   virtual void Init(const WindowProps& props);
   virtual void Shutdown();

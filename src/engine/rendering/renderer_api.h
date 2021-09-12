@@ -20,6 +20,7 @@ class SAMUI_API RendererAPI {
   virtual void SetClearColor(const glm::vec4& color) = 0;
   virtual void Clear() = 0;
   virtual void DrawIndexed(const samui::Ref<VertexArray>& vertex_array, uint32_t index_count = 0) = 0;
+  virtual void SetDepthTestEnable(bool enable) = 0;
 
   inline static API GetAPI() { return api_; }
 

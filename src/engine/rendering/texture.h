@@ -42,7 +42,7 @@ class SAMUI_API Texture2D : public Texture {
                                 uint16_t cell_width, uint16_t cell_height,
                                 uint16_t rows, uint16_t columns);
 
-  static ImageInfo* LoadFile(const std::filesystem::path& path);
+  static ImageInfo* LoadFile(const std::filesystem::path& path, bool flip_vertically = true);
 };
 
 }  // namespace samui

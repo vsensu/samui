@@ -38,4 +38,13 @@ void OpenGLRendererAPI::DrawIndexed(const samui::Ref<VertexArray>& vertex_array,
   glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
   // glBindTexture(GL_TEXTURE_2D, 0);
 }
+
+void OpenGLRendererAPI::SetDepthTestEnable(bool enable) {
+  if (enable) {
+    glEnable(GL_DEPTH_TEST);
+  } else {
+    glDisable(GL_DEPTH_TEST);
+  }
+}
+
 }  // namespace samui

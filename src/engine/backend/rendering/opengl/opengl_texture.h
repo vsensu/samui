@@ -29,7 +29,7 @@ class SAMUI_API OpenGLTexture2D : public Texture2D {
   static Ref<Texture2D> Combine(const std::vector<Ref<Texture2D>>& textures,
                                 uint16_t cell_width, uint16_t cell_height,
                                 uint16_t rows, uint16_t columns);
-  static ImageInfo* LoadFile(const std::filesystem::path& path);
+  static ImageInfo* LoadFile(const std::filesystem::path& path, bool flip_vertically = true);
 
  private:
   std::filesystem::path path_;

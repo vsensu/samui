@@ -29,6 +29,7 @@ class SAMUI_API Application {
   ImGuiLayer* GetImGuiLayer() { return imgui_layer_; }
 
   void Close();
+  void SetInputMode(InputMode mode);
 
  private:
   void OnEvent(Event& e);

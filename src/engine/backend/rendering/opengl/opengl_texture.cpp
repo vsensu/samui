@@ -139,11 +139,11 @@ Ref<Texture2D> OpenGLTexture2D::Combine(
   return nullptr;
 }
 
-ImageInfo* OpenGLTexture2D::LoadFile(const std::filesystem::path& path) {
+ImageInfo* OpenGLTexture2D::LoadFile(const std::filesystem::path& path, bool flip_vertically) {
   SAMUI_PROFILE_FUNCTION();
 
   ImageInfo* info = new ImageInfo();
-  stbi_set_flip_vertically_on_load(1);
+  stbi_set_flip_vertically_on_load(flip_vertically ? 1 : 0);
   info->data = stbi_load(path.string().c_str(), &info->width, &info->height,
                          &info->channels, 0);
   return info;
