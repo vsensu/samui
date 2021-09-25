@@ -193,7 +193,10 @@ constexpr auto SAMUI_API CleanupOutputString(const char (&expr)[N],
 
 }  // namespace samui
 
-#define SAMUI_PROFILE 1
+#ifdef SAMUI_DEBUG
+#define DEBUG_GL_ERRORS
+#endif
+
 #if SAMUI_PROFILE
    // Resolve which function signature macro will be used. Note that this only
 // is resolved when the (pre)compiler starts, so the syntax highlighting
