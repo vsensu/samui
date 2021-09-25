@@ -18,6 +18,11 @@ namespace samui {
     CounterClockwise
   };
 
+  enum class SAMUI_API PolygonMode {
+    Wireframe,
+    Fill
+  };
+
 class SAMUI_API RendererAPI {
  public:
   enum class API { None = 0, OpenGL = 1 };
@@ -35,6 +40,7 @@ class SAMUI_API RendererAPI {
   virtual void SetCullFaceEnable(bool enable) = 0;
   virtual void SetCullFace(CullFaceType cull_face) = 0;
   virtual void SetFrontFace(FaceVertexOrder face_vertex_order) = 0;
+  virtual void SetPolygonMode(PolygonMode polygon_mode) = 0;
 
   inline static API GetAPI() { return api_; }
 

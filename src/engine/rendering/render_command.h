@@ -39,6 +39,10 @@ class SAMUI_API RenderCommand {
     renderer_api_->SetFrontFace(face_vertex_order);
   }
 
+  inline static void SetPolygonMode(PolygonMode polygon_mode) {
+    renderer_api_->SetPolygonMode(polygon_mode);
+  }
+
  private:
   static RendererAPI* renderer_api_;
 };

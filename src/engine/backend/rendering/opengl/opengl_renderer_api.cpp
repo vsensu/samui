@@ -80,4 +80,15 @@ void OpenGLRendererAPI::SetFrontFace(FaceVertexOrder face_vertex_order) {
   }
 }
 
+void OpenGLRendererAPI::SetPolygonMode(PolygonMode polygon_mode) {
+  switch (polygon_mode) {
+    case PolygonMode::Wireframe:
+      glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+      break;
+    case PolygonMode::Fill:
+      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+      break;
+  }
+}
+
 }  // namespace samui
