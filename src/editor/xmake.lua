@@ -16,7 +16,7 @@ target("editor")
     add_includedirs("$(projectdir)/src/deps/imgui-docking")
 
     add_files("**.cpp")
-    add_packages("spdlog", "glfw", "glm", "yaml-cpp")
+    add_packages("spdlog", "glfw", "glm", "yaml-cpp", "asio")
     add_deps("engine", "glad", "imgui")
     -- add_links("user32", "gdi32", "shell32")
 
