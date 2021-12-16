@@ -15,7 +15,7 @@ struct QuadVertex {
   glm::vec3 position;
   glm::vec4 color;
   glm::vec2 texcoord;
-  float     texture_index;
+  uint32_t     texture_index;
   float     tiling_factor;
 
   // #ifdef SAMUI_EDITOR
@@ -57,7 +57,7 @@ void Renderer2D::Init() {
       {"Position", ShaderDataType::Float3},
       {"Color", ShaderDataType::Float4},
       {"TexCoord", ShaderDataType::Float2},
-      {"TexIndex", ShaderDataType::Float},
+      {"TexIndex", ShaderDataType::UInt},
       {"TilingFactor", ShaderDataType::Float},
       {"EntityID", ShaderDataType::Int},
   });
@@ -292,7 +292,7 @@ void Renderer2D::DrawQuad(const glm::mat4&      transform,
     FlushAndReset();
   }
 
-  float texture_index = 0.f;
+  uint32_t texture_index = 0;
   if (texture != nullptr) {
     for (int i = 1; i < renderer2d_data.texture_slot_index; ++i) {
       if (*renderer2d_data.texture_slots[i].get() == *texture.get()) {
@@ -301,8 +301,8 @@ void Renderer2D::DrawQuad(const glm::mat4&      transform,
       }
     }
 
-    if (texture_index == 0.f) {
-      texture_index = (float)renderer2d_data.texture_slot_index;
+    if (texture_index == 0) {
+      texture_index = renderer2d_data.texture_slot_index;
       renderer2d_data.texture_slots[renderer2d_data.texture_slot_index] =
           texture;
       ++renderer2d_data.texture_slot_index;
@@ -337,7 +337,7 @@ void Renderer2D::DrawQuad(const glm::mat4&         transform,
     FlushAndReset();
   }
 
-  float       texture_index = 0.f;
+  uint32_t       texture_index = 0;
   const auto& texture = subtexture->GetTexture();
   if (texture != nullptr) {
     for (int i = 1; i < renderer2d_data.texture_slot_index; ++i) {
@@ -347,8 +347,8 @@ void Renderer2D::DrawQuad(const glm::mat4&         transform,
       }
     }
 
-    if (texture_index == 0.f) {
-      texture_index = (float)renderer2d_data.texture_slot_index;
+    if (texture_index == 0) {
+      texture_index = renderer2d_data.texture_slot_index;
       renderer2d_data.texture_slots[renderer2d_data.texture_slot_index] =
           texture;
       ++renderer2d_data.texture_slot_index;

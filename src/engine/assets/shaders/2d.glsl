@@ -3,13 +3,13 @@
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec4 aColor;
 layout (location = 2) in vec2 aTexCoord;
-layout (location = 3) in float aTexIndex;
+layout (location = 3) in uint aTexIndex;
 layout (location = 4) in float aTilingFactor;
 layout (location = 5) in uint aEntityID;
 
 out vec4 v_color;
 out vec2 texCoord;
-out float v_tex_index;
+flat out float v_tex_index;
 out float v_tiling_factor;
 out float v_entity_id;
 
@@ -34,7 +34,7 @@ layout(location = 3) out vec4 color4;
 
 in vec4 v_color;
 in vec2 texCoord;
-in float v_tex_index;
+flat in float v_tex_index;
 in float v_tiling_factor;
 in float v_entity_id;
 
