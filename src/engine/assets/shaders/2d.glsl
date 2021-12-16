@@ -11,7 +11,7 @@ out vec4 v_color;
 out vec2 texCoord;
 flat out float v_tex_index;
 out float v_tiling_factor;
-out float v_entity_id;
+flat out float v_entity_id;
 
 uniform mat4 viewProj;
 
@@ -36,7 +36,7 @@ in vec4 v_color;
 in vec2 texCoord;
 flat in float v_tex_index;
 in float v_tiling_factor;
-in float v_entity_id;
+flat in float v_entity_id;
 
 uniform sampler2D u_textures[32];
 
