@@ -27,8 +27,7 @@ class TileLevel
             {
                 char tile_type = level_str_[y * map_size_.x + x];
                 samui::Ref<samui::SubTexture2D> texture = tiles_[tile_type];
-                auto screen_pos = screen_pos_to_world_pos(
-                    {x * tile_size, y * tile_size-720});
+                auto screen_pos = glm::vec2{x * tile_size, y * tile_size};
                 samui::Renderer2D::DrawQuad({screen_pos.x, screen_pos.y, 0.f},
                                             {tile_size, tile_size}, texture);
             }
@@ -43,25 +42,12 @@ class TileLevel
     }
 
   private:
-    glm::vec2 screen_pos_to_world_pos(const glm::vec2& screen_pos)
-    {
-        // screen space
-        // negative x to positive x from left to right
-        // negative y to positive y from top to bottom
-        // opengel world space
-        // negative x to positive x from left to right
-        // negative y to positive y from bottom to top
-        // so we need to flip y
-        return {screen_pos.x, -screen_pos.y};
-        // return {screen_pos.x, screen_pos.y};
-    }
-
-  private:
     const char*                                               level_str_;
     glm::uvec2                                                map_size_;
     std::unordered_map<char, samui::Ref<samui::SubTexture2D>> tiles_;
 };
 
+// clang-format off
 const char* level_str =
     "WWWWW" "WWWWW" "WWWWWWWWW" "WWWWWW" "WWWWW"
     "WDDDW" "WWDWW" "WWDWWWDWW" "WDWWDW" "WDDDW"
@@ -70,13 +56,12 @@ const char* level_str =
     "WWWDW" "WDWDW" "WDWWWWWDW" "WDWWDW" "WWDWW"
     "WDDDW" "WDWDW" "WDWWWWWDW" "WWDDWW" "WDDDW"
     "WWWWW" "WWWWW" "WWWWWWWWW" "WWWWWW" "WWWWW";
+// clang-format on
 
 class Game2DLayer : public samui::Layer
 {
   public:
-    Game2DLayer() : Layer("Example"), camera_controller_(1280.f / 720.f, true)
-    {
-    }
+    Game2DLayer() : Layer("Example") {}
 
     virtual void OnAttach() override
     {
@@ -95,8 +80,6 @@ class Game2DLayer : public samui::Layer
                           sprite_sheet_, {11, 11}, {128, 128})},
             };
         tile_level_->SetTileDefines(tileDefines);
-
-        camera_controller_.SetZoomLevel(10.f);
     }
 
     virtual void OnDetach() override { SAMUI_PROFILE_FUNCTION(); }
@@ -104,7 +87,6 @@ class Game2DLayer : public samui::Layer
     virtual void OnUpdate(const samui::Timestep& deltaTime)
     {
         SAMUI_PROFILE_FUNCTION();
-        camera_controller_.OnUpdate(deltaTime);
 
         samui::Renderer2D::ResetStats();
         {
@@ -115,10 +97,9 @@ class Game2DLayer : public samui::Layer
         {
             SAMUI_PROFILE_SCOPE("Render Draw(CPU)");
             samui::RenderCommand::Clear();
-            // glm::mat4 projection = glm::ortho(0.f, 1280.f, 720.f, 0.f, -1.f, 1.f);
-            glm::mat4 projection = glm::ortho(0.f, 1280.f, 0.f, 720.f, -1.f, 1.f);
-            // samui::Renderer2D::BeginScene(camera_controller_.GetCamera());
-            samui::Renderer2D::BeginScene(/*glm::translate(glm::identity<glm::mat4>(), {1280*0.5f, -720*0.5f, 0}) **/ projection);
+            glm::mat4 projection =
+                glm::ortho(0.f, 1280.f, 720.f, 0.f, -1.f, 1.f);
+            samui::Renderer2D::BeginScene(projection);
             tile_level_->Draw();
             samui::Renderer2D::EndScene();
         }
@@ -136,12 +117,21 @@ class Game2DLayer : public samui::Layer
 
     virtual void OnEvent(samui::Event& event)
     {
-        camera_controller_.OnEvent(event);
+        if (event.GetEventType() == samui::EventType::KeyReleased)
+        {
+            auto keyReleasedEvent = static_cast<samui::KeyPressedEvent&>(event);
+            if (keyReleasedEvent.GetKeyCode() == SAMUI_KEY_F2)
+            {
+                static bool wireframe = false;
+                wireframe = !wireframe;
+                samui::RenderCommand::SetPolygonMode(
+                    wireframe ? samui::PolygonMode::Wireframe
+                              : samui::PolygonMode::Fill);
+            }
+        }
     }
 
   private:
-    samui::OrthographicCameraController camera_controller_;
-
     samui::Ref<samui::Texture2D> sprite_sheet_;
     samui::Ref<TileLevel>        tile_level_;
 };
