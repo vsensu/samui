@@ -1,1 +1,1 @@
-includes("game")
+includes("game", "snake")
