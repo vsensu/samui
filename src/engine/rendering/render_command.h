@@ -31,6 +31,14 @@ class SAMUI_API RenderCommand {
     renderer_api_->SetCullFaceEnable(enable);
   }
 
+  inline static void SetBlendEnable(bool enable) {
+    renderer_api_->SetBlendEnable(enable);
+  }
+
+  inline static void SetBlendFunc(BlendFactor src_factor, BlendFactor dest_factor) {
+    renderer_api_->SetBlendFunc(src_factor, dest_factor);
+  }
+
   inline static void SetCullFace(CullFaceType cull_face) {
     renderer_api_->SetCullFace(cull_face);
   }

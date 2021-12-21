@@ -55,6 +55,29 @@ void OpenGLRendererAPI::SetCullFaceEnable(bool enable) {
   }
 }
 
+void OpenGLRendererAPI::SetBlendEnable(bool enable) {
+  if(enable) {
+    glEnable(GL_BLEND);
+  } else {
+    glDisable(GL_BLEND);
+  }
+}
+
+GLenum blend_factor_2_gl(BlendFactor factor) {
+  switch(factor) {
+    case BlendFactor::Src_Alpha:
+      return GL_SRC_ALPHA;
+    case BlendFactor::One_Minus_Src_Alpha:
+      return GL_ONE_MINUS_SRC_ALPHA;
+  }
+
+  return GL_ZERO;
+}
+
+void OpenGLRendererAPI::SetBlendFunc(BlendFactor src_factor, BlendFactor dest_factor) {
+  glBlendFunc(blend_factor_2_gl(src_factor), blend_factor_2_gl(dest_factor));
+}
+
 void OpenGLRendererAPI::SetCullFace(CullFaceType cull_face) {
   switch (cull_face) {
     case CullFaceType::Front:
