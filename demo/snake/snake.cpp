@@ -2,7 +2,8 @@
 #include <samui.h>
 #include <entrypoint.h>
 
-#include "game2d.h"
+#include "sprite_atlas.h"
+#include "snake.h"
 // clang-format on
 
 class Demo : public samui::Application

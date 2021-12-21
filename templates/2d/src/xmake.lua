@@ -1,7 +1,7 @@
 add_requires("spdlog 1.8.5")
 add_requires("glfw 3.3.2")
 add_requires("glm 0.9.9+8")
-add_requires("conan::asio/1.18.0", {alias = "asio"})
+add_requires("asio 1.20.0")
 
 target("2d")
     set_kind("binary")

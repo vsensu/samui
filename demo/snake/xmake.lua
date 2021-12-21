@@ -16,6 +16,6 @@ target("snake")
         if not os.isdir(target_dir) then
             os.mkdir(target_dir)
         end
-        print("[build] copy game assets ...")
-        os.cp("$(projectdir)/demo/game/assets/", target_dir)
+        print("[build] copy snake assets ...")
+        os.cp("$(projectdir)/demo/snake/assets/", target_dir)
     end)
