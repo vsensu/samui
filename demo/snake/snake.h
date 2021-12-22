@@ -167,6 +167,7 @@ class Game2DLayer : public samui::Layer
                 timer_ = 0.f;
                 int new_col = snake_.front()->col;
                 int new_row = snake_.front()->row;
+                move_direction_ = next_move_direction_;
                 switch (move_direction_)
                 {
                     case Direction::RIGHT:
@@ -199,6 +200,9 @@ class Game2DLayer : public samui::Layer
                     new_row = rows - 1;
                 }
 
+                auto tail = snake_.back();
+                snake_.pop_back();
+
                 // death check
                 bool dead = false;
                 for (const auto& snake : snake_)
@@ -218,12 +222,19 @@ class Game2DLayer : public samui::Layer
                 // grow check
                 if (food_level[new_row][new_col] == SnakeSpriteType::NONE)
                 {
-                    snake_.pop_back();
+                    snake_.push_front(
+                        std::make_shared<SnakeNode>(new_row, new_col));
                 }
                 else
                 {
-                    // grow up
+                    // eat food
                     food_level[new_row][new_col] = SnakeSpriteType::NONE;
+
+                    // grow up
+                    snake_.push_front(
+                        std::make_shared<SnakeNode>(new_row, new_col));
+                    // add tail
+                    snake_.push_back(tail);
 
                     // gen new food
                     if (!gen_food())
@@ -231,9 +242,6 @@ class Game2DLayer : public samui::Layer
                         game_state_ = GameState::Win;
                     }
                 }
-
-                snake_.push_front(
-                    std::make_shared<SnakeNode>(new_row, new_col));
             }
         }
 
@@ -334,30 +342,54 @@ class Game2DLayer : public samui::Layer
 
             else if (keyCode == SAMUI_KEY_UP)
             {
+                if (move_direction_ == Direction::UP)
+                {
+                    force_move();
+                }
+
                 if (move_direction_ != Direction::DOWN)
                 {
-                    move_direction_ = Direction::UP;
+                    next_move_direction_ = Direction::UP;
+                    force_move();
                 }
             }
             else if (keyCode == SAMUI_KEY_DOWN)
             {
+                if (move_direction_ == Direction::DOWN)
+                {
+                    force_move();
+                }
+
                 if (move_direction_ != Direction::UP)
                 {
-                    move_direction_ = Direction::DOWN;
+                    next_move_direction_ = Direction::DOWN;
+                    force_move();
                 }
             }
             else if (keyCode == SAMUI_KEY_LEFT)
             {
+                if (move_direction_ == Direction::LEFT)
+                {
+                    force_move();
+                }
+
                 if (move_direction_ != Direction::RIGHT)
                 {
-                    move_direction_ = Direction::LEFT;
+                    next_move_direction_ = Direction::LEFT;
+                    force_move();
                 }
             }
             else if (keyCode == SAMUI_KEY_RIGHT)
             {
+                if (move_direction_ == Direction::RIGHT)
+                {
+                    force_move();
+                }
+
                 if (move_direction_ != Direction::LEFT)
                 {
-                    move_direction_ = Direction::RIGHT;
+                    next_move_direction_ = Direction::RIGHT;
+                    force_move();
                 }
             }
 
@@ -422,12 +454,15 @@ class Game2DLayer : public samui::Layer
         return false;
     }
 
+    void force_move() { timer_ += move_interval_ + 1.f; }
+
   private:
     std::shared_ptr<SpriteAtlas<SnakeSpriteType>> sprite_atlas_;
     samui::Ref<samui::SubTexture2D>               snake_head_sprite_;
     samui::Ref<samui::SubTexture2D>               snake_body_sprite_;
     std::list<std::shared_ptr<SnakeNode>>         snake_;
     Direction          move_direction_{Direction::RIGHT};
+    Direction          next_move_direction_{move_direction_};
     float              timer_ = 0.f;
     float              fast_move_interval_ = 0.2f;
     float              norm_move_interval_ = 1.f;
