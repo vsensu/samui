@@ -21,10 +21,11 @@ struct WindowProps {
   std::string  Title;
   unsigned int Width;
   unsigned int Height;
+  bool Fullscreen;
 
   WindowProps(const std::string& title = "Samui Engine",
-              unsigned int width = 1280, unsigned int height = 720)
-      : Title(title), Width(width), Height(height) {}
+              unsigned int width = 1280, unsigned int height = 720, bool fullscreen = false)
+      : Title(title), Width(width), Height(height), Fullscreen(fullscreen) {}
 };
 
 class SAMUI_API Window {

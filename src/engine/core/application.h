@@ -16,7 +16,7 @@ class SAMUI_API Application {
  private:
   /* data */
  public:
-  Application(/* args */);
+  explicit Application(const WindowProps& props = WindowProps());
   virtual ~Application();
   virtual void Run();
 

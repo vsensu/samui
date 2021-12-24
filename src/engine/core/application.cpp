@@ -14,11 +14,11 @@
 namespace samui {
 Application* Application::instance_ = nullptr;
 
-Application::Application(/* args */) {
+Application::Application(const WindowProps& props) {
   SAMUI_PROFILE_FUNCTION();
 
   instance_ = this;
-  window_ = Window::Create();
+  window_ = Window::Create(props);
   window_->SetEventCallback(BIND_EVENT_FUNC(Application::OnEvent));
 
   Renderer::Init();

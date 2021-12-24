@@ -72,7 +72,7 @@ void WindowsWindow::Init(const WindowProps& props) {
   {
     SAMUI_PROFILE_SCOPE("glfwCreateWindow");
     window_ = glfwCreateWindow((int)props.Width, (int)props.Height,
-                               data_.Title.c_str(), nullptr, nullptr);
+                               data_.Title.c_str(), props.Fullscreen ? glfwGetPrimaryMonitor() : nullptr, nullptr);
   }
 
   if (window_ == nullptr) {
