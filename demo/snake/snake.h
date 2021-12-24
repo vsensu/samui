@@ -254,8 +254,11 @@ class Game2DLayer : public samui::Layer
         {
             SAMUI_PROFILE_SCOPE("Render Draw(CPU)");
             samui::RenderCommand::Clear();
-            glm::mat4 projection =
-                glm::ortho(0.f, 1280.f, 720.f, 0.f, -1.f, 1.f);
+            const auto& window = samui::Application::Get().GetWindow();
+            auto        window_width = static_cast<float>(window.GetWidth());
+            auto        window_height = static_cast<float>(window.GetHeight());
+            glm::mat4   projection =
+                glm::ortho(0.f, window_width, 0.f, window_height, -1.f, 1.f);
             samui::Renderer2D::BeginScene(projection);
             for (int row = 0; row < rows; ++row)
             {
@@ -271,8 +274,8 @@ class Game2DLayer : public samui::Layer
                     // draw battle ground
                     samui::Renderer2D::DrawQuad(
                         {col * tile_size + tile_size,
-                         row * tile_size + tile_size, 0.f},
-                        {tile_size, -tile_size},
+                         window_height - row * tile_size - tile_size, 0.f},
+                        {tile_size, tile_size},
                         sprite_atlas_->get_sprite(level[row][col]));
 
                     // draw food
@@ -280,8 +283,8 @@ class Game2DLayer : public samui::Layer
                     {
                         samui::Renderer2D::DrawQuad(
                             {col * tile_size + tile_size,
-                             row * tile_size + tile_size, 0.f},
-                            {tile_size, -tile_size},
+                             window_height - row * tile_size - tile_size, 0.f},
+                            {tile_size, tile_size},
                             sprite_atlas_->get_sprite(food_level[row][col]));
                     }
                 }
@@ -292,23 +295,23 @@ class Game2DLayer : public samui::Layer
                 auto sprite = i == 0 ? snake_head_sprite_ : snake_body_sprite_;
                 samui::Renderer2D::DrawQuad(
                     {snake->col * tile_size + tile_size,
-                     snake->row * tile_size + tile_size, 0.f},
-                    {tile_size, -tile_size}, sprite);
+                     window_height - snake->row * tile_size - tile_size, 0.f},
+                    {tile_size, tile_size}, sprite);
                 ++i;
             }
 
             if (game_state_ == GameState::Win)
             {
                 samui::Renderer2D::DrawQuad(
-                    {tile_size, tile_size, 0.f},
-                    {tile_size * cols, -tile_size * rows},
+                    {tile_size, window_height - tile_size, 0.f},
+                    {tile_size * cols, tile_size * rows},
                     sprite_atlas_->get_sprite(SnakeSpriteType::WIN));
             }
             else if (game_state_ == GameState::Lose)
             {
                 samui::Renderer2D::DrawQuad(
-                    {tile_size, tile_size, 0.f},
-                    {tile_size * cols, -tile_size * rows},
+                    {tile_size, window_height - tile_size, 0.f},
+                    {tile_size * cols, tile_size * rows},
                     sprite_atlas_->get_sprite(SnakeSpriteType::LOSE));
             }
             samui::Renderer2D::EndScene();

@@ -9,7 +9,7 @@
 class Demo : public samui::Application
 {
   public:
-    Demo() : Application() { PushLayer(new Game2DLayer()); }
+    Demo() : Application(samui::WindowProps("Snake", 1280, 720, false)) { PushLayer(new Game2DLayer()); }
 };
 
 samui::Application* samui::create_application()
