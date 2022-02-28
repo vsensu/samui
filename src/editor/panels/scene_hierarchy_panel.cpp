@@ -111,7 +111,7 @@ void DrawComponent(const std::string& label, Scene& scene, Entity entity,
   }
 }
 
-SceneHierarchyPanel::SceneHierarchyPanel(const Ref<Scene>& scene)
+SceneHierarchyPanel::SceneHierarchyPanel(const std::shared_ptr<Scene>& scene)
     : scene_(scene) {}
 
 void SceneHierarchyPanel::OnImGuiRender() {
@@ -178,7 +178,7 @@ void SceneHierarchyPanel::OnImGuiRender() {
   ImGui::End();
 }
 
-void SceneHierarchyPanel::SetScene(Ref<Scene> scene) {
+void SceneHierarchyPanel::SetScene(std::shared_ptr<Scene> scene) {
   scene_ = scene;
   selected_entity_ = entt::null;
 }

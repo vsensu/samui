@@ -7,7 +7,7 @@
 
 namespace samui {
 
-Ref<Shader> Shader::Create(const std::string& filepath) {
+std::shared_ptr<Shader> Shader::Create(const std::string& filepath) {
   switch (Renderer::GetAPI()) {
     case RendererAPI::API::OpenGL:
       return std::make_shared<OpenGLShader>(filepath);
@@ -16,7 +16,7 @@ Ref<Shader> Shader::Create(const std::string& filepath) {
   return nullptr;
 }
 
-Ref<Shader> Shader::Create(const std::string& vertex_shader,
+std::shared_ptr<Shader> Shader::Create(const std::string& vertex_shader,
                            const std::string& fragment_shader) {
   switch (Renderer::GetAPI()) {
     case RendererAPI::API::OpenGL:
@@ -26,12 +26,12 @@ Ref<Shader> Shader::Create(const std::string& vertex_shader,
   return nullptr;
 }
 
-bool ShaderLibrary::Add(const std::string& name, Ref<Shader> shader) {
+bool ShaderLibrary::Add(const std::string& name, std::shared_ptr<Shader> shader) {
   shaders_[name] = shader;
   return true;
 }
 
-Ref<Shader> ShaderLibrary::Get(const std::string& name) const {
+std::shared_ptr<Shader> ShaderLibrary::Get(const std::string& name) const {
   auto it = shaders_.find(name);
   if (it != shaders_.end()) {
     return it->second;

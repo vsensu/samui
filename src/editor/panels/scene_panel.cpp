@@ -5,7 +5,7 @@
 // clang-format on
 
 namespace samui {
-ScenePanel::ScenePanel(const Ref<Scene>& scene, EditorLayer* parent)
+ScenePanel::ScenePanel(const std::shared_ptr<Scene>& scene, EditorLayer* parent)
     : scene_(scene), parent_(parent) {
   FrameBufferSpecification spec;
   spec.attachments = {
@@ -22,7 +22,7 @@ ScenePanel::ScenePanel(const Ref<Scene>& scene, EditorLayer* parent)
   editor_camera_ = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
 }
 
-void ScenePanel::SetScene(const Ref<Scene>& scene) {
+void ScenePanel::SetScene(const std::shared_ptr<Scene>& scene) {
   scene_ = scene;
   hovered_entity_ = entt::null;
 }

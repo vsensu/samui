@@ -1,7 +1,7 @@
 #include "subtexture2d.h"
 
 namespace samui {
-SubTexture2D::SubTexture2D(const Ref<Texture2D>& texture, const glm::vec2& min,
+SubTexture2D::SubTexture2D(const std::shared_ptr<Texture2D>& texture, const glm::vec2& min,
                            const glm::vec2& max)
     : texture_(texture) {
   tex_coords_[0] = {min.x, min.y};
@@ -10,7 +10,7 @@ SubTexture2D::SubTexture2D(const Ref<Texture2D>& texture, const glm::vec2& min,
   tex_coords_[3] = {min.x, max.y};
 }
 
-Ref<SubTexture2D> SubTexture2D::CreateFromCoords(const Ref<Texture2D>& texture,
+std::shared_ptr<SubTexture2D> SubTexture2D::CreateFromCoords(const std::shared_ptr<Texture2D>& texture,
                                                  const glm::vec2&      coords,
                                                  const glm::vec2&      cellSize,
                                                  const glm::vec2& spriteSize) {

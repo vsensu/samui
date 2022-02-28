@@ -6,7 +6,7 @@
 // clang-format on
 
 namespace samui {
-Ref<FrameBuffer> FrameBuffer::Create(const FrameBufferSpecification& spec) {
+std::shared_ptr<FrameBuffer> FrameBuffer::Create(const FrameBufferSpecification& spec) {
   switch (Renderer::GetAPI()) {
     case RendererAPI::API::OpenGL:
       return std::make_shared<OpenGLFrameBuffer>(spec);

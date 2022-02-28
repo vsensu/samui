@@ -5,6 +5,7 @@
 #include <array>
 #include <list>
 #include <random>
+#include <memory>
 
 #include <samui.h>
 
@@ -461,8 +462,8 @@ class Game2DLayer : public samui::Layer
 
   private:
     std::shared_ptr<SpriteAtlas<SnakeSpriteType>> sprite_atlas_;
-    samui::Ref<samui::SubTexture2D>               snake_head_sprite_;
-    samui::Ref<samui::SubTexture2D>               snake_body_sprite_;
+    std::shared_ptr<samui::SubTexture2D>               snake_head_sprite_;
+    std::shared_ptr<samui::SubTexture2D>               snake_body_sprite_;
     std::list<std::shared_ptr<SnakeNode>>         snake_;
     Direction          move_direction_{Direction::RIGHT};
     Direction          next_move_direction_{move_direction_};

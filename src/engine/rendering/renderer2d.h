@@ -2,6 +2,8 @@
 #define SAMUI_RENDERER2D_H_
 
 // clang-format off
+#include <memory>
+
 #include <core/core.h>
 #include "orthographic_camera.h"
 #include "subtexture2d.h"
@@ -31,17 +33,17 @@ class SAMUI_API Renderer2D {
                        const glm::vec4& color);
 
   static void DrawQuad(const glm::vec2& pos, const glm::vec2& size,
-                       const Ref<Texture2D>& texture, float tilingFactor = 1.f,
+                       const std::shared_ptr<Texture2D>& texture, float tilingFactor = 1.f,
                        glm::vec4 tint = glm::vec4(1.f));
   static void DrawQuad(const glm::vec3& pos, const glm::vec2& size,
-                       const Ref<Texture2D>& texture, float tilingFactor = 1.f,
+                       const std::shared_ptr<Texture2D>& texture, float tilingFactor = 1.f,
                        glm::vec4 tint = glm::vec4(1.f));
   static void DrawQuad(const glm::vec2& pos, const glm::vec2& size,
-                       const Ref<SubTexture2D>& subtexture,
+                       const std::shared_ptr<SubTexture2D>& subtexture,
                        float                    tilingFactor = 1.f,
                        glm::vec4                tint = glm::vec4(1.f));
   static void DrawQuad(const glm::vec3& pos, const glm::vec2& size,
-                       const Ref<SubTexture2D>& subtexture,
+                       const std::shared_ptr<SubTexture2D>& subtexture,
                        float                    tilingFactor = 1.f,
                        glm::vec4                tint = glm::vec4(1.f));
 
@@ -51,32 +53,32 @@ class SAMUI_API Renderer2D {
                               float rotation, const glm::vec4& color);
 
   static void DrawRotatedQuad(const glm::vec2& pos, const glm::vec2& size,
-                              float rotation, const Ref<Texture2D>& texture,
+                              float rotation, const std::shared_ptr<Texture2D>& texture,
                               float     tilingFactor = 1.f,
                               glm::vec4 tint = glm::vec4(1.f));
   static void DrawRotatedQuad(const glm::vec3& pos, const glm::vec2& size,
-                              float rotation, const Ref<Texture2D>& texture,
+                              float rotation, const std::shared_ptr<Texture2D>& texture,
                               float     tilingFactor = 1.f,
                               glm::vec4 tint = glm::vec4(1.f));
   static void DrawRotatedQuad(const glm::vec2& pos, const glm::vec2& size,
                               float                    rotation,
-                              const Ref<SubTexture2D>& subtexture,
+                              const std::shared_ptr<SubTexture2D>& subtexture,
                               float                    tilingFactor = 1.f,
                               glm::vec4                tint = glm::vec4(1.f));
   static void DrawRotatedQuad(const glm::vec3& pos, const glm::vec2& size,
                               float                    rotation,
-                              const Ref<SubTexture2D>& subtexture,
+                              const std::shared_ptr<SubTexture2D>& subtexture,
                               float                    tilingFactor = 1.f,
                               glm::vec4                tint = glm::vec4(1.f));
 
   static void DrawQuad(const glm::mat4& transform, const glm::vec4& color,
                        entt::entity entity_id = entt::null);
   static void DrawQuad(const glm::mat4&      transform,
-                       const Ref<Texture2D>& texture, float tilingFactor = 1.f,
+                       const std::shared_ptr<Texture2D>& texture, float tilingFactor = 1.f,
                        glm::vec4    tint = glm::vec4(1.f),
                        entt::entity entity_id = entt::null);
   static void DrawQuad(const glm::mat4&         transform,
-                       const Ref<SubTexture2D>& subtexture,
+                       const std::shared_ptr<SubTexture2D>& subtexture,
                        float                    tilingFactor = 1.f,
                        glm::vec4                tint = glm::vec4(1.f),
                        entt::entity             entity_id = entt::null);

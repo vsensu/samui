@@ -2,6 +2,8 @@
 #define SAMUI_RENDERER_H_
 
 // clang-format off
+#include <memory>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -19,8 +21,8 @@ class SAMUI_API Renderer {
   static void OnWindowResize(uint32_t width, uint32_t height);
   static void BeginScene(const OrthographicCamera& camera);
   static void EndScene();
-  static void Submit(const samui::Ref<Shader>&      shader,
-                     const samui::Ref<VertexArray>& vertex_array,
+  static void Submit(const std::shared_ptr<Shader>&      shader,
+                     const std::shared_ptr<VertexArray>& vertex_array,
                      const glm::mat4& transform = glm::identity<glm::mat4>());
 
   inline static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }

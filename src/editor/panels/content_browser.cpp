@@ -35,7 +35,7 @@ void ContentBrowser::OnImGuiRender() {
     const auto& path = dir_entry.path().filename();
 
     ImGui::PushID(path.string().c_str());
-    Ref<Texture2D> icon = dir_entry.is_directory() ? folder_icon_ : file_icon_;
+    std::shared_ptr<Texture2D> icon = dir_entry.is_directory() ? folder_icon_ : file_icon_;
     ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
     ImGui::ImageButton((ImTextureID)icon->GetTextureID(),
                        ImVec2(thumbnail_size, thumbnail_size), {0, 1}, {1, 0});

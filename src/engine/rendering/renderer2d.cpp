@@ -29,16 +29,16 @@ struct Rendderer2DData {
   constexpr static uint32_t max_indices = max_quads * 6;
   constexpr static uint32_t max_texture_slots = 32;
 
-  Ref<VertexArray>  quad_vertex_array;
-  Ref<VertexBuffer> quad_vertex_buffer;
-  Ref<Shader>       texture_shader;
-  Ref<Texture2D>    white_texture;
+  std::shared_ptr<VertexArray>  quad_vertex_array;
+  std::shared_ptr<VertexBuffer> quad_vertex_buffer;
+  std::shared_ptr<Shader>       texture_shader;
+  std::shared_ptr<Texture2D>    white_texture;
 
   uint32_t    quad_index_count;
   QuadVertex* quad_vertex_buffer_base = nullptr;
   QuadVertex* quad_vertex_buffer_ptr = nullptr;
 
-  std::array<Ref<Texture2D>, max_texture_slots> texture_slots;
+  std::array<std::shared_ptr<Texture2D>, max_texture_slots> texture_slots;
   uint32_t texture_slot_index = 1;  // 0 is white texture
 
   glm::vec4 quad_vertex_positions[4];
@@ -79,7 +79,7 @@ void Renderer2D::Init() {
     quad_indices[i + 5] = offset + 0;
     offset += 4;
   }
-  Ref<IndexBuffer> quad_index_buffer =
+  std::shared_ptr<IndexBuffer> quad_index_buffer =
       IndexBuffer::Create(quad_indices, Rendderer2DData::max_indices);
   renderer2d_data.quad_vertex_array->SetIndexBuffer(quad_index_buffer);
   delete[] quad_indices;
@@ -187,14 +187,14 @@ void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec2& size,
 }
 
 void Renderer2D::DrawQuad(const glm::vec2& pos, const glm::vec2& size,
-                          const Ref<Texture2D>& texture, float tilingFactor,
+                          const std::shared_ptr<Texture2D>& texture, float tilingFactor,
                           glm::vec4 tint) {
   SAMUI_PROFILE_FUNCTION();
   DrawQuad({pos.x, pos.y, 0.f}, size, texture, tilingFactor, tint);
 }
 
 void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec2& size,
-                          const Ref<Texture2D>& texture, float tilingFactor,
+                          const std::shared_ptr<Texture2D>& texture, float tilingFactor,
                           glm::vec4 tint) {
   SAMUI_PROFILE_FUNCTION();
   auto transform =
@@ -204,14 +204,14 @@ void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec2& size,
 }
 
 void Renderer2D::DrawQuad(const glm::vec2& pos, const glm::vec2& size,
-                          const Ref<SubTexture2D>& subtexture,
+                          const std::shared_ptr<SubTexture2D>& subtexture,
                           float tilingFactor, glm::vec4 tint) {
   SAMUI_PROFILE_FUNCTION();
   DrawQuad({pos.x, pos.y, 0.f}, size, subtexture, tilingFactor, tint);
 }
 
 void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec2& size,
-                          const Ref<SubTexture2D>& subtexture,
+                          const std::shared_ptr<SubTexture2D>& subtexture,
                           float tilingFactor, glm::vec4 tint) {
   SAMUI_PROFILE_FUNCTION();
   auto transform =
@@ -238,7 +238,7 @@ void Renderer2D::DrawRotatedQuad(const glm::vec3& pos, const glm::vec2& size,
 }
 
 void Renderer2D::DrawRotatedQuad(const glm::vec2& pos, const glm::vec2& size,
-                                 float rotation, const Ref<Texture2D>& texture,
+                                 float rotation, const std::shared_ptr<Texture2D>& texture,
                                  float tilingFactor, glm::vec4 tint) {
   SAMUI_PROFILE_FUNCTION();
   DrawRotatedQuad({pos.x, pos.y, 0.f}, size, rotation, texture, tilingFactor,
@@ -246,7 +246,7 @@ void Renderer2D::DrawRotatedQuad(const glm::vec2& pos, const glm::vec2& size,
 }
 
 void Renderer2D::DrawRotatedQuad(const glm::vec3& pos, const glm::vec2& size,
-                                 float rotation, const Ref<Texture2D>& texture,
+                                 float rotation, const std::shared_ptr<Texture2D>& texture,
                                  float tilingFactor, glm::vec4 tint) {
   SAMUI_PROFILE_FUNCTION();
   auto transform =
@@ -258,7 +258,7 @@ void Renderer2D::DrawRotatedQuad(const glm::vec3& pos, const glm::vec2& size,
 
 void Renderer2D::DrawRotatedQuad(const glm::vec2& pos, const glm::vec2& size,
                                  float                    rotation,
-                                 const Ref<SubTexture2D>& subtexture,
+                                 const std::shared_ptr<SubTexture2D>& subtexture,
                                  float tilingFactor, glm::vec4 tint) {
   SAMUI_PROFILE_FUNCTION();
   DrawRotatedQuad({pos.x, pos.y, 0.f}, size, rotation, subtexture, tilingFactor,
@@ -267,7 +267,7 @@ void Renderer2D::DrawRotatedQuad(const glm::vec2& pos, const glm::vec2& size,
 
 void Renderer2D::DrawRotatedQuad(const glm::vec3& pos, const glm::vec2& size,
                                  float                    rotation,
-                                 const Ref<SubTexture2D>& subtexture,
+                                 const std::shared_ptr<SubTexture2D>& subtexture,
                                  float tilingFactor, glm::vec4 tint) {
   SAMUI_PROFILE_FUNCTION();
   auto transform =
@@ -280,11 +280,11 @@ void Renderer2D::DrawRotatedQuad(const glm::vec3& pos, const glm::vec2& size,
 void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color,
                           entt::entity entity_id) {
   SAMUI_PROFILE_FUNCTION();
-  DrawQuad(transform, static_cast<const Ref<Texture2D>&>(nullptr), 1.f, color,
+  DrawQuad(transform, static_cast<const std::shared_ptr<Texture2D>&>(nullptr), 1.f, color,
            entity_id);
 }
 void Renderer2D::DrawQuad(const glm::mat4&      transform,
-                          const Ref<Texture2D>& texture, float tilingFactor,
+                          const std::shared_ptr<Texture2D>& texture, float tilingFactor,
                           glm::vec4 tint, entt::entity entity_id) {
   SAMUI_PROFILE_FUNCTION();
 
@@ -328,7 +328,7 @@ void Renderer2D::DrawQuad(const glm::mat4&      transform,
   ++renderer2d_data.stats.quad_count;
 }
 void Renderer2D::DrawQuad(const glm::mat4&         transform,
-                          const Ref<SubTexture2D>& subtexture,
+                          const std::shared_ptr<SubTexture2D>& subtexture,
                           float tilingFactor, glm::vec4 tint,
                           entt::entity entity_id) {
   SAMUI_PROFILE_FUNCTION();

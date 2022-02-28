@@ -1,10 +1,13 @@
 #ifndef SAMUI_BUFFER_H_
 #define SAMUI_BUFFER_H_
 
+// clang-format off
 #include <cstdint>
+#include <memory>
 
 #include <core/core.h>
 #include <log/log.h>
+// clang-format on
 
 namespace samui {
 
@@ -133,8 +136,8 @@ class SAMUI_API VertexBuffer : public Buffer {
 
   virtual void SetData(const void* data, uint32_t size) = 0;
 
-  static Ref<VertexBuffer> Create(uint32_t size);
-  static Ref<VertexBuffer> Create(const void* vertices, uint32_t size);
+  static std::shared_ptr<VertexBuffer> Create(uint32_t size);
+  static std::shared_ptr<VertexBuffer> Create(const void* vertices, uint32_t size);
 };
 
 class SAMUI_API IndexBuffer : public Buffer {
@@ -143,7 +146,7 @@ class SAMUI_API IndexBuffer : public Buffer {
 
   virtual uint32_t GetCount() const = 0;
 
-  static Ref<IndexBuffer> Create(const uint32_t* indices, uint32_t count);
+  static std::shared_ptr<IndexBuffer> Create(const uint32_t* indices, uint32_t count);
 };
 
 class SAMUI_API VertexArray {
@@ -154,11 +157,11 @@ class SAMUI_API VertexArray {
   virtual void UnBind() = 0;
 
   virtual void AddVertexBuffer(
-      const samui::Ref<VertexBuffer>& vertexBuffer) = 0;
-  virtual void SetIndexBuffer(const samui::Ref<IndexBuffer>& vertexBuffer) = 0;
+      const std::shared_ptr<VertexBuffer>& vertexBuffer) = 0;
+  virtual void SetIndexBuffer(const std::shared_ptr<IndexBuffer>& vertexBuffer) = 0;
   virtual IndexBuffer* GetIndexBuffer() const = 0;
 
-  static Ref<VertexArray> Create();
+  static std::shared_ptr<VertexArray> Create();
 };
 
 }  // namespace samui

@@ -2,6 +2,8 @@
 #define SAMUI_OPENGL_TEXTURE_H_
 
 // clang-format off
+#include <memory>
+
 #include <glad/glad.h>
 
 #include <rendering/texture.h>
@@ -26,7 +28,7 @@ class SAMUI_API OpenGLTexture2D : public Texture2D {
   virtual uint32_t GetTextureID() const override { return texture_id_; }
 
   static unsigned int   GetOpenGLTextureEnum(uint8_t slot);
-  static Ref<Texture2D> Combine(const std::vector<Ref<Texture2D>>& textures,
+  static std::shared_ptr<Texture2D> Combine(const std::vector<std::shared_ptr<Texture2D>>& textures,
                                 uint16_t cell_width, uint16_t cell_height,
                                 uint16_t rows, uint16_t columns);
   static ImageInfo* LoadFile(const std::filesystem::path& path, bool flip_vertically = true);

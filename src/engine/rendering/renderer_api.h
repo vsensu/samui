@@ -1,10 +1,14 @@
 #ifndef SAMUI_RENDERER_API_H_
 #define SAMUI_RENDERER_API_H_
 
+// clang-format off
+#include <memory>
+
 #include <glm/glm.hpp>
 
 #include "buffer.h"
 #include "core/core.h"
+// clan-format on
 
 namespace samui {
   enum class SAMUI_API CullFaceType {
@@ -40,7 +44,7 @@ class SAMUI_API RendererAPI {
                            uint32_t height) = 0;
   virtual void SetClearColor(const glm::vec4& color) = 0;
   virtual void Clear() = 0;
-  virtual void DrawIndexed(const samui::Ref<VertexArray>& vertex_array, uint32_t index_count = 0) = 0;
+  virtual void DrawIndexed(const std::shared_ptr<VertexArray>& vertex_array, uint32_t index_count = 0) = 0;
   virtual void SetDepthTestEnable(bool enable) = 0;
   virtual void SetCullFaceEnable(bool enable) = 0;
   virtual void SetBlendEnable(bool enable) = 0;

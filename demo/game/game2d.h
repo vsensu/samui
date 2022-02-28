@@ -4,6 +4,7 @@
 // clang-format off
 #include <iostream>
 #include <chrono>
+#include <memory>
 
 #include <samui.h>
 
@@ -26,7 +27,7 @@ class TileLevel
             for (int x = 0; x < map_size_.x; ++x)
             {
                 char tile_type = level_str_[y * map_size_.x + x];
-                samui::Ref<samui::SubTexture2D> texture = tiles_[tile_type];
+                std::shared_ptr<samui::SubTexture2D> texture = tiles_[tile_type];
                 auto screen_pos = glm::vec2{x * tile_size, y * tile_size};
                 samui::Renderer2D::DrawQuad({screen_pos.x, screen_pos.y, 0.f},
                                             {tile_size, tile_size}, texture);
@@ -35,7 +36,7 @@ class TileLevel
     }
 
     void SetTileDefines(
-        const std::unordered_map<char, samui::Ref<samui::SubTexture2D>>&
+        const std::unordered_map<char, std::shared_ptr<samui::SubTexture2D>>&
             tileDefines)
     {
         tiles_ = tileDefines;
@@ -44,7 +45,7 @@ class TileLevel
   private:
     const char*                                               level_str_;
     glm::uvec2                                                map_size_;
-    std::unordered_map<char, samui::Ref<samui::SubTexture2D>> tiles_;
+    std::unordered_map<char, std::shared_ptr<samui::SubTexture2D>> tiles_;
 };
 
 // clang-format off
@@ -72,7 +73,7 @@ class Game2DLayer : public samui::Layer
             samui::Texture2D::Create("assets/textures/RPGpack_sheet_2X.png");
 
         tile_level_ = std::make_shared<TileLevel>(level_str, glm::uvec2(30, 7));
-        std::unordered_map<char, samui::Ref<samui::SubTexture2D>> tileDefines =
+        std::unordered_map<char, std::shared_ptr<samui::SubTexture2D>> tileDefines =
             {
                 {'D', samui::SubTexture2D::CreateFromCoords(
                           sprite_sheet_, {6, 11}, {128, 128})},
@@ -132,8 +133,8 @@ class Game2DLayer : public samui::Layer
     }
 
   private:
-    samui::Ref<samui::Texture2D> sprite_sheet_;
-    samui::Ref<TileLevel>        tile_level_;
+    std::shared_ptr<samui::Texture2D> sprite_sheet_;
+    std::shared_ptr<TileLevel>        tile_level_;
 };
 
 #endif  // GAME_GAME2D_H_

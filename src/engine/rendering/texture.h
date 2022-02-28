@@ -2,6 +2,7 @@
 #define SAMUI_TEXTURE_H_
 
 // clang-format off
+#include <memory>
 #include <filesystem>
 
 #include "core/core.h"
@@ -35,10 +36,10 @@ enum class SAMUI_API TextureFormat {
 
 class SAMUI_API Texture2D : public Texture {
  public:
-  static Ref<Texture2D> Create(uint32_t width, uint32_t height, TextureFormat format = TextureFormat::RGBA);
-  static Ref<Texture2D> Create(const std::filesystem::path& path);
+  static std::shared_ptr<Texture2D> Create(uint32_t width, uint32_t height, TextureFormat format = TextureFormat::RGBA);
+  static std::shared_ptr<Texture2D> Create(const std::filesystem::path& path);
 
-  static Ref<Texture2D> Combine(const std::vector<Ref<Texture2D>>& textures,
+  static std::shared_ptr<Texture2D> Combine(const std::vector<std::shared_ptr<Texture2D>>& textures,
                                 uint16_t cell_width, uint16_t cell_height,
                                 uint16_t rows, uint16_t columns);
 

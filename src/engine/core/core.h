@@ -32,13 +32,4 @@
 #include <utility>
 #define BIND_EVENT_FUNC(fn) [this](auto&& ... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); } 
 
-#include <memory>
-namespace samui {
-template <typename T>
-using Scope = std::unique_ptr<T>;
-
-template <typename T>
-using Ref = std::shared_ptr<T>;
-}  // namespace samui
-
 #endif

@@ -3,6 +3,7 @@
 
 // clang-format off
 #include <vector>
+#include <memory>
 
 #include <core/core.h>
 // clang-format on
@@ -43,7 +44,7 @@ class SAMUI_API FrameBuffer {
   virtual const FrameBufferSpecification& GetSpecification() const = 0;
   virtual void ClearAttachment(uint32_t attachment_index, uint32_t value) = 0;
 
-  static Ref<FrameBuffer> Create(const FrameBufferSpecification& spec);
+  static std::shared_ptr<FrameBuffer> Create(const FrameBufferSpecification& spec);
 };
 }  // namespace samui
 

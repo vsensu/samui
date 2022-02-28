@@ -3,6 +3,7 @@
 // clang-format off
 #include <unordered_map>
 #include <filesystem>
+#include <memory>
 
 #include <samui.h>
 // clang-format on
@@ -11,7 +12,7 @@ template <typename IDType>
 class SpriteAtlas
 {
   public:
-    explicit SpriteAtlas(samui::Ref<samui::Texture2D> sprite_sheet)
+    explicit SpriteAtlas(std::shared_ptr<samui::Texture2D> sprite_sheet)
         : sprite_sheet_(sprite_sheet)
     {
     }
@@ -28,7 +29,7 @@ class SpriteAtlas
             sprite_sheet_, uv, cell_size, sprite_size);
     }
 
-    samui::Ref<samui::SubTexture2D> get_sprite(IDType id) const
+    std::shared_ptr<samui::SubTexture2D> get_sprite(IDType id) const
     {
         auto find_result = sprites_.find(id);
         if (find_result != sprites_.end())
@@ -39,6 +40,6 @@ class SpriteAtlas
     }
 
   private:
-    samui::Ref<samui::Texture2D>                                sprite_sheet_;
-    std::unordered_map<IDType, samui::Ref<samui::SubTexture2D>> sprites_;
+    std::shared_ptr<samui::Texture2D>                                sprite_sheet_;
+    std::unordered_map<IDType, std::shared_ptr<samui::SubTexture2D>> sprites_;
 };

@@ -3,6 +3,7 @@
 
 // clang-format off
 #include <string>
+#include <memory>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -34,7 +35,7 @@ struct SAMUI_API TransformComponent {
 
 struct SAMUI_API SpriteRendererComponent {
   glm::vec4      color{1.0f, 1.0f, 1.0f, 1.0f};
-  Ref<Texture2D> texture{0};
+  std::shared_ptr<Texture2D> texture{0};
   float          tiling_factor{1.0f};
 };
 

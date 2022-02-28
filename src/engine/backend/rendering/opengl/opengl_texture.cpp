@@ -107,8 +107,8 @@ void OpenGLTexture2D::Bind(uint8_t slot) {
   glBindTexture(GL_TEXTURE_2D, texture_id_);
 }
 
-Ref<Texture2D> OpenGLTexture2D::Combine(
-    const std::vector<Ref<Texture2D>>& textures, uint16_t cell_width,
+std::shared_ptr<Texture2D> OpenGLTexture2D::Combine(
+    const std::vector<std::shared_ptr<Texture2D>>& textures, uint16_t cell_width,
     uint16_t cell_height, uint16_t rows, uint16_t columns) {
   SAMUI_PROFILE_FUNCTION();
   // uint16_t width = cell_width * columns;

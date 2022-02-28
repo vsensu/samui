@@ -1,17 +1,21 @@
 #ifndef SAMUI_SCENE_HIERARCHY_PANEL_H_
 #define SAMUI_SCENE_HIERARCHY_PANEL_H_
 
+// clang-format off
+#include <memory>
+
 #include <samui.h>
+// clan-format on
 
 namespace samui {
 class SceneHierarchyPanel {
  public:
   SceneHierarchyPanel() = default;
-  SceneHierarchyPanel(const Ref<Scene>& scene);
+  SceneHierarchyPanel(const std::shared_ptr<Scene>& scene);
 
   void OnImGuiRender();
 
-  void SetScene(Ref<Scene> scene);
+  void SetScene(std::shared_ptr<Scene> scene);
 
   Entity GetSelectedEntity() const { return selected_entity_; }
   void SetSelectedEntity(Entity entity) { selected_entity_ = entity; }
@@ -20,7 +24,7 @@ class SceneHierarchyPanel {
   void DrawProperties(Entity entity);
 
  private:
-  Ref<Scene> scene_;
+  std::shared_ptr<Scene> scene_;
   Entity     selected_entity_{entt::null};
 };
 }  // namespace samui
