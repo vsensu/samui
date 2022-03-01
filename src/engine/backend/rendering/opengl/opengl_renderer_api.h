@@ -18,12 +18,14 @@ class SAMUI_API OpenGLRendererAPI : public RendererAPI {
   void DrawIndexed(const std::shared_ptr<VertexArray>& vertex_array,
                    uint32_t                       index_count = 0) override;
   virtual void SetDepthTestEnable(bool enable) override;
+  virtual void SetDepthTestFunc(DepthFunc depth_func) override;
   virtual void SetCullFaceEnable(bool enable) override;
   virtual void SetBlendEnable(bool enable) override;
   virtual void SetBlendFunc(BlendFactor src_factor, BlendFactor dest_factor) override;
   virtual void SetCullFace(CullFaceType cull_face) override;
   virtual void SetFrontFace(FaceVertexOrder face_vertex_order) override;
   virtual void SetPolygonMode(PolygonMode polygon_mode) override;
+  virtual void SetFlipVerticallyOnLoad(bool flip_vertically) override;
 };
 }  // namespace samui
 

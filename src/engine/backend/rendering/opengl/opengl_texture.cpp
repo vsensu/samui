@@ -28,6 +28,9 @@ static uint8_t TextureFormatChannels(TextureFormat format) {
   SAMUI_ENGINE_ASSERT(false, "Unkown TextureFormat");
   return 0;
 }
+unsigned int GetOpenGLTextureEnum(uint8_t slot){
+  return GL_TEXTURE0 + slot;
+}
 // clang-format on
 
 OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height, TextureFormat format)
@@ -47,7 +50,6 @@ OpenGLTexture2D::OpenGLTexture2D(const std::filesystem::path& path)
     : path_(path), internal_format_(0) {
   SAMUI_PROFILE_FUNCTION();
   int width, height, channels;
-  stbi_set_flip_vertically_on_load(1);
   stbi_uc* data = nullptr;
   {
     SAMUI_PROFILE_SCOPE("stbi_load");
@@ -83,10 +85,6 @@ OpenGLTexture2D::OpenGLTexture2D(const std::filesystem::path& path)
 OpenGLTexture2D::~OpenGLTexture2D() {
   SAMUI_PROFILE_FUNCTION();
   glDeleteTextures(1, &texture_id_);
-}
-
-unsigned int OpenGLTexture2D::GetOpenGLTextureEnum(uint8_t slot) {
-  return GL_TEXTURE0 + slot;
 }
 
 void OpenGLTexture2D::SetData(void* data, uint32_t size) {
@@ -139,14 +137,57 @@ std::shared_ptr<Texture2D> OpenGLTexture2D::Combine(
   return nullptr;
 }
 
-ImageInfo* OpenGLTexture2D::LoadFile(const std::filesystem::path& path, bool flip_vertically) {
+ImageInfo* OpenGLTexture2D::LoadFile(const std::filesystem::path& path) {
   SAMUI_PROFILE_FUNCTION();
 
   ImageInfo* info = new ImageInfo();
-  stbi_set_flip_vertically_on_load(flip_vertically ? 1 : 0);
   info->data = stbi_load(path.string().c_str(), &info->width, &info->height,
                          &info->channels, 0);
   return info;
+}
+
+OpenGLCubeMap::OpenGLCubeMap(const std::array<std::filesystem::path, 6>& paths)
+{
+  SAMUI_PROFILE_FUNCTION();
+  int width, height, channels;
+  
+  // 创建纹理对象
+  glGenTextures(1, &texture_id_);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id_);
+
+  stbi_uc* data = nullptr;
+  {
+      SAMUI_PROFILE_SCOPE("stbi_load");
+      for (int i = 0; i < paths.size(); ++i)
+      {
+          data = stbi_load(paths[i].string().c_str(), &width, &height,
+                           &channels, 0);
+
+          SAMUI_ENGINE_ASSERT(data, "Failed to load image:{0}", paths[i].string());
+          GLenum internal_format = channels == 4 ? GL_RGBA : (channels == 3 ? GL_RGB : 0);
+          SAMUI_ENGINE_ASSERT(internal_format, "Format not supported! channels: {0}", channels);
+          glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0 /*mipmap*/, internal_format, width,
+                       height, 0 /*legacy*/, internal_format, GL_UNSIGNED_BYTE,
+                       data);
+          stbi_image_free(data);
+      }
+  }
+
+  // 为当前绑定的纹理对象设置环绕、过滤方式
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+  // glGenerateMipmap(GL_TEXTURE_2D);
+}
+
+void OpenGLCubeMap::Bind(uint8_t slot)
+{
+    SAMUI_PROFILE_FUNCTION();
+    // 绑定纹理
+    glActiveTexture(GetOpenGLTextureEnum(slot));
+    glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id_);
 }
 
 }  // namespace samui

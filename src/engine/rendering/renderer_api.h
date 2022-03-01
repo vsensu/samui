@@ -32,6 +32,18 @@ namespace samui {
     One_Minus_Src_Alpha,
   };
 
+  enum class SAMUI_API DepthFunc {
+    Always,
+    Never,
+    Less,
+    Equal,
+    Less_Equal,
+    Greater,
+    Not_Equal,
+    Greater_Equal
+  };
+
+
 class SAMUI_API RendererAPI {
  public:
   enum class API { None = 0, OpenGL = 1 };
@@ -46,12 +58,14 @@ class SAMUI_API RendererAPI {
   virtual void Clear() = 0;
   virtual void DrawIndexed(const std::shared_ptr<VertexArray>& vertex_array, uint32_t index_count = 0) = 0;
   virtual void SetDepthTestEnable(bool enable) = 0;
+  virtual void SetDepthTestFunc(DepthFunc depth_func) = 0;
   virtual void SetCullFaceEnable(bool enable) = 0;
   virtual void SetBlendEnable(bool enable) = 0;
   virtual void SetBlendFunc(BlendFactor src_factor, BlendFactor dest_factor) = 0;
   virtual void SetCullFace(CullFaceType cull_face) = 0;
   virtual void SetFrontFace(FaceVertexOrder face_vertex_order) = 0;
   virtual void SetPolygonMode(PolygonMode polygon_mode) = 0;
+  virtual void SetFlipVerticallyOnLoad(bool flip_vertically) = 0;
 
   inline static API GetAPI() { return api_; }
 

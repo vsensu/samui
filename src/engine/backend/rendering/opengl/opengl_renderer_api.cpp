@@ -2,6 +2,7 @@
 #include "opengl_renderer_api.h"
 
 #include <glad/glad.h>
+#include <stb_image.h>
 
 #include <debug/instrumentor.h>
 #include "gl_errors.h"
@@ -45,6 +46,39 @@ void OpenGLRendererAPI::SetDepthTestEnable(bool enable) {
   } else {
     glDisable(GL_DEPTH_TEST);
   }
+}
+
+void OpenGLRendererAPI::SetDepthTestFunc(DepthFunc depth_func)
+{
+  GLenum gl_depth_func = GL_LESS;
+  switch (depth_func)
+  {
+      case DepthFunc::Always:
+          gl_depth_func = GL_ALWAYS;
+          break;
+      case DepthFunc::Never:
+          gl_depth_func = GL_NEVER;
+          break;
+      case DepthFunc::Less:
+          gl_depth_func = GL_LESS;
+          break;
+      case DepthFunc::Equal:
+          gl_depth_func = GL_EQUAL;
+          break;
+      case DepthFunc::Less_Equal:
+          gl_depth_func = GL_LEQUAL;
+          break;
+      case DepthFunc::Greater:
+          gl_depth_func = GL_GREATER;
+          break;
+      case DepthFunc::Not_Equal:
+          gl_depth_func = GL_NOTEQUAL;
+          break;
+      case DepthFunc::Greater_Equal:
+          gl_depth_func = GL_GEQUAL;
+          break;
+  }
+  glDepthFunc(gl_depth_func);
 }
 
 void OpenGLRendererAPI::SetCullFaceEnable(bool enable) {
@@ -112,6 +146,10 @@ void OpenGLRendererAPI::SetPolygonMode(PolygonMode polygon_mode) {
       glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
       break;
   }
+}
+
+void OpenGLRendererAPI::SetFlipVerticallyOnLoad(bool flip_vertically) {
+  stbi_set_flip_vertically_on_load(flip_vertically ? 1 : 0);
 }
 
 }  // namespace samui

@@ -4,6 +4,7 @@
 // clang-format off
 #include <memory>
 #include <filesystem>
+#include <array>
 
 #include "core/core.h"
 // clang-format on
@@ -43,7 +44,12 @@ class SAMUI_API Texture2D : public Texture {
                                 uint16_t cell_width, uint16_t cell_height,
                                 uint16_t rows, uint16_t columns);
 
-  static ImageInfo* LoadFile(const std::filesystem::path& path, bool flip_vertically = true);
+  static ImageInfo* LoadFile(const std::filesystem::path& path);
+};
+
+class SAMUI_API CubeMap : public Texture {
+  public:
+  static std::shared_ptr<CubeMap> Create(const std::array<std::filesystem::path, 6> &paths);
 };
 
 }  // namespace samui

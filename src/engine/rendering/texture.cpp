@@ -36,10 +36,20 @@ std::shared_ptr<Texture2D> Texture2D::Combine(const std::vector<std::shared_ptr<
   return nullptr;
 }
 
-ImageInfo* Texture2D::LoadFile(const std::filesystem::path& path, bool flip_vertically) {
+ImageInfo* Texture2D::LoadFile(const std::filesystem::path& path) {
   switch (Renderer::GetAPI()) {
     case RendererAPI::API::OpenGL:
-      return OpenGLTexture2D::LoadFile(path, flip_vertically);
+      return OpenGLTexture2D::LoadFile(path);
+  }
+  SAMUI_ENGINE_ASSERT(false, "Unsupported Render API");
+  return nullptr;
+}
+
+std::shared_ptr<CubeMap> CubeMap::Create(const std::array<std::filesystem::path, 6> &paths)
+{
+  switch (Renderer::GetAPI()) {
+    case RendererAPI::API::OpenGL:
+      return std::make_shared<OpenGLCubeMap>(paths);
   }
   SAMUI_ENGINE_ASSERT(false, "Unsupported Render API");
   return nullptr;

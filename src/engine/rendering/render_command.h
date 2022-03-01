@@ -27,6 +27,10 @@ class SAMUI_API RenderCommand {
     renderer_api_->SetDepthTestEnable(enable);
   }
 
+  inline static void SetDepthTestFunc(DepthFunc depth_func) {
+    renderer_api_->SetDepthTestFunc(depth_func);
+  }
+
   inline static void SetCullFaceEnable(bool enable) {
     renderer_api_->SetCullFaceEnable(enable);
   }
@@ -49,6 +53,11 @@ class SAMUI_API RenderCommand {
 
   inline static void SetPolygonMode(PolygonMode polygon_mode) {
     renderer_api_->SetPolygonMode(polygon_mode);
+  }
+
+  inline static void SetFlipVerticallyOnLoad(bool flip_vertically)
+  {
+    renderer_api_->SetFlipVerticallyOnLoad(flip_vertically);
   }
 
  private:

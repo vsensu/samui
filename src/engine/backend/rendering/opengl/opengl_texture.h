@@ -27,11 +27,10 @@ class SAMUI_API OpenGLTexture2D : public Texture2D {
 
   virtual uint32_t GetTextureID() const override { return texture_id_; }
 
-  static unsigned int   GetOpenGLTextureEnum(uint8_t slot);
   static std::shared_ptr<Texture2D> Combine(const std::vector<std::shared_ptr<Texture2D>>& textures,
                                 uint16_t cell_width, uint16_t cell_height,
                                 uint16_t rows, uint16_t columns);
-  static ImageInfo* LoadFile(const std::filesystem::path& path, bool flip_vertically = true);
+  static ImageInfo* LoadFile(const std::filesystem::path& path);
 
  private:
   std::filesystem::path path_;
@@ -40,6 +39,27 @@ class SAMUI_API OpenGLTexture2D : public Texture2D {
   unsigned              texture_id_;
   GLenum                internal_format_;
   TextureFormat         format_;
+};
+
+class OpenGLCubeMap : public CubeMap
+{
+  public:
+    OpenGLCubeMap(const std::array<std::filesystem::path, 6>& paths);
+    virtual uint32_t GetWidth() const override { return 64; }
+    virtual uint32_t GetHeight() const override { return 64; }
+    virtual void     SetData(void* data, uint32_t size) override {}
+    virtual void     Bind(uint8_t slot = 0) override;
+    
+    virtual bool     operator==(const Texture& other) const override
+    {
+        return texture_id_ ==
+               static_cast<const OpenGLCubeMap&>(other).texture_id_;
+    }
+
+    virtual uint32_t GetTextureID() const override { return texture_id_; }
+
+  private:
+    unsigned texture_id_;
 };
 
 }  // namespace samui

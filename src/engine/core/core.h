@@ -2,6 +2,8 @@
 #define SAMUI_CORE_H_
 
 // clang-format off
+#define SAMUI_VERSION 20220301  // year, month, version
+
 #ifdef SAMUI_PLATFORM_WINDOWS
   #ifdef SAMUI_BUILD_DLL
     #define SAMUI_API __declspec(dllexport)
