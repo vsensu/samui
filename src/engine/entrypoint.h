@@ -13,7 +13,7 @@ int main(int argc, char** argv) {
   SAMUI_PROFILE_END_SESSION();
 
   SAMUI_PROFILE_BEGIN_SESSION("Startup", "SamuiProfile-Runtime.json");
-  app->Run();
+  app->run();
   SAMUI_PROFILE_END_SESSION();
 
   SAMUI_PROFILE_BEGIN_SESSION("Startup", "SamuiProfile-Shutdown.json");

@@ -9,12 +9,12 @@ LayerStack::~LayerStack() {
   }
 }
 
-void LayerStack::PushLayer(Layer* layer) {
+void LayerStack::push_layer(Layer* layer) {
   layers_.emplace(layers_.begin() + layer_insert_index_, layer);
   ++layer_insert_index_;
 }
 
-void LayerStack::PushOverlay(Layer* overlay) { layers_.emplace_back(overlay); }
+void LayerStack::push_overlay(Layer* overlay) { layers_.emplace_back(overlay); }
 
 void LayerStack::PopLayer(Layer* layer) {
   auto it = std::find(layers_.begin(), layers_.end(), layer);

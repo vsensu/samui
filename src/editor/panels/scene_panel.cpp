@@ -101,7 +101,7 @@ void ScenePanel::OnImGuiRender() {
 
   viewport_focused_ = ImGui::IsWindowFocused();
   viewport_hovered_ = ImGui::IsWindowHovered();
-  Application::Get().GetImGuiLayer()->BlockEvents(!viewport_focused_ &&
+  Application::instance().get_imgui_layer()->BlockEvents(!viewport_focused_ &&
                                                   !viewport_hovered_);
   const auto&   viewport_size = ImGui::GetContentRegionAvail();
   static ImVec2 last_viewport_size_;

@@ -8,7 +8,7 @@
 class Demo : public samui::Application
 {
   public:
-    Demo() : Application() { PushLayer(new Game2DLayer()); }
+    Demo() : Application() { push_layer(new Game2DLayer()); }
 };
 
 samui::Application* samui::create_application()

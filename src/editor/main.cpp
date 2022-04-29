@@ -9,7 +9,7 @@ namespace samui {
 
 class Demo : public Application {
  public:
-  Demo() : Application() { PushLayer(new EditorLayer()); }
+  Demo() : Application() { push_layer(new EditorLayer()); }
 };
 
 Application* create_application() { return new Demo(); }

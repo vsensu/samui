@@ -12,21 +12,21 @@
 namespace samui {
 bool Input::IsKeyPressed(int keycode) {
   auto* window = static_cast<GLFWwindow*>(
-      Application::Get().GetWindow().GetNativeWindow());
+      Application::instance().get_window().GetNativeWindow());
   auto state = glfwGetKey(window, keycode);
   return state == GLFW_PRESS || state == GLFW_REPEAT;
 }
 
 bool Input::IsMouseButtonPressed(int button) {
   auto* window = static_cast<GLFWwindow*>(
-      Application::Get().GetWindow().GetNativeWindow());
+      Application::instance().get_window().GetNativeWindow());
   auto state = glfwGetMouseButton(window, button);
   return state == GLFW_PRESS;
 }
 
 float Input::GetMouseX() {
   auto* window = static_cast<GLFWwindow*>(
-      Application::Get().GetWindow().GetNativeWindow());
+      Application::instance().get_window().GetNativeWindow());
   double xpos, ypos;
   glfwGetCursorPos(window, &xpos, &ypos);
   return xpos;
@@ -34,7 +34,7 @@ float Input::GetMouseX() {
 
 float Input::GetMouseY() {
   auto* window = static_cast<GLFWwindow*>(
-      Application::Get().GetWindow().GetNativeWindow());
+      Application::instance().get_window().GetNativeWindow());
   double xpos, ypos;
   glfwGetCursorPos(window, &xpos, &ypos);
   return ypos;

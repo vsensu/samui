@@ -255,7 +255,7 @@ class Game2DLayer : public samui::Layer
         {
             SAMUI_PROFILE_SCOPE("Render Draw(CPU)");
             samui::RenderCommand::Clear();
-            const auto& window = samui::Application::Get().GetWindow();
+            const auto& window = samui::Application::instance().get_window();
             auto        window_width = static_cast<float>(window.GetWidth());
             auto        window_height = static_cast<float>(window.GetHeight());
             glm::mat4   projection =

@@ -12,8 +12,8 @@ class SAMUI_API LayerStack {
   LayerStack();
   ~LayerStack();
 
-  void PushLayer(Layer* layer);
-  void PushOverlay(Layer* overlay);
+  void push_layer(Layer* layer);
+  void push_overlay(Layer* overlay);
   void PopLayer(Layer* layer);
   void PopOverlay(Layer* overlay);
 

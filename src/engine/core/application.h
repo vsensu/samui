@@ -1,5 +1,4 @@
-#ifndef SAMUI_APPLICATION_H_
-#define SAMUI_APPLICATION_H_
+#pragma once
 
 // clang-format off
 #include "core.h"
@@ -8,46 +7,44 @@
 #include <layer/layer_stack.h>
 // clang-format on
 
-namespace samui {
+namespace samui
+{
 
 class ImGuiLayer;
 
-class SAMUI_API Application {
- private:
-  /* data */
- public:
-  explicit Application(const WindowProps& props = WindowProps());
-  virtual ~Application();
-  virtual void Run();
+class SAMUI_API Application
+{
+  public:
+    explicit Application(const WindowProps& props = WindowProps());
+    virtual ~Application();
+    virtual void run();
 
-  void PushLayer(Layer* layer);
-  void PushOverlay(Layer* layer);
+    void push_layer(Layer* layer);
+    void push_overlay(Layer* layer);
 
-  inline static Application& Get() { return *instance_; }
-  inline Window&             GetWindow() { return *window_; }
+    inline static Application& instance() { return *instance_; }
+    inline Window&             get_window() { return *window_; }
 
-  ImGuiLayer* GetImGuiLayer() { return imgui_layer_; }
+    ImGuiLayer* get_imgui_layer() { return imgui_layer_; }
 
-  void Close();
-  void SetInputMode(InputMode mode);
+    void close();
+    void set_input_mode(InputMode mode);
 
- private:
-  void OnEvent(Event& e);
-  bool OnWindowClose(WindowCloseEvent& event);
-  bool OnWindowResize(WindowResizeEvent& event);
+  private:
+    void on_event(Event& e);
+    bool on_window_close(WindowCloseEvent& event);
+    bool on_window_resize(WindowResizeEvent& event);
 
- private:
-  std::unique_ptr<Window> window_;
-  ImGuiLayer*             imgui_layer_;
-  bool                    running_{true};
-  bool                    minimized_{false};
-  LayerStack              layer_stack_;
-  float                   last_frame_time_{0.f};
-  static Application*     instance_;
+  private:
+    std::unique_ptr<Window> window_;
+    ImGuiLayer*             imgui_layer_;
+    bool                    running_{true};
+    bool                    minimized_{false};
+    LayerStack              layer_stack_;
+    float                   last_frame_time_{0.f};
+    static Application*     instance_;
 };
 
 Application* create_application();
 
 }  // namespace samui
-
-#endif

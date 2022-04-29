@@ -44,7 +44,7 @@ void ImGuiLayer::OnAttach() {
 
   // Setup Platform/Renderer backends
   ImGui_ImplGlfw_InitForOpenGL(
-      (GLFWwindow*)(Application::Get().GetWindow().GetNativeWindow()), true);
+      (GLFWwindow*)(Application::instance().get_window().GetNativeWindow()), true);
   ImGui_ImplOpenGL3_Init("#version 130");
 }
 
@@ -78,9 +78,9 @@ void ImGuiLayer::Begin() {
 void ImGuiLayer::End() {
   SAMUI_PROFILE_FUNCTION();
   ImGuiIO&     io = ImGui::GetIO();
-  Application& app = Application::Get();
+  Application& app = Application::instance();
   io.DisplaySize =
-      ImVec2(app.GetWindow().GetWidth(), app.GetWindow().GetHeight());
+      ImVec2(app.get_window().GetWidth(), app.get_window().GetHeight());
 
   // Rendering
   ImGui::Render();

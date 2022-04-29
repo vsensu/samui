@@ -154,7 +154,7 @@ void EditorLayer::OnImGuiFullScreenDocking() {
       }
 
       if (ImGui::MenuItem("Exit")) {
-        Application::Get().Close();
+        Application::instance().close();
       }
       ImGui::EndMenu();
     }

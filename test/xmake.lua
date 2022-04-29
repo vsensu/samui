@@ -1,4 +1,4 @@
-add_requires("catch2")
+add_requires("catch2 2.13.9")
 
 target("test")
     set_kind("binary")
