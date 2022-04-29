@@ -1,5 +1,4 @@
-#ifndef SAMUI_GL_ERRORS_H_
-#define SAMUI_GL_ERRORS_H_
+#pragma once
 
 #ifdef SAMUI_DEBUG
 #define DEBUG_GL_ERRORS
@@ -20,5 +19,3 @@ void glCheckError(const char *file, unsigned int line,
 void initGLDebug();
 
 // clang-format on
-
-#endif  // SAMUI_GL_ERRORS_H_
