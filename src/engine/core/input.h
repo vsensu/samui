@@ -1,16 +1,15 @@
-#ifndef SAMUI_INPUT_H_
-#define SAMUI_INPUT_H_
+#pragma once
 
 #include "core.h"
 
-namespace samui {
-class SAMUI_API Input {
- public:
-  static bool  IsKeyPressed(int keycode);
-  static bool  IsMouseButtonPressed(int button);
-  static float GetMouseX();
-  static float GetMouseY();
+namespace samui
+{
+class SAMUI_API Input
+{
+  public:
+    static bool  is_key_pressed(int keycode);
+    static bool  is_mouse_button_pressed(int button);
+    static float get_mouse_x();
+    static float get_mouse_y();
 };
 }  // namespace samui
-
-#endif

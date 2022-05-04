@@ -1,5 +1,4 @@
-#ifndef SAMUI_KEYCODES_H_
-#define SAMUI_KEYCODES_H_
+#pragma once
 
 /* The unknown key */
 #define SAMUI_KEY_UNKNOWN            -1
@@ -142,5 +141,3 @@
 #define SAMUI_MOUSE_BUTTON_LEFT      SAMUI_MOUSE_BUTTON_1
 #define SAMUI_MOUSE_BUTTON_RIGHT     SAMUI_MOUSE_BUTTON_2
 #define SAMUI_MOUSE_BUTTON_MIDDLE    SAMUI_MOUSE_BUTTON_3
-
-#endif

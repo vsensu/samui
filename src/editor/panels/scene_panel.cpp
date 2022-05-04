@@ -164,7 +164,7 @@ void ScenePanel::OnImGuiRender() {
         scene_->GetComponent<TransformComponent>(selected_entity);
     glm::mat4 transform = trans_comp.transform();
 
-    bool  snap = Input::IsKeyPressed(SAMUI_KEY_LEFT_CONTROL);
+    bool  snap = Input::is_key_pressed(SAMUI_KEY_LEFT_CONTROL);
     float snap_value = gizmos_op_ == ImGuizmo::OPERATION::ROTATE ? 45.f : 0.5f;
     float snap_values[3] = {snap_value, snap_value, snap_value};
 

@@ -15,28 +15,28 @@ OrthographicCameraController::OrthographicCameraController(float aspect_ratio,
 void OrthographicCameraController::OnUpdate(const Timestep& deltaTime) {
   SAMUI_PROFILE_FUNCTION();
   auto camera_pos = camera_.get_position();
-  if (Input::IsKeyPressed(SAMUI_KEY_A)) {
+  if (Input::is_key_pressed(SAMUI_KEY_A)) {
     camera_pos.x -= 1.f * deltaTime;
   }
 
-  if (Input::IsKeyPressed(SAMUI_KEY_D)) {
+  if (Input::is_key_pressed(SAMUI_KEY_D)) {
     camera_pos.x += 1.f * deltaTime;
   }
 
-  if (Input::IsKeyPressed(SAMUI_KEY_W)) {
+  if (Input::is_key_pressed(SAMUI_KEY_W)) {
     camera_pos.y += 1.f * deltaTime;
   }
 
-  if (Input::IsKeyPressed(SAMUI_KEY_S)) {
+  if (Input::is_key_pressed(SAMUI_KEY_S)) {
     camera_pos.y -= 1.f * deltaTime;
   }
 
   if (rotation_enabled_) {
     auto rotation = camera_.get_rotation();
-    if (Input::IsKeyPressed(SAMUI_KEY_Q)) {
+    if (Input::is_key_pressed(SAMUI_KEY_Q)) {
       rotation += 10.f * deltaTime;
     }
-    if (Input::IsKeyPressed(SAMUI_KEY_E)) {
+    if (Input::is_key_pressed(SAMUI_KEY_E)) {
       rotation -= 10.f * deltaTime;
     }
     camera_.set_rotation(rotation);

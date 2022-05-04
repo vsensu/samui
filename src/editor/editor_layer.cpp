@@ -202,11 +202,11 @@ Entity EditorLayer::GetSelectedEntity() {
 bool EditorLayer::OnKeyPressed(KeyPressedEvent& event) {
   if (event.GetRepeatCount() > 0) return false;
 
-  bool ctrl_pressed = Input::IsKeyPressed(SAMUI_KEY_LEFT_CONTROL) ||
-                      Input::IsKeyPressed(SAMUI_KEY_RIGHT_CONTROL);
+  bool ctrl_pressed = Input::is_key_pressed(SAMUI_KEY_LEFT_CONTROL) ||
+                      Input::is_key_pressed(SAMUI_KEY_RIGHT_CONTROL);
 
-  bool shift_pressed = Input::IsKeyPressed(SAMUI_KEY_LEFT_SHIFT) ||
-                       Input::IsKeyPressed(SAMUI_KEY_RIGHT_SHIFT);
+  bool shift_pressed = Input::is_key_pressed(SAMUI_KEY_LEFT_SHIFT) ||
+                       Input::is_key_pressed(SAMUI_KEY_RIGHT_SHIFT);
 
   switch (event.GetKeyCode()) {
     case SAMUI_KEY_N: {
@@ -242,7 +242,7 @@ bool EditorLayer::OnKeyPressed(KeyPressedEvent& event) {
 
 bool EditorLayer::OnMouseButtonPressed(MouseButtonPressedEvent& event) {
   if (scene_panel_->GetHoveredEntity() != entt::null && !ImGuizmo::IsOver() &&
-      !Input::IsKeyPressed(SAMUI_KEY_LEFT_CONTROL)) {
+      !Input::is_key_pressed(SAMUI_KEY_LEFT_CONTROL)) {
     scene_hierarchy_panel_->SetSelectedEntity(scene_panel_->GetHoveredEntity());
     return false;
   }

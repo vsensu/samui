@@ -158,7 +158,7 @@ class Game2DLayer : public samui::Layer
 
         if (game_state_ == GameState::Running)
         {
-            move_interval_ = samui::Input::IsKeyPressed(SAMUI_KEY_LEFT_SHIFT)
+            move_interval_ = samui::Input::is_key_pressed(SAMUI_KEY_LEFT_SHIFT)
                                  ? fast_move_interval_
                                  : norm_move_interval_;
 

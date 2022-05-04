@@ -10,47 +10,51 @@
 #include <rendering/graphics_context.h>
 // clang-format on
 
-namespace samui {
-class SAMUI_API WindowsWindow : public Window {
- public:
-  WindowsWindow(const WindowProps& props);
-  virtual ~WindowsWindow();
+namespace samui
+{
+class SAMUI_API WindowsWindow : public Window
+{
+  public:
+    WindowsWindow(const WindowProps& props);
+    virtual ~WindowsWindow();
 
-  void BeforeUpdate() override;
-  void OnUpdate() override;
-  void LateUpdate() override;
+    void before_update() override;
+    void on_update() override;
+    void late_update() override;
 
-  unsigned int GetWidth() const override { return data_.Width; }
-  unsigned int GetHeight() const override { return data_.Height; }
+    unsigned int get_width() const override { return data_.Width; }
+    unsigned int get_height() const override { return data_.Height; }
 
-  void SetEventCallback(const EventCallbackFunc& callback) override {
-    data_.EventCallback = callback;
-  }
-  void SetVSync(bool enabled) override;
-  bool IsVSync() const override;
+    void set_event_callback(const EventCallbackFunc& callback) override
+    {
+        data_.EventCallback = callback;
+    }
+    void set_vsync(bool enabled) override;
+    bool is_vsync() const override;
 
-  void* GetNativeWindow() const override { return window_; }
+    void* get_native_window() const override { return window_; }
 
-  void SetInputMode(InputMode mode) override;
+    void set_input_mode(InputMode mode) override;
 
- private:
-  virtual void Init(const WindowProps& props);
-  virtual void Shutdown();
+  private:
+    virtual void init(const WindowProps& props);
+    virtual void shutdown();
 
- private:
-  struct WindowData {
-    std::string  Title;
-    unsigned int Width;
-    unsigned int Height;
-    bool         VSync;
+  private:
+    struct WindowData
+    {
+        std::string  Title;
+        unsigned int Width;
+        unsigned int Height;
+        bool         VSync;
 
-    EventCallbackFunc EventCallback;
-  };
+        EventCallbackFunc EventCallback;
+    };
 
-  GLFWwindow*      window_;
-  GraphicsContext* graphics_context_;
-  // std::unique_ptr<GraphicsContext> context_;
-  WindowData data_;
+    GLFWwindow*      window_;
+    GraphicsContext* graphics_context_;
+    // std::unique_ptr<GraphicsContext> context_;
+    WindowData data_;
 };
 }  // namespace samui
 

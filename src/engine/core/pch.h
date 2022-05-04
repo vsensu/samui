@@ -1,5 +1,4 @@
-#ifndef SAMUI_PCH_H_
-#define SAMUI_PCH_H_
+#pragma once
 
 #include <memory>
 #include <functional>
@@ -20,5 +19,3 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
 #include <glm/gtx/quaternion.hpp>
-
-#endif // SAMUI_PCH_H_

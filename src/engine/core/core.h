@@ -1,5 +1,4 @@
-#ifndef SAMUI_CORE_H_
-#define SAMUI_CORE_H_
+#pragma once
 
 // clang-format off
 #define SAMUI_VERSION 20220401  // year, month, version
@@ -33,5 +32,3 @@
 
 #include <utility>
 #define BIND_EVENT_FUNC(fn) [this](auto&& ... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); } 
-
-#endif

@@ -20,8 +20,8 @@ Application::Application(const WindowProps& props)
     SAMUI_PROFILE_FUNCTION();
 
     instance_ = this;
-    window_ = Window::Create(props);
-    window_->SetEventCallback(BIND_EVENT_FUNC(Application::on_event));
+    window_ = Window::create(props);
+    window_->set_event_callback(BIND_EVENT_FUNC(Application::on_event));
 
     Renderer::Init();
 
@@ -45,7 +45,7 @@ void Application::run()
         Timestep delta_time = time - last_frame_time_;
         last_frame_time_ = time;
 
-        window_->BeforeUpdate();
+        window_->before_update();
 
         if (!minimized_)
         {
@@ -67,8 +67,8 @@ void Application::run()
             }
         }
 
-        window_->OnUpdate();
-        window_->LateUpdate();
+        window_->on_update();
+        window_->late_update();
     }
 }
 
@@ -94,7 +94,7 @@ void Application::close()
 
 void Application::set_input_mode(InputMode mode)
 {
-    window_->SetInputMode(mode);
+    window_->set_input_mode(mode);
 }
 
 void Application::on_event(Event& e)

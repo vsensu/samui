@@ -55,16 +55,16 @@ float EditorCamera::ZoomSpeed() const {
 }
 
 void EditorCamera::OnUpdate(Timestep ts) {
-  if (Input::IsKeyPressed(SAMUI_KEY_LEFT_ALT)) {
-    const glm::vec2& mouse{Input::GetMouseX(), Input::GetMouseY()};
+  if (Input::is_key_pressed(SAMUI_KEY_LEFT_ALT)) {
+    const glm::vec2& mouse{Input::get_mouse_x(), Input::get_mouse_y()};
     glm::vec2        delta = (mouse - m_InitialMousePosition) * 0.003f;
     m_InitialMousePosition = mouse;
 
-    if (Input::IsMouseButtonPressed(SAMUI_MOUSE_BUTTON_MIDDLE))
+    if (Input::is_mouse_button_pressed(SAMUI_MOUSE_BUTTON_MIDDLE))
       MousePan(delta);
-    else if (Input::IsMouseButtonPressed(SAMUI_MOUSE_BUTTON_LEFT))
+    else if (Input::is_mouse_button_pressed(SAMUI_MOUSE_BUTTON_LEFT))
       MouseRotate(delta);
-    else if (Input::IsMouseButtonPressed(SAMUI_MOUSE_BUTTON_RIGHT))
+    else if (Input::is_mouse_button_pressed(SAMUI_MOUSE_BUTTON_RIGHT))
       MouseZoom(delta.y);
   }
 
