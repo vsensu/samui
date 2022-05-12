@@ -73,12 +73,12 @@ void EditorCamera::OnUpdate(Timestep ts) {
 
 void EditorCamera::OnEvent(Event& e) {
   EventDispatcher dispatcher(e);
-  dispatcher.Dispatch<MouseScrolledEvent>(
+  dispatcher.dispatch<MouseScrolledEvent>(
       BIND_EVENT_FUNC(EditorCamera::OnMouseScroll));
 }
 
 bool EditorCamera::OnMouseScroll(MouseScrolledEvent& e) {
-  float delta = e.GetYOffset() * 0.1f;
+  float delta = e.get_y_offset() * 0.1f;
   MouseZoom(delta);
   UpdateView();
   return false;

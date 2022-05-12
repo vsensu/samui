@@ -48,10 +48,10 @@ void OrthographicCameraController::OnUpdate(const Timestep& deltaTime) {
 void OrthographicCameraController::OnEvent(Event& e) {
   SAMUI_PROFILE_FUNCTION();
   EventDispatcher dispatcher(e);
-  dispatcher.Dispatch<MouseScrolledEvent>(
+  dispatcher.dispatch<MouseScrolledEvent>(
       BIND_EVENT_FUNC(OrthographicCameraController::OnMouseScrolled));
 
-  dispatcher.Dispatch<WindowResizeEvent>(
+  dispatcher.dispatch<WindowResizeEvent>(
       BIND_EVENT_FUNC(OrthographicCameraController::OnWindowResized));
 }
 
@@ -69,7 +69,7 @@ void OrthographicCameraController::CalculateView() {
 
 bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent& e) {
   SAMUI_PROFILE_FUNCTION();
-  zoom_level_ -= e.GetYOffset() * 0.2f;
+  zoom_level_ -= e.get_y_offset() * 0.2f;
   zoom_level_ = std::max(zoom_level_, 0.25f);
   CalculateView();
 
@@ -78,7 +78,7 @@ bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent& e) {
 
 bool OrthographicCameraController::OnWindowResized(WindowResizeEvent& e) {
   SAMUI_PROFILE_FUNCTION();
-  aspect_ratio_ = e.GetWidth() / (float)e.GetHeight();
+  aspect_ratio_ = e.get_width() / (float)e.get_height();
   CalculateView();
 
   return false;

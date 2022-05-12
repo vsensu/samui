@@ -1,5 +1,4 @@
-#ifndef SAMUI_EVENT_H_
-#define SAMUI_EVENT_H_
+#pragma once
 
 // clang-format off
 #include <core/core.h>
@@ -7,7 +6,8 @@
 #include <string>
 // clang-format on
 
-namespace samui {
+namespace samui
+{
 
 // clang-format off
 enum class EventType {
@@ -28,48 +28,52 @@ enum EventCategory {
 };
 
 #define EVENT_CLASS_TYPE(type)                                                  \
-  static EventType    GetStaticType() { return type; }                          \
-  virtual EventType   GetEventType() const override { return GetStaticType(); } \
-  virtual const char* GetName() const override { return #type; }
+  static EventType    get_static_type() { return type; }                          \
+  virtual EventType   get_event_type() const override { return get_static_type(); } \
+  virtual const char* get_name() const override { return #type; }
 
-#define EVENT_CLASS_CATEGORY(category) virtual int GetCategoryFlags() const override {return category;}
+#define EVENT_CLASS_CATEGORY(category) virtual int get_category_flags() const override {return category;}
 // clang-format on
 
-class SAMUI_API Event {
- public:
-  virtual EventType   GetEventType() const = 0;
-  virtual const char* GetName() const = 0;
-  virtual int         GetCategoryFlags() const = 0;
-  virtual std::string ToString() const { return GetName(); }
+class SAMUI_API Event
+{
+  public:
+    virtual EventType   get_event_type() const = 0;
+    virtual const char* get_name() const = 0;
+    virtual int         get_category_flags() const = 0;
+    virtual std::string to_string() const { return get_name(); }
 
-  inline bool IsInCategory(EventCategory category) const {
-    return GetCategoryFlags() & category;
-  }
-
-  bool handled_ = false;
-};
-
-class EventDispatcher {
- public:
-  EventDispatcher(Event& event) : event_(event) {}
-
-  template <typename T, typename F>
-  bool Dispatch(const F& func) {
-    if (event_.GetEventType() == T::GetStaticType()) {
-      event_.handled_ |= func(static_cast<T&>(event_));
-      return true;
+    inline bool is_in_category(EventCategory category) const
+    {
+        return get_category_flags() & category;
     }
-    return false;
-  }
 
- private:
-  Event& event_;
+    bool handled_ = false;
 };
 
-inline std::ostream& operator<<(std::ostream& os, const Event& e) {
-  return os << e.ToString();
+class EventDispatcher
+{
+  public:
+    EventDispatcher(Event& event) : event_(event) {}
+
+    template <typename T, typename F>
+    bool dispatch(const F& func)
+    {
+        if (event_.get_event_type() == T::get_static_type())
+        {
+            event_.handled_ |= func(static_cast<T&>(event_));
+            return true;
+        }
+        return false;
+    }
+
+  private:
+    Event& event_;
+};
+
+inline std::ostream& operator<<(std::ostream& os, const Event& e)
+{
+    return os << e.to_string();
 }
 
 }  // namespace samui
-
-#endif

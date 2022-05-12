@@ -76,9 +76,9 @@ void EditorLayer::OnImGuiRender() {
 void EditorLayer::OnEvent(Event& event) {
   scene_panel_->OnEvent(event);
   EventDispatcher dispatcher(event);
-  dispatcher.Dispatch<KeyPressedEvent>(
+  dispatcher.dispatch<KeyPressedEvent>(
       BIND_EVENT_FUNC(EditorLayer::OnKeyPressed));
-  dispatcher.Dispatch<MouseButtonPressedEvent>(
+  dispatcher.dispatch<MouseButtonPressedEvent>(
       BIND_EVENT_FUNC(EditorLayer::OnMouseButtonPressed));
 }
 
@@ -200,7 +200,7 @@ Entity EditorLayer::GetSelectedEntity() {
 }
 
 bool EditorLayer::OnKeyPressed(KeyPressedEvent& event) {
-  if (event.GetRepeatCount() > 0) return false;
+  if (event.get_repeat_count() > 0) return false;
 
   bool ctrl_pressed = Input::is_key_pressed(SAMUI_KEY_LEFT_CONTROL) ||
                       Input::is_key_pressed(SAMUI_KEY_RIGHT_CONTROL);
@@ -208,7 +208,7 @@ bool EditorLayer::OnKeyPressed(KeyPressedEvent& event) {
   bool shift_pressed = Input::is_key_pressed(SAMUI_KEY_LEFT_SHIFT) ||
                        Input::is_key_pressed(SAMUI_KEY_RIGHT_SHIFT);
 
-  switch (event.GetKeyCode()) {
+  switch (event.get_key_code()) {
     case SAMUI_KEY_N: {
       if (ctrl_pressed) {
         NewScene();

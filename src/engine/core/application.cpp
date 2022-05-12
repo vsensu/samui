@@ -101,9 +101,9 @@ void Application::on_event(Event& e)
 {
     SAMUI_PROFILE_FUNCTION();
     EventDispatcher dispatcher(e);
-    dispatcher.Dispatch<WindowCloseEvent>(
+    dispatcher.dispatch<WindowCloseEvent>(
         BIND_EVENT_FUNC(Application::on_window_close));
-    dispatcher.Dispatch<WindowResizeEvent>(
+    dispatcher.dispatch<WindowResizeEvent>(
         BIND_EVENT_FUNC(Application::on_window_resize));
 
     for (auto it = layer_stack_.end(); it != layer_stack_.begin();)
@@ -125,14 +125,14 @@ bool Application::on_window_close(WindowCloseEvent& event)
 bool Application::on_window_resize(WindowResizeEvent& event)
 {
     SAMUI_PROFILE_FUNCTION();
-    if (event.GetWidth() == 0 || event.GetHeight() == 0)
+    if (event.get_width() == 0 || event.get_height() == 0)
     {
         minimized_ = true;
         return false;
     }
 
     minimized_ = false;
-    Renderer::OnWindowResize(event.GetWidth(), event.GetHeight());
+    Renderer::OnWindowResize(event.get_width(), event.get_height());
 
     return false;
 }
