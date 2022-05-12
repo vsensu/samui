@@ -97,7 +97,7 @@ void WindowsWindow::init(const WindowProps& props)
 #else
 #error samui only support OpenGL
 #endif
-    graphics_context_->Init();
+    graphics_context_->init();
 
     // glfwSetFramebufferSizeCallback(window_, framebuffer_size_callback);
     glfwSetWindowUserPointer(window_, &data_);
@@ -211,7 +211,7 @@ void WindowsWindow::on_update() { SAMUI_PROFILE_FUNCTION(); }
 void WindowsWindow::late_update()
 {
     SAMUI_PROFILE_FUNCTION();
-    graphics_context_->SwapBuffers();
+    graphics_context_->swap_buffers();
 }
 
 void WindowsWindow::set_vsync(bool enabled)

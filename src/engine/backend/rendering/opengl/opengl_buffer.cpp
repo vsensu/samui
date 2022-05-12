@@ -8,7 +8,8 @@
 #include <debug/instrumentor.h>
 // clang-format on
 
-namespace samui {
+namespace samui
+{
 // clang-format off
 static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type) {
   switch (type) {
@@ -35,137 +36,158 @@ static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type) {
 // clang-format on
 
 // VertexBuffer-------------------------------------------------------------------
-OpenGLVertexBuffer::OpenGLVertexBuffer(uint32_t size) {
-  SAMUI_PROFILE_FUNCTION();
-  glGenBuffers(1, &buffer_id_);
-  Bind();
-  glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
+OpenGLVertexBuffer::OpenGLVertexBuffer(uint32_t size)
+{
+    SAMUI_PROFILE_FUNCTION();
+    glGenBuffers(1, &buffer_id_);
+    bind();
+    glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
 }
 
-OpenGLVertexBuffer::OpenGLVertexBuffer(const void* vertices, uint32_t size) {
-  SAMUI_PROFILE_FUNCTION();
-  glGenBuffers(1, &buffer_id_);
-  Bind();
-  glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
+OpenGLVertexBuffer::OpenGLVertexBuffer(const void* vertices, uint32_t size)
+{
+    SAMUI_PROFILE_FUNCTION();
+    glGenBuffers(1, &buffer_id_);
+    bind();
+    glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
 }
 
-OpenGLVertexBuffer::~OpenGLVertexBuffer() {
-  SAMUI_PROFILE_FUNCTION();
-  glDeleteBuffers(1, &buffer_id_);
+OpenGLVertexBuffer::~OpenGLVertexBuffer()
+{
+    SAMUI_PROFILE_FUNCTION();
+    glDeleteBuffers(1, &buffer_id_);
 }
 
-void OpenGLVertexBuffer::Bind() {
-  SAMUI_PROFILE_FUNCTION();
-  glBindBuffer(GL_ARRAY_BUFFER, buffer_id_);
+void OpenGLVertexBuffer::bind()
+{
+    SAMUI_PROFILE_FUNCTION();
+    glBindBuffer(GL_ARRAY_BUFFER, buffer_id_);
 }
 
-void OpenGLVertexBuffer::UnBind() {
-  SAMUI_PROFILE_FUNCTION();
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
+void OpenGLVertexBuffer::unbind()
+{
+    SAMUI_PROFILE_FUNCTION();
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void OpenGLVertexBuffer::SetData(const void* data, uint32_t size) {
-  SAMUI_PROFILE_FUNCTION();
-  glBindBuffer(GL_ARRAY_BUFFER, buffer_id_);
-  glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
+void OpenGLVertexBuffer::set_data(const void* data, uint32_t size)
+{
+    SAMUI_PROFILE_FUNCTION();
+    glBindBuffer(GL_ARRAY_BUFFER, buffer_id_);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
 }
 
 // IndexBuffer-------------------------------------------------------------------
 OpenGLIndexBuffer::OpenGLIndexBuffer(const uint32_t* indices, uint32_t count)
-    : count_(count) {
-  SAMUI_PROFILE_FUNCTION();
-  glGenBuffers(1, &buffer_id_);
-  Bind();
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices,
-               GL_STATIC_DRAW);
+    : count_(count)
+{
+    SAMUI_PROFILE_FUNCTION();
+    glGenBuffers(1, &buffer_id_);
+    bind();
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices,
+                 GL_STATIC_DRAW);
 }
 
-OpenGLIndexBuffer::~OpenGLIndexBuffer() {
-  SAMUI_PROFILE_FUNCTION();
-  glDeleteBuffers(1, &buffer_id_);
+OpenGLIndexBuffer::~OpenGLIndexBuffer()
+{
+    SAMUI_PROFILE_FUNCTION();
+    glDeleteBuffers(1, &buffer_id_);
 }
 
-void OpenGLIndexBuffer::Bind() {
-  SAMUI_PROFILE_FUNCTION();
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer_id_);
+void OpenGLIndexBuffer::bind()
+{
+    SAMUI_PROFILE_FUNCTION();
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer_id_);
 }
 
-void OpenGLIndexBuffer::UnBind() {
-  SAMUI_PROFILE_FUNCTION();
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+void OpenGLIndexBuffer::unbind()
+{
+    SAMUI_PROFILE_FUNCTION();
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-OpenGLVertexArray::OpenGLVertexArray() {
-  SAMUI_PROFILE_FUNCTION();
-  glGenVertexArrays(1, &vao_id_);
-  Bind();
+OpenGLVertexArray::OpenGLVertexArray()
+{
+    SAMUI_PROFILE_FUNCTION();
+    glGenVertexArrays(1, &vao_id_);
+    bind();
 }
 
-OpenGLVertexArray::~OpenGLVertexArray() {
-  SAMUI_PROFILE_FUNCTION();
-  glDeleteVertexArrays(1, &vao_id_);
+OpenGLVertexArray::~OpenGLVertexArray()
+{
+    SAMUI_PROFILE_FUNCTION();
+    glDeleteVertexArrays(1, &vao_id_);
 }
 
-void OpenGLVertexArray::Bind() {
-  SAMUI_PROFILE_FUNCTION();
-  glBindVertexArray(vao_id_);
+void OpenGLVertexArray::bind()
+{
+    SAMUI_PROFILE_FUNCTION();
+    glBindVertexArray(vao_id_);
 }
 
-void OpenGLVertexArray::UnBind() {
-  SAMUI_PROFILE_FUNCTION();
-  glBindVertexArray(0);
+void OpenGLVertexArray::unbind()
+{
+    SAMUI_PROFILE_FUNCTION();
+    glBindVertexArray(0);
 }
 
-void OpenGLVertexArray::AddVertexBuffer(
-    const std::shared_ptr<VertexBuffer>& buffer) {
-  SAMUI_PROFILE_FUNCTION();
-  SAMUI_ENGINE_ASSERT(buffer->GetLayout().GetElements().size(),
-                      "Vertex Buffer has no layout!");
+void OpenGLVertexArray::add_vertex_buffer(
+    const std::shared_ptr<VertexBuffer>& buffer)
+{
+    SAMUI_PROFILE_FUNCTION();
+    SAMUI_ENGINE_ASSERT(buffer->GetLayout().GetElements().size(),
+                        "Vertex Buffer has no layout!");
 
-  Bind();
-  buffer->Bind();
+    bind();
+    buffer->bind();
 
-  uint32_t    index = 0;
-  const auto& layout = buffer->GetLayout();
-  for (const auto& elem : layout) {
-    switch (elem.Type) {
-      case ShaderDataType::Bool:
-      case ShaderDataType::Int:
-      case ShaderDataType::Int2:
-      case ShaderDataType::Int3:
-      case ShaderDataType::Int4:
-      case ShaderDataType::UInt:
-      case ShaderDataType::UInt2:
-      case ShaderDataType::UInt3:
-      case ShaderDataType::UInt4:
-        // 定义OpenGL如何理解该顶点数据
-        glVertexAttribIPointer(index, ShaderDataTypeCount(elem.Type),
-                               ShaderDataTypeToOpenGLBaseType(elem.Type),
-                               layout.GetStride(), (const void*)elem.Offset);
-        break;
-      default:
-        // 定义OpenGL如何理解该顶点数据
-        glVertexAttribPointer(index, ShaderDataTypeCount(elem.Type),
-                              ShaderDataTypeToOpenGLBaseType(elem.Type),
-                              elem.Normalized ? GL_TRUE : GL_FALSE,
-                              layout.GetStride(), (const void*)elem.Offset);
+    uint32_t    index = 0;
+    const auto& layout = buffer->get_layout();
+    for (const auto& elem : layout)
+    {
+        switch (elem.Type)
+        {
+            case ShaderDataType::Bool:
+            case ShaderDataType::Int:
+            case ShaderDataType::Int2:
+            case ShaderDataType::Int3:
+            case ShaderDataType::Int4:
+            case ShaderDataType::UInt:
+            case ShaderDataType::UInt2:
+            case ShaderDataType::UInt3:
+            case ShaderDataType::UInt4:
+                // 定义OpenGL如何理解该顶点数据
+                glVertexAttribIPointer(
+                    index, ShaderDataTypeCount(elem.Type),
+                    ShaderDataTypeToOpenGLBaseType(elem.Type),
+                    layout.get_stride(), (const void*)elem.Offset);
+                break;
+            default:
+                // 定义OpenGL如何理解该顶点数据
+                glVertexAttribPointer(index, ShaderDataTypeCount(elem.Type),
+                                      ShaderDataTypeToOpenGLBaseType(elem.Type),
+                                      elem.Normalized ? GL_TRUE : GL_FALSE,
+                                      layout.get_stride(),
+                                      (const void*)elem.Offset);
 
-        break;
+                break;
+        }
+
+        // 启用顶点属性 顶点属性默认是禁用的
+        glEnableVertexAttribArray(index);
+        index++;
     }
 
-    // 启用顶点属性 顶点属性默认是禁用的
-    glEnableVertexAttribArray(index);
-    index++;
-  }
-
-  vertex_buffers_.push_back(buffer);
+    vertex_buffers_.push_back(buffer);
 }
 
-void OpenGLVertexArray::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& buffer) {
-  SAMUI_PROFILE_FUNCTION();
-  Bind();
-  buffer->Bind();
-  index_buffer_ = buffer;
+void OpenGLVertexArray::set_index_buffer(
+    const std::shared_ptr<IndexBuffer>& buffer)
+{
+    SAMUI_PROFILE_FUNCTION();
+    bind();
+    buffer->bind();
+    index_buffer_ = buffer;
 }
 
 }  // namespace samui

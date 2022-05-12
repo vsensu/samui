@@ -7,8 +7,8 @@
 namespace samui {
 const std::filesystem::path kAssetPath = "assets";
 ContentBrowser::ContentBrowser() : path_(kAssetPath) {
-  folder_icon_ = Texture2D::Create("editor/assets/textures/folder.png");
-  file_icon_ = Texture2D::Create("editor/assets/textures/file.png");
+  folder_icon_ = Texture2D::create("editor/assets/textures/folder.png");
+  file_icon_ = Texture2D::create("editor/assets/textures/file.png");
 }
 
 void ContentBrowser::OnImGuiRender() {
@@ -37,7 +37,7 @@ void ContentBrowser::OnImGuiRender() {
     ImGui::PushID(path.string().c_str());
     std::shared_ptr<Texture2D> icon = dir_entry.is_directory() ? folder_icon_ : file_icon_;
     ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
-    ImGui::ImageButton((ImTextureID)icon->GetTextureID(),
+    ImGui::ImageButton((ImTextureID)icon->get_texture_id(),
                        ImVec2(thumbnail_size, thumbnail_size), {0, 1}, {1, 0});
     if (ImGui::BeginDragDropSource()) {
       auto           abs_path = std::filesystem::absolute(dir_entry.path());

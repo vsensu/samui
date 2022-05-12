@@ -1,42 +1,50 @@
+// clang-format off
 #include "renderer.h"
 
 #include "renderer2d.h"
 #include "debug/instrumentor.h"
+// clang-format on
 
-namespace samui {
+namespace samui
+{
 Renderer::SceneData* Renderer::scene_data_ = new Renderer::SceneData;
 
-void Renderer::Init() {
-  SAMUI_PROFILE_FUNCTION();
+void Renderer::init()
+{
+    SAMUI_PROFILE_FUNCTION();
 
-  RenderCommand::Init();
-  Renderer2D::Init();
+    RenderCommand::init();
+    Renderer2D::init();
 }
 
-void Renderer::Shutdown() {
-  SAMUI_PROFILE_FUNCTION();
+void Renderer::shutdown()
+{
+    SAMUI_PROFILE_FUNCTION();
 
-  Renderer2D::Shutdown();
+    Renderer2D::shutdown();
 }
 
-void Renderer::OnWindowResize(uint32_t width, uint32_t height) {
-  RenderCommand::SetViewport(0, 0, width, height);
+void Renderer::on_window_resize(uint32_t width, uint32_t height)
+{
+    RenderCommand::set_viewport(0, 0, width, height);
 }
 
-void Renderer::BeginScene(const OrthographicCamera& camera) {
-  scene_data_->view_proj_matrix = camera.get_view_projection_matrix();
+void Renderer::begin_scene(const OrthographicCamera& camera)
+{
+    scene_data_->view_proj_matrix = camera.get_view_projection_matrix();
 }
 
-void Renderer::EndScene() {}
+void Renderer::end_scene() {}
 
-void Renderer::Submit(const std::shared_ptr<Shader>&      shader,
+void Renderer::submit(const std::shared_ptr<Shader>&      shader,
                       const std::shared_ptr<VertexArray>& vertex_array,
-                      const glm::mat4&               transform) {
-  shader->Bind();
-  shader->SetMat4("viewProj", scene_data_->view_proj_matrix);
-  shader->SetMat4("transform", transform);
+                      const glm::mat4&                    transform)
+{
+    shader->bind();
+    shader->set_mat4("viewProj", scene_data_->view_proj_matrix);
+    shader->set_mat4("transform", transform);
 
-  vertex_array->Bind();
-  RenderCommand::DrawIndexed(vertex_array);
+    vertex_array->bind();
+    RenderCommand::draw_indexed(vertex_array);
 }
 }  // namespace samui

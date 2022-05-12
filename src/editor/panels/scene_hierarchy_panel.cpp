@@ -250,7 +250,7 @@ void SceneHierarchyPanel::DrawProperties(Entity entity) {
       "Sprite Renderer", *scene_, entity, [](auto& component) {
         ImGui::ColorEdit4("Sprite Color", glm::value_ptr(component.color));
         if (component.texture != nullptr) {
-          ImGui::Image((ImTextureID)component.texture->GetTextureID(),
+          ImGui::Image((ImTextureID)component.texture->get_texture_id(),
                        ImVec2(128, 128), {0, 1}, {1, 0});
         } else {
           ImGui::Image((ImTextureID)1, ImVec2(128, 128), {0, 1}, {1, 0});
@@ -260,7 +260,7 @@ void SceneHierarchyPanel::DrawProperties(Entity entity) {
           if (const ImGuiPayload* payload =
                   ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM")) {
             const wchar_t* path = (const wchar_t*)payload->Data;
-            component.texture = Texture2D::Create(path);
+            component.texture = Texture2D::create(path);
           }
 
           ImGui::EndDragDropTarget();

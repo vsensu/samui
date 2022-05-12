@@ -8,8 +8,8 @@ EditorLayer::EditorLayer()
 
 void EditorLayer::on_attach() {
   SAMUI_PROFILE_FUNCTION();
-  RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
-  camera_controller_.SetZoomLevel(5.f);
+  RenderCommand::set_clear_color({0.1f, 0.1f, 0.1f, 1});
+  camera_controller_.set_zoom_level(5.f);
 
   active_scene_ = std::make_shared<Scene>();
 
@@ -22,7 +22,7 @@ void EditorLayer::on_detach() { SAMUI_PROFILE_FUNCTION(); }
 
 void EditorLayer::on_update(const Timestep& deltaTime) {
   SAMUI_PROFILE_FUNCTION();
-  Renderer2D::ResetStats();
+  Renderer2D::reset_stats();
 
   // update scene logic
   active_scene_->OnUpdate(deltaTime);
@@ -38,7 +38,7 @@ void EditorLayer::on_imgui_render() {
   scene_panel_->OnImGuiRender();
 
   // settings pannel begine
-  auto stats = Renderer2D::GetStats();
+  auto stats = Renderer2D::get_stats();
   ImGui::Begin("Stats");
   ImGui::Text("Renderer2D Stats:");
   ImGui::Text("Draw Calls: %d", stats.draw_calls);

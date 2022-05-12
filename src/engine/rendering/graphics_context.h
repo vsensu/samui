@@ -1,14 +1,13 @@
-#ifndef SAMUI_GRAPHICS_CONTEXT_H_
-#define SAMUI_GRAPHICS_CONTEXT_H_
+#pragma once
 
 #include "core/core.h"
 
-namespace samui {
-class SAMUI_API GraphicsContext {
- public:
-  virtual void Init() = 0;
-  virtual void SwapBuffers() = 0;
+namespace samui
+{
+class SAMUI_API GraphicsContext
+{
+  public:
+    virtual void init() = 0;
+    virtual void swap_buffers() = 0;
 };
 }  // namespace samui
-
-#endif

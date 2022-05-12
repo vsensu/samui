@@ -1,5 +1,4 @@
-#ifndef SAMUI_WINDOWS_WINDOW_H_
-#define SAMUI_WINDOWS_WINDOW_H_
+#pragma once
 
 #ifdef SAMUI_PLATFORM_WINDOWS
 
@@ -57,7 +56,5 @@ class SAMUI_API WindowsWindow : public Window
     WindowData data_;
 };
 }  // namespace samui
-
-#endif
 
 #endif

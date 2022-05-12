@@ -14,7 +14,7 @@ ScenePanel::ScenePanel(const std::shared_ptr<Scene>& scene, EditorLayer* parent)
       FrameBufferTextureFormat::Depth};
   spec.width = 1280;
   spec.height = 720;
-  frame_buffer_ = FrameBuffer::Create(spec);
+  frame_buffer_ = FrameBuffer::create(spec);
 
   viewport_bounds_[0] = {0.f, 0.f};
   viewport_bounds_[1] = {0.f, 0.f};
@@ -33,9 +33,9 @@ void ScenePanel::OnUpdate(const Timestep& deltaTime) {
 
 void ScenePanel::RenderScene() {
   SAMUI_PROFILE_FUNCTION();
-  frame_buffer_->Bind();
-  RenderCommand::Clear();
-  frame_buffer_->ClearAttachment(1, static_cast<uint32_t>(entt::null));
+  frame_buffer_->bind();
+  RenderCommand::clear();
+  frame_buffer_->clear_attachment(1, static_cast<uint32_t>(entt::null));
 
   // Renderer2D::BeginScene(camera_controller_.GetCamera());
 
@@ -52,7 +52,7 @@ void ScenePanel::RenderScene() {
   //         : CameraUtils::get_perspective_projection(
   //               camera_comp.aspect_ratio, camera_comp.pers_fov,
   //               camera_comp.pers_near, camera_comp.pers_far);
-  Renderer2D::BeginScene(editor_camera_.GetViewProjection());
+  Renderer2D::begin_scene(editor_camera_.GetViewProjection());
   // projection,
   // active_scene_->GetComponent<TransformComponent>(main_camera_)
   // .transform());
@@ -61,10 +61,10 @@ void ScenePanel::RenderScene() {
   for (auto entity : group) {
     auto& transform = group.get<TransformComponent>(entity);
     auto& sprite = group.get<SpriteRendererComponent>(entity);
-    Renderer2D::DrawSprite(transform.transform(), sprite, entity);
+    Renderer2D::draw_sprite(transform.transform(), sprite, entity);
   }
 
-  Renderer2D::EndScene();
+  Renderer2D::end_scene();
   // }
 
   // Renderer2D::EndScene();
@@ -79,11 +79,11 @@ void ScenePanel::RenderScene() {
 
   if (mouse_x >= 0 && mouse_y >= 0 && mouse_x < viewport_size.x &&
       mouse_y < viewport_size.y) {
-    int pixel = frame_buffer_->ReadPixel(1, mouse_x, mouse_y);
+    int pixel = frame_buffer_->read_pixel(1, mouse_x, mouse_y);
     hovered_entity_ = (pixel == -1 ? entt::null : (Entity)pixel);
   }
 
-  frame_buffer_->Unbind();
+  frame_buffer_->unbind();
 }
 
 void ScenePanel::OnImGuiRender() {
@@ -108,7 +108,7 @@ void ScenePanel::OnImGuiRender() {
   if (viewport_size.x > 0 && viewport_size.y > 0) {
     if (viewport_size.x != last_viewport_size_.x ||
         viewport_size.y != last_viewport_size_.y) {
-      frame_buffer_->Resize(viewport_size.x, viewport_size.y);
+      frame_buffer_->resize(viewport_size.x, viewport_size.y);
       //   camera_controller_.OnResize(viewport_size.x, viewport_size.y);
       //   if (main_camera_ != entt::null) {
       //     auto& camera_comp =
@@ -122,7 +122,7 @@ void ScenePanel::OnImGuiRender() {
     }
   }
   last_viewport_size_ = viewport_size;
-  uint32_t texture_id = frame_buffer_->GetColorAttachmentRenderID();
+  uint32_t texture_id = frame_buffer_->get_color_attachment_render_id();
   // flip y
   ImGui::Image((ImTextureID)texture_id, viewport_size, {0.f, 1.f}, {1.f, 0.f});
 

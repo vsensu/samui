@@ -1,16 +1,15 @@
-#ifndef SAMUI_TEXT_H_
-#define SAMUI_TEXT_H_
+#pragma once
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-namespace samui {
+namespace samui
+{
 
-class Text {
- public:
-  static void init();
+class Text
+{
+  public:
+    static void init();
 };
 
 }  // namespace samui
-
-#endif  // SAMUI_TEXT_H_

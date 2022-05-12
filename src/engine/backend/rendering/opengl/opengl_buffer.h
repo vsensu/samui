@@ -17,13 +17,13 @@ class SAMUI_API OpenGLVertexBuffer : public VertexBuffer
     OpenGLVertexBuffer(uint32_t size);
     OpenGLVertexBuffer(const void* vertices, uint32_t size);
     virtual ~OpenGLVertexBuffer();
-    void Bind() override;
-    void UnBind() override;
+    void bind() override;
+    void unbind() override;
 
-    virtual void SetData(const void* data, uint32_t size) override;
+    virtual void set_data(const void* data, uint32_t size) override;
 
-    const BufferLayout& GetLayout() const override { return layout_; }
-    void SetLayout(const BufferLayout& layout) override { layout_ = layout; }
+    const BufferLayout& get_layout() const override { return layout_; }
+    void set_layout(const BufferLayout& layout) override { layout_ = layout; }
 
   private:
     uint32_t     buffer_id_{0};
@@ -35,9 +35,9 @@ class SAMUI_API OpenGLIndexBuffer : public IndexBuffer
   public:
     OpenGLIndexBuffer(const uint32_t* indices, uint32_t size);
     virtual ~OpenGLIndexBuffer();
-    uint32_t GetCount() const { return count_; }
-    void     Bind() override;
-    void     UnBind() override;
+    uint32_t get_count() const override { return count_; }
+    void     bind() override;
+    void     unbind() override;
 
   private:
     uint32_t buffer_id_{0};
@@ -50,12 +50,15 @@ class SAMUI_API OpenGLVertexArray : public VertexArray
     OpenGLVertexArray();
     virtual ~OpenGLVertexArray();
 
-    void Bind() override;
-    void UnBind() override;
+    void bind() override;
+    void unbind() override;
 
-    void         AddVertexBuffer(const std::shared_ptr<VertexBuffer>&) override;
-    void         SetIndexBuffer(const std::shared_ptr<IndexBuffer>&) override;
-    IndexBuffer* GetIndexBuffer() const override { return index_buffer_.get(); }
+    void add_vertex_buffer(const std::shared_ptr<VertexBuffer>&) override;
+    void set_index_buffer(const std::shared_ptr<IndexBuffer>&) override;
+    IndexBuffer* get_index_buffer() const override
+    {
+        return index_buffer_.get();
+    }
 
   private:
     std::vector<std::shared_ptr<VertexBuffer>> vertex_buffers_;

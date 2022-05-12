@@ -4,7 +4,8 @@
 #include <backend/rendering/opengl/opengl_renderer_api.h>
 // clang-format on
 
-namespace samui {
+namespace samui
+{
 RendererAPI* RenderCommand::renderer_api_ = new OpenGLRendererAPI();
 
 }  // namespace samui

@@ -23,7 +23,7 @@ Application::Application(const WindowProps& props)
     window_ = Window::create(props);
     window_->set_event_callback(BIND_EVENT_FUNC(Application::on_event));
 
-    Renderer::Init();
+    Renderer::init();
 
     imgui_layer_ = new ImGuiLayer();
     push_overlay(imgui_layer_);
@@ -32,7 +32,7 @@ Application::Application(const WindowProps& props)
 Application::~Application()
 {
     SAMUI_PROFILE_FUNCTION();
-    Renderer::Shutdown();
+    Renderer::shutdown();
 }
 
 void Application::run()
@@ -132,7 +132,7 @@ bool Application::on_window_resize(WindowResizeEvent& event)
     }
 
     minimized_ = false;
-    Renderer::OnWindowResize(event.get_width(), event.get_height());
+    Renderer::on_window_resize(event.get_width(), event.get_height());
 
     return false;
 }

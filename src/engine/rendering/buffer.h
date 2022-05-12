@@ -1,5 +1,4 @@
-#ifndef SAMUI_BUFFER_H_
-#define SAMUI_BUFFER_H_
+#pragma once
 
 // clang-format off
 #include <cstdint>
@@ -9,7 +8,8 @@
 #include <log/log.h>
 // clang-format on
 
-namespace samui {
+namespace samui
+{
 
 // clang-format off
 enum class ShaderDataType {
@@ -64,106 +64,121 @@ constexpr uint32_t ShaderDataTypeSize(ShaderDataType type) {
 }
 // clang-format on
 
-struct BufferElement {
-  std::string    Name;
-  ShaderDataType Type;
-  uint32_t       Size;
-  uint32_t       Offset;
-  bool           Normalized;
+struct BufferElement
+{
+    std::string    Name;
+    ShaderDataType Type;
+    uint32_t       Size;
+    uint32_t       Offset;
+    bool           Normalized;
 
-  BufferElement(const std::string& name, ShaderDataType type,
-                bool normalized = false)
-      : Name(name),
-        Type(type),
-        Size(ShaderDataTypeSize(type)),
-        Offset(0),
-        Normalized(normalized) {}
-};
-
-class BufferLayout {
- public:
-  BufferLayout() {}
-  BufferLayout(const std::initializer_list<BufferElement>& elements)
-      : elements_(elements) {
-    CalcStrideAndOffset();
-  }
-
-  inline uint32_t GetStride() const { return stride_; }
-
-  inline const std::vector<BufferElement>& GetElements() const {
-    return elements_;
-  }
-
-  std::vector<BufferElement>::iterator begin() { return elements_.begin(); }
-  std::vector<BufferElement>::iterator end() { return elements_.end(); }
-  std::vector<BufferElement>::const_iterator begin() const {
-    return elements_.begin();
-  }
-  std::vector<BufferElement>::const_iterator end() const {
-    return elements_.end();
-  }
-
- private:
-  void CalcStrideAndOffset() {
-    stride_ = 0;
-    uint32_t offset = 0;
-    for (auto& elem : elements_) {
-      elem.Offset = offset;
-      offset += elem.Size;
-      stride_ += elem.Size;
+    BufferElement(const std::string& name, ShaderDataType type,
+                  bool normalized = false)
+        : Name(name),
+          Type(type),
+          Size(ShaderDataTypeSize(type)),
+          Offset(0),
+          Normalized(normalized)
+    {
     }
-  }
-
- private:
-  std::vector<BufferElement> elements_;
-  uint32_t                   stride_;
 };
 
-class SAMUI_API Buffer {
- public:
-  virtual ~Buffer() {}
+class BufferLayout
+{
+  public:
+    BufferLayout() {}
+    BufferLayout(const std::initializer_list<BufferElement>& elements)
+        : elements_(elements)
+    {
+        calc_stride_and_offset();
+    }
 
-  virtual void Bind() = 0;
-  virtual void UnBind() = 0;
+    inline uint32_t get_stride() const { return stride_; }
+
+    inline const std::vector<BufferElement>& get_elements() const
+    {
+        return elements_;
+    }
+
+    std::vector<BufferElement>::iterator begin() { return elements_.begin(); }
+    std::vector<BufferElement>::iterator end() { return elements_.end(); }
+    std::vector<BufferElement>::const_iterator begin() const
+    {
+        return elements_.begin();
+    }
+    std::vector<BufferElement>::const_iterator end() const
+    {
+        return elements_.end();
+    }
+
+  private:
+    void calc_stride_and_offset()
+    {
+        stride_ = 0;
+        uint32_t offset = 0;
+        for (auto& elem : elements_)
+        {
+            elem.Offset = offset;
+            offset += elem.Size;
+            stride_ += elem.Size;
+        }
+    }
+
+  private:
+    std::vector<BufferElement> elements_;
+    uint32_t                   stride_;
 };
 
-class SAMUI_API VertexBuffer : public Buffer {
- public:
-  virtual ~VertexBuffer() {}
+class SAMUI_API Buffer
+{
+  public:
+    virtual ~Buffer() {}
 
-  virtual const BufferLayout& GetLayout() const = 0;
-  virtual void                SetLayout(const BufferLayout& layout) = 0;
-
-  virtual void SetData(const void* data, uint32_t size) = 0;
-
-  static std::shared_ptr<VertexBuffer> Create(uint32_t size);
-  static std::shared_ptr<VertexBuffer> Create(const void* vertices, uint32_t size);
+    virtual void bind() = 0;
+    virtual void unbind() = 0;
 };
 
-class SAMUI_API IndexBuffer : public Buffer {
- public:
-  virtual ~IndexBuffer() {}
+class SAMUI_API VertexBuffer : public Buffer
+{
+  public:
+    virtual ~VertexBuffer() {}
 
-  virtual uint32_t GetCount() const = 0;
+    virtual const BufferLayout& get_layout() const = 0;
+    virtual void                set_layout(const BufferLayout& layout) = 0;
 
-  static std::shared_ptr<IndexBuffer> Create(const uint32_t* indices, uint32_t count);
+    virtual void set_data(const void* data, uint32_t size) = 0;
+
+    static std::shared_ptr<VertexBuffer> create(uint32_t size);
+    static std::shared_ptr<VertexBuffer> create(const void* vertices,
+                                                uint32_t    size);
 };
 
-class SAMUI_API VertexArray {
- public:
-  virtual ~VertexArray() {}
+class SAMUI_API IndexBuffer : public Buffer
+{
+  public:
+    virtual ~IndexBuffer() {}
 
-  virtual void Bind() = 0;
-  virtual void UnBind() = 0;
+    virtual uint32_t get_count() const = 0;
 
-  virtual void AddVertexBuffer(
-      const std::shared_ptr<VertexBuffer>& vertexBuffer) = 0;
-  virtual void SetIndexBuffer(const std::shared_ptr<IndexBuffer>& vertexBuffer) = 0;
-  virtual IndexBuffer* GetIndexBuffer() const = 0;
+    static std::shared_ptr<IndexBuffer> create(const uint32_t* indices,
+                                               uint32_t        count);
+};
 
-  static std::shared_ptr<VertexArray> Create();
+class SAMUI_API VertexArray
+{
+  public:
+    virtual ~VertexArray() {}
+
+    virtual void bind() = 0;
+    virtual void unbind() = 0;
+
+    virtual void add_vertex_buffer(
+        const std::shared_ptr<VertexBuffer>& vertexBuffer) = 0;
+    virtual void set_index_buffer(
+        const std::shared_ptr<IndexBuffer>& vertexBuffer) = 0;
+    virtual IndexBuffer* get_index_buffer() const = 0;
+
+    static std::shared_ptr<VertexArray> create();
 };
 
 }  // namespace samui
-
-#endif
