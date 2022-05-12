@@ -161,7 +161,7 @@ void ScenePanel::OnImGuiRender() {
 
     // Entity
     auto& trans_comp =
-        scene_->GetComponent<TransformComponent>(selected_entity);
+        scene_->get_component<TransformComponent>(selected_entity);
     glm::mat4 transform = trans_comp.transform();
 
     bool  snap = Input::is_key_pressed(SAMUI_KEY_LEFT_CONTROL);

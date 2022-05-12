@@ -1,5 +1,4 @@
-#ifndef SAMUI_SERIALIZATION_H_
-#define SAMUI_SERIALIZATION_H_
+#pragma once
 
 // clang-format off
 #include <string>
@@ -8,11 +7,13 @@
 #include "scene.h"
 // clang-format on
 
-namespace samui {
+namespace samui
+{
 
-namespace Serialization {
-void SAMUI_API SerializeScene(Scene& scene, const std::string& filepath);
-bool SAMUI_API DeserializeScene(Scene &scene, const std::string& filepath);
+namespace Serialization
+{
+void SAMUI_API serialize_scene(Scene& scene, const std::string& filepath);
+bool SAMUI_API deserialize_scene(Scene& scene, const std::string& filepath);
 }  // namespace Serialization
 // class SAMUI_API SceneSerializer {
 //  public:
@@ -22,5 +23,3 @@ bool SAMUI_API DeserializeScene(Scene &scene, const std::string& filepath);
 //   Ref<Scene> scene_;
 // };
 }  // namespace samui
-
-#endif  // SAMUI_SERIALIZATION_H_

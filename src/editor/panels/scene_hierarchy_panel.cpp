@@ -72,7 +72,7 @@ void DrawVec3Control(const std::string& label, glm::vec3& values,
 template <typename T, typename UIFunction>
 void DrawComponent(const std::string& label, Scene& scene, Entity entity,
                    const UIFunction& func) {
-  if (scene.HasComponent<T>(entity)) {
+  if (scene.has_component<T>(entity)) {
     constexpr ImGuiTreeNodeFlags treeNodeFlags =
         ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap |
         ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_FramePadding |
@@ -99,14 +99,14 @@ void DrawComponent(const std::string& label, Scene& scene, Entity entity,
     }
 
     if (open) {
-      auto& comp = scene.GetComponent<T>(entity);
+      auto& comp = scene.get_component<T>(entity);
       func(comp);
 
       ImGui::TreePop();
     }
 
     if (remove_component) {
-      scene.RemoveComponent<T>(entity);
+      scene.remove_component<T>(entity);
     }
   }
 }
@@ -118,7 +118,7 @@ void SceneHierarchyPanel::OnImGuiRender() {
   ImGui::Begin("Scene Hierarchy");
 
   scene_->registry().each([&](auto entity) {
-    auto               name = scene_->GetComponent<NameComponent>(entity).name;
+    auto               name = scene_->get_component<NameComponent>(entity).name;
     ImGuiTreeNodeFlags flags =
         (selected_entity_ == entity ? ImGuiTreeNodeFlags_Selected : 0) |
         ImGuiTreeNodeFlags_OpenOnArrow;
@@ -142,17 +142,17 @@ void SceneHierarchyPanel::OnImGuiRender() {
     // Right-click on blank space
     if (ImGui::BeginPopupContextWindow(0, 1, false)) {
       if (ImGui::MenuItem("Create Empty Entity")) {
-        scene_->CreateEntity("Empty Entity");
+        scene_->create_entity("Empty Entity");
       }
 
       if (ImGui::MenuItem("Create Camera")) {
-        auto camera_entity = scene_->CreateEntity("Camera");
-        scene_->AddComponent<CameraComponent>(camera_entity);
+        auto camera_entity = scene_->create_entity("Camera");
+        scene_->add_component<CameraComponent>(camera_entity);
       }
 
       if (ImGui::MenuItem("Create Sprite")) {
-        auto sprite_entity = scene_->CreateEntity("Sprite");
-        scene_->AddComponent<SpriteRendererComponent>(sprite_entity);
+        auto sprite_entity = scene_->create_entity("Sprite");
+        scene_->add_component<SpriteRendererComponent>(sprite_entity);
       }
       ImGui::EndPopup();
     }
@@ -162,7 +162,7 @@ void SceneHierarchyPanel::OnImGuiRender() {
     // Right click on entity
     if (ImGui::BeginPopupContextWindow()) {
       if (ImGui::MenuItem("Delete Entity")) {
-        scene_->DestroyEntity(selected_entity_);
+        scene_->destroy_entity(selected_entity_);
         selected_entity_ = entt::null;
       }
       ImGui::EndPopup();
@@ -188,8 +188,8 @@ void SceneHierarchyPanel::DrawProperties(Entity entity) {
       ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
 
   // Draw Property
-  if (scene_->HasComponent<NameComponent>(entity)) {
-    auto& name_comp = scene_->GetComponent<NameComponent>(entity);
+  if (scene_->has_component<NameComponent>(entity)) {
+    auto& name_comp = scene_->get_component<NameComponent>(entity);
     char  buff[256];
     memset(buff, 0, sizeof(buff));
     strcpy(buff, name_comp.name.c_str());
@@ -206,12 +206,12 @@ void SceneHierarchyPanel::DrawProperties(Entity entity) {
 
   if (ImGui::BeginPopup("AddComponent")) {
     if (ImGui::MenuItem("Camera")) {
-      scene_->AddComponent<CameraComponent>(selected_entity_);
+      scene_->add_component<CameraComponent>(selected_entity_);
       ImGui::CloseCurrentPopup();
     }
 
     if (ImGui::MenuItem("Sprite Renderer")) {
-      scene_->AddComponent<SpriteRendererComponent>(selected_entity_);
+      scene_->add_component<SpriteRendererComponent>(selected_entity_);
       ImGui::CloseCurrentPopup();
     }
 

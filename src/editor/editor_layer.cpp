@@ -25,7 +25,7 @@ void EditorLayer::on_update(const Timestep& deltaTime) {
   Renderer2D::reset_stats();
 
   // update scene logic
-  active_scene_->OnUpdate(deltaTime);
+  active_scene_->on_update(deltaTime);
   scene_panel_->OnUpdate(deltaTime);
 
   // RenderCommand::Clear();
@@ -185,13 +185,13 @@ void EditorLayer::OpenScene(const std::filesystem::path& path) {
   scene_hierarchy_panel_->SetScene(active_scene_);
   scene_panel_->SetScene(active_scene_);
 
-  Serialization::DeserializeScene(*active_scene_, path.string());
+  Serialization::deserialize_scene(*active_scene_, path.string());
 }
 
 void EditorLayer::SaveSceneAs() {
   auto filepath = DialogUtils::SaveFile("Samui Scene(*.samui)\0*.samui\0");
   if (!filepath.empty()) {
-    Serialization::SerializeScene(*active_scene_, filepath);
+    Serialization::serialize_scene(*active_scene_, filepath);
   }
 }
 

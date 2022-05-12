@@ -8,19 +8,21 @@
 #include <rendering/renderer2d.h>
 // clang-format on
 
-namespace samui {
+namespace samui
+{
 
 Scene::Scene() {}
 
-Entity Scene::CreateEntity(const std::string& name) {
-  auto entity = registry_.create();
-  AddComponent<NameComponent>(entity, name);
-  AddComponent<TransformComponent>(entity);
-  return entity;
+Entity Scene::create_entity(const std::string& name)
+{
+    auto entity = registry_.create();
+    add_component<NameComponent>(entity, name);
+    add_component<TransformComponent>(entity);
+    return entity;
 }
 
-void Scene::DestroyEntity(Entity entity) { registry_.destroy(entity); }
+void Scene::destroy_entity(Entity entity) { registry_.destroy(entity); }
 
-void Scene::OnUpdate(const Timestep& deltaTime) {}
+void Scene::on_update(const Timestep& deltaTime) {}
 
 }  // namespace samui
