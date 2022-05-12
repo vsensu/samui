@@ -17,7 +17,7 @@ namespace samui
 namespace DialogUtils
 {
 // These return empty strings if cancelled
-std::string OpenFile(const char* filter)
+std::string open_file(const char* filter)
 {
     OPENFILENAMEA ofn;
     CHAR          szFile[260] = {0};
@@ -38,7 +38,7 @@ std::string OpenFile(const char* filter)
     return std::string();
 }
 
-std::string SaveFile(const char* filter)
+std::string save_file(const char* filter)
 {
     OPENFILENAMEA ofn;
     CHAR          szFile[260] = {0};

@@ -1,5 +1,4 @@
-#ifndef SAMUI_ENTRYPOINT_H_
-#define SAMUI_ENTRYPOINT_H_
+#pragma once
 
 #ifdef SAMUI_PLATFORM_WINDOWS
 
@@ -26,6 +25,4 @@ int main(int argc, char** argv) {
 
 #else
 #error samui only support windows!
-#endif
-
 #endif

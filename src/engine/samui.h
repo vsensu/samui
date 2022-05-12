@@ -1,5 +1,4 @@
-#ifndef SAMUI_SAMUI_H_
-#define SAMUI_SAMUI_H_
+#pragma once
 
 // clang-format off
 
@@ -43,5 +42,3 @@
 #include "utils/platform_utils.h"
 
 // clang-format on
-
-#endif

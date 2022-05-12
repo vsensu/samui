@@ -173,7 +173,7 @@ void EditorLayer::NewScene() {
 }
 
 void EditorLayer::OpenScene() {
-  auto filepath = DialogUtils::OpenFile("Samui Scene(*.samui)\0*.samui\0");
+  auto filepath = DialogUtils::open_file("Samui Scene(*.samui)\0*.samui\0");
   if (!filepath.empty()) {
     OpenScene(filepath);
   }
@@ -189,7 +189,7 @@ void EditorLayer::OpenScene(const std::filesystem::path& path) {
 }
 
 void EditorLayer::SaveSceneAs() {
-  auto filepath = DialogUtils::SaveFile("Samui Scene(*.samui)\0*.samui\0");
+  auto filepath = DialogUtils::save_file("Samui Scene(*.samui)\0*.samui\0");
   if (!filepath.empty()) {
     Serialization::serialize_scene(*active_scene_, filepath);
   }
