@@ -1,5 +1,4 @@
-#ifndef SAMUI_IMGUI_LAYER_H_
-#define SAMUI_IMGUI_LAYER_H_
+#pragma once
 
 // clang-format off
 #include <core/core.h>
@@ -7,28 +6,28 @@
 #include <layer/layer.h>
 // clang-format on
 
-namespace samui {
-class SAMUI_API ImGuiLayer : public Layer {
- public:
-  ImGuiLayer();
-  virtual ~ImGuiLayer();
+namespace samui
+{
+class SAMUI_API ImGuiLayer : public Layer
+{
+  public:
+    ImGuiLayer();
+    virtual ~ImGuiLayer();
 
-  void         OnAttach() override;
-  void         OnDetach() override;
-  virtual void OnEvent(Event& event) override;
+    void         on_attach() override;
+    void         on_detach() override;
+    virtual void on_event(Event& event) override;
 
-  void Begin();
-  void End();
+    void begin();
+    void end();
 
-  void BlockEvents(bool block) { block_events_ = block; }
+    void block_events(bool block) { block_events_ = block; }
 
- private:
-  void SetDarkThemeColors();
+  private:
+    void set_dark_theme_colors();
 
- private:
-  bool block_events_{true};
+  private:
+    bool block_events_{true};
 };
 
 }  // namespace samui
-
-#endif

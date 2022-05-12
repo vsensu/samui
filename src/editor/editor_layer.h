@@ -18,11 +18,11 @@ class EditorLayer : public Layer {
  public:
   EditorLayer();
 
-  virtual void OnAttach() override;
-  virtual void OnDetach() override;
-  virtual void OnUpdate(const Timestep& deltaTime) override;
-  virtual void OnImGuiRender() override;
-  virtual void OnEvent(Event& event) override;
+  virtual void on_attach() override;
+  virtual void on_detach() override;
+  virtual void on_update(const Timestep& deltaTime) override;
+  virtual void on_imgui_render() override;
+  virtual void on_event(Event& event) override;
 
   void NewScene();
   void OpenScene();

@@ -19,7 +19,7 @@ namespace samui
 ImGuiLayer::ImGuiLayer() : Layer("ImGuiLayer") {}
 ImGuiLayer::~ImGuiLayer() {}
 
-void ImGuiLayer::OnAttach()
+void ImGuiLayer::on_attach()
 {
     SAMUI_PROFILE_FUNCTION();
     // Setup Dear ImGui context
@@ -43,7 +43,7 @@ void ImGuiLayer::OnAttach()
     ImGui::StyleColorsDark();
     // ImGui::StyleColorsClassic();
 
-    SetDarkThemeColors();
+    set_dark_theme_colors();
 
     // Setup Platform/Renderer backends
     ImGui_ImplGlfw_InitForOpenGL(
@@ -52,7 +52,7 @@ void ImGuiLayer::OnAttach()
     ImGui_ImplOpenGL3_Init("#version 130");
 }
 
-void ImGuiLayer::OnDetach()
+void ImGuiLayer::on_detach()
 {
     SAMUI_PROFILE_FUNCTION();
     ImGui_ImplOpenGL3_Shutdown();
@@ -60,7 +60,7 @@ void ImGuiLayer::OnDetach()
     ImGui::DestroyContext();
 }
 
-void ImGuiLayer::OnEvent(Event& event)
+void ImGuiLayer::on_event(Event& event)
 {
     SAMUI_PROFILE_FUNCTION();
     if (block_events_)
@@ -68,12 +68,12 @@ void ImGuiLayer::OnEvent(Event& event)
         ImGuiIO& io = ImGui::GetIO();
         event.handled_ |=
             event.is_in_category(EventCategoryMouse) & io.WantCaptureMouse;
-        event.handled_ |=
-            event.is_in_category(EventCategoryKeyboard) & io.WantCaptureKeyboard;
+        event.handled_ |= event.is_in_category(EventCategoryKeyboard) &
+                          io.WantCaptureKeyboard;
     }
 }
 
-void ImGuiLayer::Begin()
+void ImGuiLayer::begin()
 {
     SAMUI_PROFILE_FUNCTION();
     // Start the Dear ImGui frame
@@ -83,7 +83,7 @@ void ImGuiLayer::Begin()
     ImGuizmo::BeginFrame();
 }
 
-void ImGuiLayer::End()
+void ImGuiLayer::end()
 {
     SAMUI_PROFILE_FUNCTION();
     ImGuiIO&     io = ImGui::GetIO();
@@ -104,7 +104,7 @@ void ImGuiLayer::End()
     }
 }
 
-void ImGuiLayer::SetDarkThemeColors()
+void ImGuiLayer::set_dark_theme_colors()
 {
     auto& colors = ImGui::GetStyle().Colors;
     colors[ImGuiCol_WindowBg] = ImVec4{0.1f, 0.105f, 0.11f, 1.0f};

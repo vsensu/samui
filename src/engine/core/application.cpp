@@ -53,17 +53,17 @@ void Application::run()
                 SAMUI_PROFILE_SCOPE("LayerStack OnUpdate");
                 for (Layer* layer : layer_stack_)
                 {
-                    layer->OnUpdate(delta_time);
+                    layer->on_update(delta_time);
                 }
             }
             {
                 SAMUI_PROFILE_SCOPE("LayerStack OnImGuiRender");
-                imgui_layer_->Begin();
+                imgui_layer_->begin();
                 for (Layer* layer : layer_stack_)
                 {
-                    layer->OnImGuiRender();
+                    layer->on_imgui_render();
                 }
-                imgui_layer_->End();
+                imgui_layer_->end();
             }
         }
 
@@ -76,14 +76,14 @@ void Application::push_layer(Layer* layer)
 {
     SAMUI_PROFILE_FUNCTION();
     layer_stack_.push_layer(layer);
-    layer->OnAttach();
+    layer->on_attach();
 }
 
 void Application::push_overlay(Layer* layer)
 {
     SAMUI_PROFILE_FUNCTION();
     layer_stack_.push_overlay(layer);
-    layer->OnAttach();
+    layer->on_attach();
 }
 
 void Application::close()
@@ -108,7 +108,7 @@ void Application::on_event(Event& e)
 
     for (auto it = layer_stack_.end(); it != layer_stack_.begin();)
     {
-        (*--it)->OnEvent(e);
+        (*--it)->on_event(e);
         if (e.handled_)
         {
             break;

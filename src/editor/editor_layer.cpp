@@ -6,7 +6,7 @@ namespace samui {
 EditorLayer::EditorLayer()
     : Layer("EditorLayer"), camera_controller_(1280.f / 720.f, true) {}
 
-void EditorLayer::OnAttach() {
+void EditorLayer::on_attach() {
   SAMUI_PROFILE_FUNCTION();
   RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
   camera_controller_.SetZoomLevel(5.f);
@@ -18,9 +18,9 @@ void EditorLayer::OnAttach() {
   scene_panel_ = std::make_shared<ScenePanel>(active_scene_, this);
 }
 
-void EditorLayer::OnDetach() { SAMUI_PROFILE_FUNCTION(); }
+void EditorLayer::on_detach() { SAMUI_PROFILE_FUNCTION(); }
 
-void EditorLayer::OnUpdate(const Timestep& deltaTime) {
+void EditorLayer::on_update(const Timestep& deltaTime) {
   SAMUI_PROFILE_FUNCTION();
   Renderer2D::ResetStats();
 
@@ -32,7 +32,7 @@ void EditorLayer::OnUpdate(const Timestep& deltaTime) {
   scene_panel_->RenderScene();
 }
 
-void EditorLayer::OnImGuiRender() {
+void EditorLayer::on_imgui_render() {
   OnImGuiFullScreenDocking();
 
   scene_panel_->OnImGuiRender();
@@ -73,7 +73,7 @@ void EditorLayer::OnImGuiRender() {
   content_browser_->OnImGuiRender();
 }
 
-void EditorLayer::OnEvent(Event& event) {
+void EditorLayer::on_event(Event& event) {
   scene_panel_->OnEvent(event);
   EventDispatcher dispatcher(event);
   dispatcher.dispatch<KeyPressedEvent>(
