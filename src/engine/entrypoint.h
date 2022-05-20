@@ -1,8 +1,15 @@
 #pragma once
 
+#include <profiler/instrumentor.h>
+
 #ifdef SAMUI_PLATFORM_WINDOWS
 
-extern samui::Application* samui::create_application();
+// extern samui::Application* samui::create_application();
+// samui::Application* samui::create_application();
+namespace samui
+{
+Application* create_application();
+}
 
 int main(int argc, char** argv) {
   samui::Log::Init();

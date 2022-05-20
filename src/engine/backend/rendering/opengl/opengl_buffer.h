@@ -5,13 +5,14 @@
 // clang-format off
 #include <memory>
 
-#include <core/core.h>
 #include <rendering/buffer.h>
+
+#include "opengl_module.h"
 // clang-format on
 
 namespace samui
 {
-class SAMUI_API OpenGLVertexBuffer : public VertexBuffer
+class SAMUI_OPENGL_API OpenGLVertexBuffer : public VertexBuffer
 {
   public:
     OpenGLVertexBuffer(uint32_t size);
@@ -30,7 +31,7 @@ class SAMUI_API OpenGLVertexBuffer : public VertexBuffer
     BufferLayout layout_;
 };
 
-class SAMUI_API OpenGLIndexBuffer : public IndexBuffer
+class SAMUI_OPENGL_API OpenGLIndexBuffer : public IndexBuffer
 {
   public:
     OpenGLIndexBuffer(const uint32_t* indices, uint32_t size);
@@ -44,7 +45,7 @@ class SAMUI_API OpenGLIndexBuffer : public IndexBuffer
     uint32_t count_{0};
 };
 
-class SAMUI_API OpenGLVertexArray : public VertexArray
+class SAMUI_OPENGL_API OpenGLVertexArray : public VertexArray
 {
   public:
     OpenGLVertexArray();

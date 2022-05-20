@@ -1,10 +1,10 @@
 #pragma once
 
-#include "core.h"
+#include "core_module.h"
 
 namespace samui
 {
-class SAMUI_API Timestep
+class SAMUI_CORE_API Timestep
 {
   public:
     Timestep(float timeInSeconds = 0.f) : time_in_seconds_(timeInSeconds) {}

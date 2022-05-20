@@ -4,7 +4,8 @@
 #include <stb_image.h>
 
 #include <log/log.h>
-#include <debug/instrumentor.h>
+#include <assert/assert.h>
+#include <profiler/instrumentor.h>
 // clang-format on
 
 namespace samui
@@ -42,10 +43,10 @@ OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height,
       format_(format)
 {
     SAMUI_PROFILE_FUNCTION();
-    // 创建纹理对象
+    // create texture object
     glGenTextures(1, &texture_id_);
     glBindTexture(GL_TEXTURE_2D, texture_id_);
-    // 为当前绑定的纹理对象设置环绕、过滤方式
+    // set texture wrapping/filtering options
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -77,10 +78,10 @@ OpenGLTexture2D::OpenGLTexture2D(const std::filesystem::path& path)
     SAMUI_ENGINE_ASSERT(internal_format_, "Format not supported! channels: {0}",
                         channels);
 
-    // 创建纹理对象
+    // create texture object
     glGenTextures(1, &texture_id_);
     glBindTexture(GL_TEXTURE_2D, texture_id_);
-    // 为当前绑定的纹理对象设置环绕、过滤方式
+    // set texture wrapping/filtering options
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -113,7 +114,7 @@ void OpenGLTexture2D::set_data(void* data, uint32_t size)
 void OpenGLTexture2D::bind(uint8_t slot)
 {
     SAMUI_PROFILE_FUNCTION();
-    // 绑定纹理
+    // bind texture
     glActiveTexture(GetOpenGLTextureEnum(slot));
     glBindTexture(GL_TEXTURE_2D, texture_id_);
 }
@@ -167,7 +168,7 @@ OpenGLCubeMap::OpenGLCubeMap(const std::array<std::filesystem::path, 6>& paths)
     SAMUI_PROFILE_FUNCTION();
     int width, height, channels;
 
-    // 创建纹理对象
+    // create texture object
     glGenTextures(1, &texture_id_);
     glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id_);
 
@@ -193,7 +194,7 @@ OpenGLCubeMap::OpenGLCubeMap(const std::array<std::filesystem::path, 6>& paths)
         }
     }
 
-    // 为当前绑定的纹理对象设置环绕、过滤方式
+    // set texture wrapping/filtering options
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -205,7 +206,7 @@ OpenGLCubeMap::OpenGLCubeMap(const std::array<std::filesystem::path, 6>& paths)
 void OpenGLCubeMap::bind(uint8_t slot)
 {
     SAMUI_PROFILE_FUNCTION();
-    // 绑定纹理
+    // bind texture
     glActiveTexture(GetOpenGLTextureEnum(slot));
     glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id_);
 }

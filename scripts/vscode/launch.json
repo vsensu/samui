@@ -1,0 +1,32 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "graphics demo(x86)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/windows/x86/debug/graphics.exe",
+            "args": [],
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}/build/windows/x86/debug/",
+            "environment": [],
+            "console": "externalTerminal",
+            "preLaunchTask": "build graphics demo(x86)",
+        },
+        {
+            "name": "graphics demo(x64)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/windows/x64/debug/graphics.exe",
+            "args": [],
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}/build/windows/x64/debug/",
+            "environment": [],
+            "console": "externalTerminal",
+            "preLaunchTask": "build graphics demo(x64)",
+        }
+    ]
+}

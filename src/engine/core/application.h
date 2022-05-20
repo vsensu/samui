@@ -1,50 +1,32 @@
 #pragma once
 
 // clang-format off
-#include "core.h"
-#include "Window.h"
-#include <events/application_event.h>
-#include <layer/layer_stack.h>
+#include "core_module.h"
+#include "layer.h"
+#include "layer_stack.h"
 // clang-format on
 
 namespace samui
 {
 
-class ImGuiLayer;
-
-class SAMUI_API Application
+class SAMUI_CORE_API Application
 {
   public:
-    explicit Application(const WindowProps& props = WindowProps());
-    virtual ~Application();
-    virtual void run();
+    virtual ~Application() {}
+    virtual void run() = 0;
 
-    void push_layer(Layer* layer);
-    void push_overlay(Layer* layer);
+    virtual void push_layer(Layer* layer);
+    virtual void push_overlay(Layer* layer);
 
-    inline static Application& instance() { return *instance_; }
-    inline Window&             get_window() { return *window_; }
+    virtual void close() = 0;
 
-    ImGuiLayer* get_imgui_layer() { return imgui_layer_; }
+  protected:
+    virtual void on_event(Event& e) = 0;
 
-    void close();
-    void set_input_mode(InputMode mode);
-
-  private:
-    void on_event(Event& e);
-    bool on_window_close(WindowCloseEvent& event);
-    bool on_window_resize(WindowResizeEvent& event);
-
-  private:
-    std::unique_ptr<Window> window_;
-    ImGuiLayer*             imgui_layer_;
-    bool                    running_{true};
-    bool                    minimized_{false};
-    LayerStack              layer_stack_;
-    float                   last_frame_time_{0.f};
-    static Application*     instance_;
+  protected:
+    LayerStack layer_stack_;
 };
 
-Application* create_application();
+// Application* create_application();
 
 }  // namespace samui

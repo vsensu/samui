@@ -7,20 +7,20 @@
 
 #include <glm/glm.hpp>
 
-#include "core/core.h"
+#include "rendering_module.h"
 // clang-format on
 
 namespace samui
 {
-class SAMUI_API Shader
+class SAMUI_RENDERING_API Shader
 {
   public:
     virtual ~Shader() {}
     virtual void bind() = 0;
 
-    static std::shared_ptr<Shader> create(const std::string& filepath);
-    static std::shared_ptr<Shader> create(const std::string& vertex_shader,
-                                          const std::string& fragment_shader);
+    // static std::shared_ptr<Shader> create(const std::string& filepath);
+    // static std::shared_ptr<Shader> create(const std::string& vertex_shader,
+                                          // const std::string& fragment_shader);
 
     virtual void set_int(const std::string& name, int value) = 0;
     virtual void set_int_array(const std::string& name, int* value,
@@ -38,7 +38,7 @@ class SAMUI_API Shader
     virtual void set_mat4(const std::string& name, const glm::mat4& value) = 0;
 };
 
-class SAMUI_API ShaderLibrary
+class SAMUI_RENDERING_API ShaderLibrary
 {
   public:
     bool add(const std::string& name, std::shared_ptr<Shader> shader);

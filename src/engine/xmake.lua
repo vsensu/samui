@@ -39,3 +39,5 @@ target("engine")
         print("[build] copy engine assets ...")
         os.cp("$(projectdir)/src/engine/assets/", target_dir)
     end)
+
+    includes("log", "assert", "profiler", "core", "rendering", "backend", "renderer", "console", "imgui_layer", "graphics")

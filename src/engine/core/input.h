@@ -1,10 +1,10 @@
 #pragma once
 
-#include "core.h"
+#include "core_module.h"
 
 namespace samui
 {
-class SAMUI_API Input
+class SAMUI_CORE_API Input
 {
   public:
     static bool  is_key_pressed(int keycode);

@@ -2,7 +2,9 @@
 #include "opengl_frame_buffer.h"
 
 #include <glad/glad.h>
+
 #include <log/log.h>
+#include <assert/assert.h>
 // clang-format on
 
 namespace samui
@@ -160,11 +162,11 @@ void OpenGLFrameBuffer::invalidate()
         glDeleteTextures(1, &depth_attachment_);
     }
 
-    // 一个完整的帧缓冲需要满足以下的条件：
-    // 附加至少一个缓冲（颜色、深度或模板缓冲）。
-    // 至少有一个颜色附件(Attachment)。
-    // 所有的附件都必须是完整的（保留了内存）。
-    // 每个缓冲都应该有相同的样本数。
+    // a framebuffer is complete if it has at least one attachment, and all.
+    // attach at least one buffer (color, depth, or stencil).
+    // attach at least one color attachment.
+    // all attachments must be complete.
+    // all buffers must have the same samples.
     glGenFramebuffers(1, &buffer_id_);
     glBindFramebuffer(GL_FRAMEBUFFER, buffer_id_);
 
@@ -210,7 +212,7 @@ void OpenGLFrameBuffer::invalidate()
         glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE,
         "FrameBuffer is incomplete!");
 
-    // 要保证所有的渲染操作在主窗口中有视觉效果，我们需要再次激活默认帧缓冲，将它绑定到0
+    // to make sure all rendering operations are done on the default framebuffer
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 

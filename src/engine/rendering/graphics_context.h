@@ -1,10 +1,12 @@
 #pragma once
 
-#include "core/core.h"
+// clang-format off
+#include "rendering_module.h"
+// clang-format on
 
 namespace samui
 {
-class SAMUI_API GraphicsContext
+class SAMUI_RENDERING_API GraphicsContext
 {
   public:
     virtual void init() = 0;

@@ -3,14 +3,17 @@
 #ifdef SAMUI_RENDER_OPENGL
 
 // clang-format off
+#include <GLFW/glfw3.h>
+
 #include <rendering/graphics_context.h>
+
+#include "opengl_module.h"
 // clang-format on
 
-#include <GLFW/glfw3.h>
 
 namespace samui
 {
-class SAMUI_API OpenGLContext : public GraphicsContext
+class SAMUI_OPENGL_API OpenGLContext : public GraphicsContext
 {
   public:
     OpenGLContext(GLFWwindow* window);

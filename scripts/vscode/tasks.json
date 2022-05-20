@@ -1,0 +1,30 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "config build type(x86)",
+            "type": "shell",
+            "command": "xmake config -y  -P . -p windows -m debug -a x86 -o build",
+        },
+        {
+            "label": "config build type(x64)",
+            "type": "shell",
+            "command": "xmake config -y  -P . -p windows -m debug -a x64 -o build",
+        },
+        
+        {
+            "label": "build graphics demo(x86)",
+            "type": "shell",
+            "command": "xmake build -y  -P . -w graphics",
+            "dependsOn": ["config build type(x86)"]
+        },
+        {
+            "label": "build graphics demo(x64)",
+            "type": "shell",
+            "command": "xmake build -y  -P . -w graphics",
+            "dependsOn": ["config build type(x64)"]
+        },
+    ]
+}

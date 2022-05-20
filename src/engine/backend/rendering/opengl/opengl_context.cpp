@@ -6,7 +6,8 @@
 #include <glad/glad.h>
 
 #include <log/log.h>
-#include <debug/instrumentor.h>
+#include <assert/assert.h>
+#include <profiler/instrumentor.h>
 // clang-format on
 
 namespace samui

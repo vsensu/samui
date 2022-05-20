@@ -6,11 +6,13 @@
 #include <glad/glad.h>
 
 #include <rendering/texture.h>
+
+#include "opengl_module.h"
 // clang-format on
 
 namespace samui
 {
-class SAMUI_API OpenGLTexture2D : public Texture2D
+class SAMUI_OPENGL_API OpenGLTexture2D : public Texture2D
 {
   public:
     OpenGLTexture2D(uint32_t width, uint32_t height,
@@ -45,7 +47,7 @@ class SAMUI_API OpenGLTexture2D : public Texture2D
     TextureFormat         format_;
 };
 
-class OpenGLCubeMap : public CubeMap
+class SAMUI_OPENGL_API OpenGLCubeMap : public CubeMap
 {
   public:
     OpenGLCubeMap(const std::array<std::filesystem::path, 6>& paths);

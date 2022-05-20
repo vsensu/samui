@@ -5,13 +5,13 @@
 
 #include <glm/glm.hpp>
 
-#include <core/core.h>
+#include "rendering_module.h"
 #include "texture.h"
 // clang-format on
 
 namespace samui
 {
-class SAMUI_API SubTexture2D
+class SAMUI_RENDERING_API SubTexture2D
 {
   public:
     SubTexture2D(const std::shared_ptr<Texture2D>& texture,

@@ -5,7 +5,8 @@
 
 #include <glad/glad.h>
 
-#include <debug/instrumentor.h>
+#include <assert/assert.h>
+#include <profiler/instrumentor.h>
 // clang-format on
 
 namespace samui
@@ -135,7 +136,7 @@ void OpenGLVertexArray::add_vertex_buffer(
     const std::shared_ptr<VertexBuffer>& buffer)
 {
     SAMUI_PROFILE_FUNCTION();
-    SAMUI_ENGINE_ASSERT(buffer->GetLayout().GetElements().size(),
+    SAMUI_ENGINE_ASSERT(buffer->get_layout().get_elements().size(),
                         "Vertex Buffer has no layout!");
 
     bind();
@@ -156,14 +157,14 @@ void OpenGLVertexArray::add_vertex_buffer(
             case ShaderDataType::UInt2:
             case ShaderDataType::UInt3:
             case ShaderDataType::UInt4:
-                // 定义OpenGL如何理解该顶点数据
+                // define how OpenGL should interpret this vertex data
                 glVertexAttribIPointer(
                     index, ShaderDataTypeCount(elem.Type),
                     ShaderDataTypeToOpenGLBaseType(elem.Type),
                     layout.get_stride(), (const void*)elem.Offset);
                 break;
             default:
-                // 定义OpenGL如何理解该顶点数据
+                // define how OpenGL should interpret this vertex data
                 glVertexAttribPointer(index, ShaderDataTypeCount(elem.Type),
                                       ShaderDataTypeToOpenGLBaseType(elem.Type),
                                       elem.Normalized ? GL_TRUE : GL_FALSE,
@@ -173,7 +174,7 @@ void OpenGLVertexArray::add_vertex_buffer(
                 break;
         }
 
-        // 启用顶点属性 顶点属性默认是禁用的
+        // enable vertex attribute, vertex attribute is disabled by default
         glEnableVertexAttribArray(index);
         index++;
     }

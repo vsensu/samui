@@ -3,14 +3,17 @@
 // clang-format off
 #include <vector>
 
-#include <core/core.h>
-#include <log/log.h>
 #include <rendering/frame_buffer.h>
+
+#include <log/log.h>
+#include <assert/assert.h>
+
+#include "opengl_module.h"
 // clang-format on
 
 namespace samui
 {
-class SAMUI_API OpenGLFrameBuffer : public FrameBuffer
+class SAMUI_OPENGL_API OpenGLFrameBuffer : public FrameBuffer
 {
   public:
     OpenGLFrameBuffer(const FrameBufferSpecification& spec);

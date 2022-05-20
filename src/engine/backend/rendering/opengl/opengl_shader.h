@@ -10,14 +10,15 @@
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "gl_errors.h"
 #include <rendering/shader.h>
-#include <debug/instrumentor.h>
+
+#include "opengl_module.h"
+#include "gl_errors.h"
 // clang-format on
 
 namespace samui
 {
-class SAMUI_API OpenGLShader : public Shader
+class SAMUI_OPENGL_API OpenGLShader : public Shader
 {
   public:
     OpenGLShader(const std::string& filePath);

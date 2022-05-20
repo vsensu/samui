@@ -4,7 +4,7 @@
 #include <vector>
 #include <memory>
 
-#include <core/core.h>
+#include "rendering_module.h"
 // clang-format on
 
 namespace samui
@@ -18,7 +18,7 @@ enum class FrameBufferTextureFormat
     Depth = Depth24_Stencil8
 };
 
-struct SAMUI_API FrameBufferTextureSpecification
+struct SAMUI_RENDERING_API FrameBufferTextureSpecification
 {
     FrameBufferTextureSpecification() = default;
     FrameBufferTextureSpecification(FrameBufferTextureFormat format_)
@@ -29,7 +29,7 @@ struct SAMUI_API FrameBufferTextureSpecification
     // TODO: filtering/warp
 };
 
-struct SAMUI_API FrameBufferSpecification
+struct SAMUI_RENDERING_API FrameBufferSpecification
 {
     uint32_t                                     width, height;
     std::vector<FrameBufferTextureSpecification> attachments;
@@ -37,7 +37,7 @@ struct SAMUI_API FrameBufferSpecification
     bool                                         swap_chain_target = false;
 };
 
-class SAMUI_API FrameBuffer
+class SAMUI_RENDERING_API FrameBuffer
 {
   public:
     virtual ~FrameBuffer() {}
@@ -53,7 +53,7 @@ class SAMUI_API FrameBuffer
     virtual void clear_attachment(uint32_t attachment_index,
                                   uint32_t value) = 0;
 
-    static std::shared_ptr<FrameBuffer> create(
-        const FrameBufferSpecification& spec);
+    // static std::shared_ptr<FrameBuffer> create(
+        // const FrameBufferSpecification& spec);
 };
 }  // namespace samui

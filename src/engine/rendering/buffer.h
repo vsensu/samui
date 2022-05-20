@@ -4,8 +4,10 @@
 #include <cstdint>
 #include <memory>
 
-#include <core/core.h>
 #include <log/log.h>
+#include <assert/assert.h>
+
+#include "rendering_module.h"
 // clang-format on
 
 namespace samui
@@ -129,7 +131,7 @@ class BufferLayout
     uint32_t                   stride_;
 };
 
-class SAMUI_API Buffer
+class SAMUI_RENDERING_API Buffer
 {
   public:
     virtual ~Buffer() {}
@@ -138,7 +140,7 @@ class SAMUI_API Buffer
     virtual void unbind() = 0;
 };
 
-class SAMUI_API VertexBuffer : public Buffer
+class SAMUI_RENDERING_API VertexBuffer : public Buffer
 {
   public:
     virtual ~VertexBuffer() {}
@@ -148,23 +150,23 @@ class SAMUI_API VertexBuffer : public Buffer
 
     virtual void set_data(const void* data, uint32_t size) = 0;
 
-    static std::shared_ptr<VertexBuffer> create(uint32_t size);
-    static std::shared_ptr<VertexBuffer> create(const void* vertices,
-                                                uint32_t    size);
+    // static std::shared_ptr<VertexBuffer> create(uint32_t size);
+    // static std::shared_ptr<VertexBuffer> create(const void* vertices,
+                                                // uint32_t    size);
 };
 
-class SAMUI_API IndexBuffer : public Buffer
+class SAMUI_RENDERING_API IndexBuffer : public Buffer
 {
   public:
     virtual ~IndexBuffer() {}
 
     virtual uint32_t get_count() const = 0;
 
-    static std::shared_ptr<IndexBuffer> create(const uint32_t* indices,
-                                               uint32_t        count);
+    // static std::shared_ptr<IndexBuffer> create(const uint32_t* indices,
+                                              //  uint32_t        count);
 };
 
-class SAMUI_API VertexArray
+class SAMUI_RENDERING_API VertexArray
 {
   public:
     virtual ~VertexArray() {}
@@ -178,7 +180,7 @@ class SAMUI_API VertexArray
         const std::shared_ptr<IndexBuffer>& vertexBuffer) = 0;
     virtual IndexBuffer* get_index_buffer() const = 0;
 
-    static std::shared_ptr<VertexArray> create();
+    // static std::shared_ptr<VertexArray> create();
 };
 
 }  // namespace samui

@@ -41,4 +41,8 @@
 
 #include "utils/platform_utils.h"
 
+#ifdef SAMUI_DEBUG
+  #define DEBUG_GL_ERRORS
+#endif
+
 // clang-format on

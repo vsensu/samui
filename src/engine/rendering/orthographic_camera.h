@@ -3,12 +3,12 @@
 // clang-format off
 #include <glm/glm.hpp>
 
-#include "core/core.h"
+#include "rendering_module.h"
 // clang-format on
 
 namespace samui
 {
-class SAMUI_API OrthographicCamera
+class SAMUI_RENDERING_API OrthographicCamera
 {
   public:
     OrthographicCamera(float left, float right, float bottom, float top);
