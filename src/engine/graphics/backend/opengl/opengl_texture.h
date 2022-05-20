@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef SAMUI_RENDER_OPENGL
+
 // clang-format off
 #include <memory>
 
@@ -69,3 +71,5 @@ class SAMUI_OPENGL_API OpenGLCubeMap : public CubeMap
 };
 
 }  // namespace samui
+
+#endif

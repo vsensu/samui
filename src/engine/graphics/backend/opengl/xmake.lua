@@ -1,0 +1,23 @@
+-- add_requires("spdlog 1.8.5")
+-- add_requires("glm 0.9.9+8")
+-- add_requires("freetype 2.10.4")
+-- -- add_requires("glfw 3.3.2")
+
+-- target("samui-opengl")
+--     set_kind("shared")
+--     set_languages("c99", "cxx20")
+--     add_defines("SAMUI_BUILD_DLL", "SAMUI_RENDER_OPENGL")
+--     if is_plat("windows") then
+--         add_defines("SAMUI_PLATFORM_WINDOWS")
+--     end
+--     if is_mode("debug") then
+--         add_defines("SAMUI_DEBUG")
+--     elseif is_mode("release") then
+--         add_defines("SAMUI_RELEASE")
+--     end
+--     add_includedirs("$(projectdir)/src/deps/glad/include", {public = true})
+--     add_includedirs("$(projectdir)/src/deps/stb_image", {public=true})
+--     add_includedirs("$(projectdir)/src/engine", {public = true})
+--     add_files("**.cpp")
+--     add_packages("spdlog", "glm", "freetype")
+--     add_deps("glad", "stb_image", "samui-log", "samui-assert", "samui-profiler", "samui-rendering")

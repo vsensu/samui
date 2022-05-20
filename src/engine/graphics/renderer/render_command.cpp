@@ -2,7 +2,7 @@
 #include "render_command.h"
 
 #ifdef SAMUI_RENDER_OPENGL
-#include <backend/rendering/opengl/opengl_rendering_api.h>
+#include "../backend/opengl/opengl_rendering_api.h"
 #endif
 
 // clang-format on

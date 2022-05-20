@@ -1,3 +1,5 @@
+#ifdef SAMUI_RENDER_OPENGL
+
 // clang-format off
 #include "opengl_shader.h"
 
@@ -251,3 +253,5 @@ void OpenGLShader::compile(
 }
 
 }  // namespace samui
+
+#endif

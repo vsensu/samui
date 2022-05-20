@@ -2,7 +2,7 @@
 #include "buffer_create.h"
 
 #ifdef SAMUI_RENDER_OPENGL
-#include <backend/rendering/opengl/opengl_buffer.h>
+#include "../backend/opengl/opengl_buffer.h"
 #endif
 
 #include "renderer.h"

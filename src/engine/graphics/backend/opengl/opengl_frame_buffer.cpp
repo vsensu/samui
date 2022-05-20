@@ -1,3 +1,5 @@
+#ifdef SAMUI_RENDER_OPENGL
+
 // clang-format off
 #include "opengl_frame_buffer.h"
 
@@ -259,3 +261,5 @@ void OpenGLFrameBuffer::clear_attachment(uint32_t attachment_index,
 }
 
 }  // namespace samui
+
+#endif

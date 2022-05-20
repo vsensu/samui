@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef SAMUI_RENDER_OPENGL
+
 // clang-format off
 #include <vector>
 
@@ -58,3 +60,5 @@ class SAMUI_OPENGL_API OpenGLFrameBuffer : public FrameBuffer
     uint32_t              depth_attachment_;
 };
 }  // namespace samui
+
+#endif

@@ -2,7 +2,7 @@
 #include "shader_create.h"
 
 #ifdef SAMUI_RENDER_OPENGL
-#include <backend/rendering/opengl/opengl_shader.h>
+#include "../backend/opengl/opengl_shader.h"
 #endif
 
 #include "renderer.h"

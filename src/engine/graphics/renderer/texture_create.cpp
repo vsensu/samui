@@ -2,7 +2,7 @@
 #include "texture_create.h"
 
 #ifdef SAMUI_RENDER_OPENGL
-#include <backend/rendering/opengl/opengl_texture.h>
+#include "../backend/opengl/opengl_texture.h"
 #endif
 
 #include "renderer.h"

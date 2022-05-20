@@ -1,3 +1,5 @@
+#ifdef SAMUI_RENDER_OPENGL
+
 // clang-format off
 #include "opengl_texture.h"
 
@@ -212,3 +214,5 @@ void OpenGLCubeMap::bind(uint8_t slot)
 }
 
 }  // namespace samui
+
+#endif

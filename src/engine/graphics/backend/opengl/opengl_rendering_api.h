@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef SAMUI_RENDER_OPENGL
+
 // clang-format off
 #include <memory>
 
@@ -32,3 +34,5 @@ class SAMUI_OPENGL_API OpenGLRenderingAPI : public RenderingAPI
     virtual void set_flip_vertically_on_load(bool flip_vertically) override;
 };
 }  // namespace samui
+
+#endif

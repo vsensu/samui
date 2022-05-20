@@ -11,7 +11,7 @@
 // clang-format on
 
 #ifdef SAMUI_RENDER_OPENGL
-#include <backend/rendering/opengl/opengl_context.h>
+#include "../backend/opengl/opengl_context.h"
 #endif
 
 namespace samui

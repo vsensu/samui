@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef SAMUI_RENDER_OPENGL
+
 // clang-format off
 #ifdef SAMUI_PLATFORM_WINDOWS
   #ifdef SAMUI_BUILD_DLL
@@ -13,3 +15,5 @@
   #define DEBUG_GL_ERRORS
 #endif
 // clang-format on
+
+#endif

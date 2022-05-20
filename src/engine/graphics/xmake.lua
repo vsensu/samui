@@ -12,7 +12,14 @@ target("samui-graphics")
     elseif is_mode("release") then
         add_defines("SAMUI_RELEASE")
     end
+    add_includedirs("$(projectdir)/src/deps/glad/include", {public = true})
+    add_includedirs("$(projectdir)/src/deps/stb_image", {public=true})
     add_includedirs("$(projectdir)/src/engine", {public = true})
-    add_files("**.cpp")
+    add_files("*.cpp")
+    if is_plat("windows") then
+        add_files("windows/**.cpp")
+    end
+    add_files("backend/opengl/**.cpp")
+    add_files("renderer/**.cpp")
     add_packages("spdlog", "glm", "glfw")
-    add_deps("samui-log", "samui-profiler", "samui-core", "samui-rendering", "samui-opengl", "samui-renderer")
+    add_deps("glad", "stb_image", "samui-log", "samui-profiler", "samui-core", "samui-rendering")

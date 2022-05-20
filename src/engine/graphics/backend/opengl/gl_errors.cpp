@@ -1,3 +1,5 @@
+#ifdef SAMUI_RENDER_OPENGL
+
 // clang-format off
 #include "gl_errors.h"
 
@@ -161,3 +163,5 @@ void glCheckError(const char* file, unsigned int line, const char* expression)
         exit(-1);
     }
 }
+
+#endif

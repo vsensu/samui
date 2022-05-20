@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef SAMUI_RENDER_OPENGL
+
 // clang-format off
 #include <cassert>
 #include <fstream>
@@ -62,3 +64,5 @@ class SAMUI_OPENGL_API OpenGLShader : public Shader
 };
 
 }  // namespace samui
+
+#endif
