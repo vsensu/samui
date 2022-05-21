@@ -3,13 +3,29 @@
 #include <engine/graphics/graphics_application.h>
 #include <engine/entrypoint.h>
 #include <engine/graphics/renderer/renderer2d.h>
+#include <engine/graphics/renderer/render_command.h>
 #include <imgui/imgui.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 // clang-format on
 
 class GameLayer : public samui::Layer
 {
   public:
     virtual void on_attach() override { SAMUI_INFO("game layer attach"); }
+
+    virtual void on_update(const samui::Timestep& deltaTime) override
+    {
+        samui::RenderCommand::clear();
+        samui::Renderer2D::reset_stats();
+
+        glm::mat4 projection = glm::ortho(0.f, 1280.f, 720.f, 0.f, -1.f, 1.f);
+        samui::Renderer2D::begin_scene(projection);
+        samui::Renderer2D::draw_quad({32.f, 32.f}, {32.f, 32.f},
+                                     {1.0f, 0.0f, 0.0f, 1.0f});
+        samui::Renderer2D::end_scene();
+    }
+
     virtual void on_imgui_render() override
     {
         auto stats = samui::Renderer2D::get_stats();
@@ -18,6 +34,8 @@ class GameLayer : public samui::Layer
         ImGui::Text("Draw Calls: %d", stats.draw_calls);
         ImGui::Text("Quads: %d", stats.quad_count);
         ImGui::End();
+
+        ImGui::ShowDemoWindow();
     }
 };
 
