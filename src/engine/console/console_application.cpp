@@ -1,6 +1,8 @@
 // clang-format off
 #include "console_application.h"
 
+#include <thread>
+
 #include <log/log.h>
 #include <profiler/instrumentor.h>
 #include <core/timestep.h>
@@ -19,19 +21,30 @@ ConsoleApplication::ConsoleApplication()
 
 ConsoleApplication::~ConsoleApplication() { SAMUI_PROFILE_FUNCTION(); }
 
+void ConsoleApplication::init()
+{
+    last_frame_time_ = std::chrono::high_resolution_clock::now();
+}
+
 void ConsoleApplication::run()
 {
     SAMUI_PROFILE_FUNCTION();
+    using namespace std::chrono_literals;
     while (running_)
     {
         SAMUI_PROFILE_SCOPE("RunLoop");
+        auto time = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double, std::milli> elapsed = time - last_frame_time_;
+        Timestep delta_time = std::chrono::duration_cast<std::chrono::seconds>(elapsed).count();
+        last_frame_time_ = time;
         {
             SAMUI_PROFILE_SCOPE("LayerStack OnUpdate");
             for (Layer* layer : layer_stack_)
             {
-                // layer->on_update(delta_time);
+                layer->on_update(delta_time);
             }
         }
+        std::this_thread::sleep_for(16ms);
     }
 }
 

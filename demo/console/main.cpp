@@ -7,6 +7,10 @@
 class GameLayer : public samui::Layer
 {
     void on_attach() override { SAMUI_INFO("game layer attach"); }
+    virtual void on_update(const samui::Timestep& deltaTime) override
+    {
+        SAMUI_INFO("game layer update");
+    }
 };
 
 class Demo : public samui::ConsoleApplication
@@ -15,7 +19,7 @@ class Demo : public samui::ConsoleApplication
     Demo() : ConsoleApplication() { push_layer(new GameLayer()); }
 };
 
-samui::Application* samui::create_application()
+std::shared_ptr<samui::Application> samui::create_application()
 {
     SAMUI_ENGINE_TRACE("engine trace");
     SAMUI_ENGINE_INFO("engine info");
@@ -29,5 +33,5 @@ samui::Application* samui::create_application()
     SAMUI_ERROR("game error");
     SAMUI_FATAL("game fatal");
 
-    return new Demo();
+    return std::make_shared<Demo>();
 }
