@@ -14,6 +14,7 @@ target("samui-graphics")
     end
     add_includedirs("$(projectdir)/src/deps/glad/include", {public = true})
     add_includedirs("$(projectdir)/src/deps/stb_image", {public=true})
+    add_includedirs("$(projectdir)/src/deps/imgui-docking", {public = true})
     add_includedirs("$(projectdir)/src/engine", {public = true})
     add_files("*.cpp")
     if is_plat("windows") then
@@ -21,5 +22,7 @@ target("samui-graphics")
     end
     add_files("backend/opengl/**.cpp")
     add_files("renderer/**.cpp")
+    add_files("imgui_layer/**.cpp")
+    add_files("ImGuizmo/**.cpp")
     add_packages("spdlog", "glm", "glfw")
-    add_deps("glad", "stb_image", "samui-log", "samui-profiler", "samui-core", "samui-rendering")
+    add_deps("glad", "stb_image", "imgui", "samui-log", "samui-profiler", "samui-core", "samui-rendering")

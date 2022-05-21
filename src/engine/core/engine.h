@@ -5,17 +5,20 @@
 
 #include "_inc.h"
 #include "application.h"
-#include "singleton.h"
 // clang-format on
 
 namespace samui
 {
-class SAMUI_CORE_API Engine : public Singleton<Engine>
+class SAMUI_CORE_API Engine
 {
   public:
-    std::shared_ptr<Application> app() { return app_; }
+    static Engine& instance();
+    
+    void set_active_app(std::shared_ptr<Application> app);
+    std::shared_ptr<Application> app();
+
 
   private:
-    std::shared_ptr<Application> app_;
+    std::shared_ptr<Application> app_ {nullptr};
 };
 }  // namespace samui

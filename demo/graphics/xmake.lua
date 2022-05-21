@@ -9,7 +9,7 @@ target("graphics")
     add_files("*.cpp")
     add_packages("spdlog", "glm", "glfw")
     -- add_deps("samui-log", "samui-assert", "samui-profiler", "samui-core", "samui-console")
-    add_deps("samui-log", "samui-profiler", "samui-core", "samui-rendering", "samui-graphics")
+    add_deps("imgui", "samui-log", "samui-profiler", "samui-core", "samui-rendering", "samui-graphics")
     after_build(function (target)
         -- local target_dir = target:targetdir()
         -- if not os.isdir(target_dir) then

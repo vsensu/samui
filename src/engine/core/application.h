@@ -13,6 +13,7 @@ class SAMUI_CORE_API Application
 {
   public:
     virtual ~Application() {}
+    virtual void init() = 0;
     virtual void run() = 0;
 
     virtual void push_layer(Layer* layer);

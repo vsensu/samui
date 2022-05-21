@@ -18,6 +18,7 @@ class SAMUI_GRAPHICS_API GraphicsApplication : public Application
   public:
     explicit GraphicsApplication(const WindowProps& props = WindowProps());
     virtual ~GraphicsApplication();
+    virtual void init() override;
     virtual void run() override;
     // void push_layer(Layer* layer);
     // void push_overlay(Layer* layer);
@@ -36,7 +37,7 @@ class SAMUI_GRAPHICS_API GraphicsApplication : public Application
   private:
     std::unique_ptr<Window> window_;
     ImGuiLayer*             imgui_layer_;
-    bool                    running_{true};
+    bool                    running_{false};
     bool                    minimized_{false};
     float                   last_frame_time_{0.f};
 };

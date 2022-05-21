@@ -4,13 +4,15 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <imgui/imgui.h>
-#include <ImGuizmo/ImGuizmo.h>
 
-#include <core/application.h>
 #include <profiler/instrumentor.h>
+#include <core/engine.h>
 
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+
+#include "../graphics_application.h"
+#include "../ImGuizmo/ImGuizmo.h"
 // clang-format on
 
 namespace samui
@@ -46,8 +48,11 @@ void ImGuiLayer::on_attach()
     set_dark_theme_colors();
 
     // Setup Platform/Renderer backends
+    std::shared_ptr<GraphicsApplication> app =
+        std::dynamic_pointer_cast<GraphicsApplication>(
+            Engine::instance().app());
     ImGui_ImplGlfw_InitForOpenGL(
-        (GLFWwindow*)(Application::instance().get_window().get_native_window()),
+        (GLFWwindow*)(app->get_window().get_native_window()),
         true);
     ImGui_ImplOpenGL3_Init("#version 130");
 }
@@ -87,9 +92,11 @@ void ImGuiLayer::end()
 {
     SAMUI_PROFILE_FUNCTION();
     ImGuiIO&     io = ImGui::GetIO();
-    Application& app = Application::instance();
+    std::shared_ptr<GraphicsApplication> app =
+        std::dynamic_pointer_cast<GraphicsApplication>(
+            Engine::instance().app());
     io.DisplaySize =
-        ImVec2(app.get_window().get_width(), app.get_window().get_height());
+        ImVec2(app->get_window().get_width(), app->get_window().get_height());
 
     // Rendering
     ImGui::Render();

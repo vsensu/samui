@@ -6,10 +6,10 @@
 #include <log/log.h>
 #include <profiler/instrumentor.h>
 #include <core/timestep.h>
-// #include <imgui/imgui_layer.h>
 #include <rendering/buffer.h>
 
 #include "renderer/renderer.h"
+#include "imgui_layer/imgui_layer.h"
 // clang-format on
 
 namespace samui
@@ -20,18 +20,26 @@ GraphicsApplication::GraphicsApplication(const WindowProps& props)
     SAMUI_PROFILE_FUNCTION();
 
     window_ = Window::create(props);
-    window_->set_event_callback(BIND_EVENT_FUNC(GraphicsApplication::on_event));
-
-    Renderer::init();
-
-    // imgui_layer_ = new ImGuiLayer();
-    // push_overlay(imgui_layer_);
+    imgui_layer_ = new ImGuiLayer();
 }
 
 GraphicsApplication::~GraphicsApplication()
 {
     SAMUI_PROFILE_FUNCTION();
     Renderer::shutdown();
+}
+
+void GraphicsApplication::init()
+{
+    SAMUI_PROFILE_FUNCTION();
+
+    window_->set_event_callback(BIND_EVENT_FUNC(GraphicsApplication::on_event));
+
+    Renderer::init();
+
+    push_overlay(imgui_layer_);
+
+    running_ = true;
 }
 
 void GraphicsApplication::run()
@@ -56,13 +64,13 @@ void GraphicsApplication::run()
                 }
             }
             {
-                // SAMUI_PROFILE_SCOPE("LayerStack OnImGuiRender");
-                // imgui_layer_->begin();
-                // for (Layer* layer : layer_stack_)
-                // {
-                //     layer->on_imgui_render();
-                // }
-                // imgui_layer_->end();
+                SAMUI_PROFILE_SCOPE("LayerStack OnImGuiRender");
+                imgui_layer_->begin();
+                for (Layer* layer : layer_stack_)
+                {
+                    layer->on_imgui_render();
+                }
+                imgui_layer_->end();
             }
         }
 

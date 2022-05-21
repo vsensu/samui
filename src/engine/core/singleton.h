@@ -2,7 +2,7 @@
 
 namespace samui
 {
-
+// do not use this in dll
 template <typename T>
 class Singleton
 {

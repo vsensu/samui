@@ -2,11 +2,23 @@
 #include <engine/log/log.h>
 #include <engine/graphics/graphics_application.h>
 #include <engine/entrypoint.h>
+#include <engine/graphics/renderer/renderer2d.h>
+#include <imgui/imgui.h>
 // clang-format on
 
 class GameLayer : public samui::Layer
 {
-    void on_attach() override { SAMUI_INFO("game layer attach"); }
+  public:
+    virtual void on_attach() override { SAMUI_INFO("game layer attach"); }
+    virtual void on_imgui_render() override
+    {
+        auto stats = samui::Renderer2D::get_stats();
+        ImGui::Begin("Stats");
+        ImGui::Text("Renderer2D Stats:");
+        ImGui::Text("Draw Calls: %d", stats.draw_calls);
+        ImGui::Text("Quads: %d", stats.quad_count);
+        ImGui::End();
+    }
 };
 
 class Demo : public samui::GraphicsApplication
@@ -15,7 +27,7 @@ class Demo : public samui::GraphicsApplication
     Demo() : GraphicsApplication() { push_layer(new GameLayer()); }
 };
 
-samui::Application* samui::create_application()
+std::shared_ptr<samui::Application> samui::create_application()
 {
     SAMUI_ENGINE_TRACE("engine trace");
     SAMUI_ENGINE_INFO("engine info");
@@ -29,5 +41,5 @@ samui::Application* samui::create_application()
     SAMUI_ERROR("game error");
     SAMUI_FATAL("game fatal");
 
-    return new Demo();
+    return std::make_shared<Demo>();
 }
