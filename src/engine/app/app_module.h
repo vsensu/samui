@@ -1,1 +1,0 @@
-// graphics application abstract layer

@@ -1,14 +1,17 @@
 #ifdef SAMUI_PLATFORM_WINDOWS
 
 // clang-format off
-#include <utils/platform_utils.h>
+#include "platform_utils.h"
 
+#include <Windows.h>
 #include <commdlg.h>
 #include <GLFW/glfw3.h>
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
 
-#include <core/Application.h>
+#include <core/engine.h>
+
+#include "../graphics_application.h"
 // clang-format on
 
 namespace samui
@@ -24,8 +27,11 @@ std::string open_file(const char* filter)
     CHAR          currentDir[256] = {0};
     ZeroMemory(&ofn, sizeof(OPENFILENAME));
     ofn.lStructSize = sizeof(OPENFILENAME);
+    std::shared_ptr<GraphicsApplication> app =
+        std::dynamic_pointer_cast<GraphicsApplication>(
+            Engine::instance().app());
     ofn.hwndOwner = glfwGetWin32Window(
-        (GLFWwindow*)Application::instance().get_window().get_native_window());
+        (GLFWwindow*)app->get_window().get_native_window());
     ofn.lpstrFile = szFile;
     ofn.nMaxFile = sizeof(szFile);
     if (GetCurrentDirectoryA(256, currentDir)) ofn.lpstrInitialDir = currentDir;
@@ -45,8 +51,11 @@ std::string save_file(const char* filter)
     CHAR          currentDir[256] = {0};
     ZeroMemory(&ofn, sizeof(OPENFILENAME));
     ofn.lStructSize = sizeof(OPENFILENAME);
+    std::shared_ptr<GraphicsApplication> app =
+        std::dynamic_pointer_cast<GraphicsApplication>(
+            Engine::instance().app());
     ofn.hwndOwner = glfwGetWin32Window(
-        (GLFWwindow*)Application::instance().get_window().get_native_window());
+        (GLFWwindow*)app->get_window().get_native_window());
     ofn.lpstrFile = szFile;
     ofn.nMaxFile = sizeof(szFile);
     if (GetCurrentDirectoryA(256, currentDir)) ofn.lpstrInitialDir = currentDir;

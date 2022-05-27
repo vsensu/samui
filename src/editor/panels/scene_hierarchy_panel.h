@@ -1,10 +1,10 @@
-#ifndef SAMUI_SCENE_HIERARCHY_PANEL_H_
-#define SAMUI_SCENE_HIERARCHY_PANEL_H_
+#pragma once
 
 // clang-format off
 #include <memory>
 
-#include <samui.h>
+// #include <samui.h>
+#include "../scene/scene.h"
 // clan-format on
 
 namespace samui {
@@ -28,5 +28,3 @@ class SceneHierarchyPanel {
   Entity     selected_entity_{entt::null};
 };
 }  // namespace samui
-
-#endif  // SAMUI_SCENE_HIERARCHY_PANEL_H_

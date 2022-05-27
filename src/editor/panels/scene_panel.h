@@ -1,12 +1,18 @@
-#ifndef SAMUI_SCENE_PANEL_H_
-#define SAMUI_SCENE_PANEL_H_
+#pragma once
 
 // clang-format off
 #include <memory>
 
-#include <samui.h>
+// #include <samui.h>
 
-#include <editor_camera.h>
+#include <engine/core/minimal.h>
+#include <engine/rendering/frame_buffer.h>
+#include <engine/graphics/renderer/render_command.h>
+#include <imgui/imgui.h>
+#include <engine/graphics/ImGuizmo/ImGuizmo.h>
+
+#include "../editor_camera.h"
+#include "../scene/scene.h"
 // clang-format on
 
 namespace samui {
@@ -40,5 +46,3 @@ class ScenePanel {
   ImGuizmo::OPERATION gizmos_op_{ImGuizmo::TRANSLATE};
 };
 }  // namespace samui
-
-#endif  // SAMUI_SCENE_PANEL_H_

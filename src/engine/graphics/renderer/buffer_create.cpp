@@ -3,6 +3,7 @@
 
 #ifdef SAMUI_RENDER_OPENGL
 #include "../backend/opengl/opengl_buffer.h"
+#include "../backend/opengl/opengl_frame_buffer.h"
 #endif
 
 #include "renderer.h"
@@ -81,5 +82,23 @@ std::shared_ptr<VertexArray> create()
     return nullptr;
 }
 }  // namespace vertex_array
+
+namespace frame_buffer
+{
+std::shared_ptr<FrameBuffer> create(const FrameBufferSpecification& spec)
+{
+    switch (Renderer::get_api())
+    {
+        case RenderCommand::API::OpenGL:
+        {
+#ifdef SAMUI_RENDER_OPENGL
+            return std::make_shared<OpenGLFrameBuffer>(spec);
+#endif
+        }
+    }
+    SAMUI_ENGINE_ASSERT(false, "Unsupported Render API");
+    return nullptr;
+}
+}  // namespace frame_buffer
 
 }  // namespace samui

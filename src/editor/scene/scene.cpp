@@ -4,8 +4,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include <engine/graphics/renderer/renderer2d.h>
+
 #include "components.h"
-#include <rendering/renderer2d.h>
 // clang-format on
 
 namespace samui

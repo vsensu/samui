@@ -1,17 +1,24 @@
 // clang-format off
-#include <samui.h>
-#include <entrypoint.h>
+// #include <samui.h>
+#include <engine/log/log.h>
+#include <engine/graphics/graphics_application.h>
+#include <engine/entrypoint.h>
 
 #include "editor_layer.h"
 // clang-format on
 
-namespace samui {
+namespace samui
+{
 
-class Demo : public Application {
- public:
-  Demo() : Application() { push_layer(new EditorLayer()); }
+class EditorApplication : public GraphicsApplication
+{
+  public:
+    EditorApplication() : GraphicsApplication() { push_layer(new EditorLayer()); }
 };
 
-Application* create_application() { return new Demo(); }
+std::shared_ptr<Application> create_application()
+{
+    return std::make_shared<EditorApplication>();
+}
 
 }  // namespace samui

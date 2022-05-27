@@ -1,7 +1,6 @@
 #pragma once
 
 // clang-format off
-#include <core/core.h>
 #include <core/event.h>
 #include <core/layer.h>
 

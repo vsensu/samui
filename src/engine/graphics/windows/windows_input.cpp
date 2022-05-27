@@ -3,7 +3,6 @@
 // clang-format off
 #include <GLFW/glfw3.h>
 
-#include <core/core.h>
 #include <core/input.h>
 #include <core/engine.h>
 

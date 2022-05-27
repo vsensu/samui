@@ -2,7 +2,7 @@ target("graphics")
     set_kind("binary")
     set_languages("c99", "cxx20")
     add_includedirs("$(projectdir)/src")
-    add_includedirs("$(projectdir)/src/engine")
+    -- add_includedirs("$(projectdir)/src/engine")
     if is_plat("windows") then
         add_defines("SAMUI_PLATFORM_WINDOWS")
     end

@@ -13,6 +13,7 @@ target("samui-core")
         add_defines("SAMUI_RELEASE")
     end
     add_includedirs("$(projectdir)/src/engine", {public = true})
+    -- set_pcxxheader("pch.h")
     add_files("**.cpp")
     add_packages("spdlog")
     add_deps("samui-log")

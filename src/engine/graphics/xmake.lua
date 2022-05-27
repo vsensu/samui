@@ -24,5 +24,9 @@ target("samui-graphics")
     add_files("renderer/**.cpp")
     add_files("imgui_layer/**.cpp")
     add_files("ImGuizmo/**.cpp")
+    add_files("utils/**.cpp")
+    if is_plat("windows") then 
+        add_links("Comdlg32")
+    end
     add_packages("spdlog", "glm", "glfw")
     add_deps("glad", "stb_image", "imgui", "samui-log", "samui-profiler", "samui-core", "samui-rendering")

@@ -1,27 +1,28 @@
-#ifndef SAMUI_CONTENT_BROWSER_H_
-#define SAMUI_CONTENT_BROWSER_H_
+#pragma once
 
 // clang-format off
 #include <memory>
 
-#include <samui.h>
+// #include <samui.h>
 
 #include <filesystem>
+
+#include <engine/rendering/texture.h>
 // clang-format on
 
-namespace samui {
-class ContentBrowser {
- public:
-  ContentBrowser();
+namespace samui
+{
+class ContentBrowser
+{
+  public:
+    ContentBrowser();
 
-  void OnImGuiRender();
+    void OnImGuiRender();
 
- private:
-  std::filesystem::path path_;
+  private:
+    std::filesystem::path path_;
 
-  std::shared_ptr<Texture2D> folder_icon_;
-  std::shared_ptr<Texture2D> file_icon_;
+    std::shared_ptr<Texture2D> folder_icon_;
+    std::shared_ptr<Texture2D> file_icon_;
 };
 }  // namespace samui
-
-#endif  // SAMUI_CONTENT_BROWSER_H_

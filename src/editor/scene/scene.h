@@ -4,15 +4,16 @@
 #include <string>
 
 #include <entt/entt.hpp>
-#include <core/core.h>
-#include <core/timestep.h>
-#include <log/log.h>
+
+#include <engine/log/log.h>
+#include <engine/assert/assert.h>
+#include <engine/core/minimal.h>
 // clang-format on
 
 namespace samui
 {
 using Entity = entt::entity;
-class SAMUI_API Scene
+class Scene
 {
   public:
     Scene();
@@ -23,7 +24,7 @@ class SAMUI_API Scene
     template <typename T, typename... Args>
     T& add_component(Entity entity, Args&&... args)
     {
-        SAMUI_ENGINE_ASSERT(!HasComponent<T>(entity),
+        SAMUI_ENGINE_ASSERT(!has_component<T>(entity),
                             "entity already has component!");
         return registry_.emplace<T>(entity, std::forward<Args>(args)...);
     }
@@ -31,7 +32,7 @@ class SAMUI_API Scene
     template <typename T>
     T& get_component(Entity entity)
     {
-        SAMUI_ENGINE_ASSERT(HasComponent<T>(entity),
+        SAMUI_ENGINE_ASSERT(has_component<T>(entity),
                             "entity does not has component!");
         return registry_.get<T>(entity);
     }

@@ -8,7 +8,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <core/core.h>
 #include <rendering/texture.h>
 // clang-format on
 
@@ -16,12 +15,12 @@ namespace samui
 {
 void foo_components();
 
-struct SAMUI_API NameComponent
+struct NameComponent
 {
     std::string name;
 };
 
-struct SAMUI_API TransformComponent
+struct TransformComponent
 {
     glm::vec3 translation{glm::zero<glm::vec3>()};
     glm::vec3 rotation{glm::zero<glm::vec3>()};
@@ -36,14 +35,14 @@ struct SAMUI_API TransformComponent
     }
 };
 
-struct SAMUI_API SpriteRendererComponent
+struct SpriteRendererComponent
 {
     glm::vec4                  color{1.0f, 1.0f, 1.0f, 1.0f};
     std::shared_ptr<Texture2D> texture{0};
     float                      tiling_factor{1.0f};
 };
 
-struct SAMUI_API CameraComponent
+struct CameraComponent
 {
     enum class ProjectionType
     {
@@ -68,10 +67,10 @@ struct SAMUI_API CameraComponent
 
 namespace CameraUtils
 {
-glm::mat4 SAMUI_API get_orthographic_projection(float aspect_ratio, float size,
+glm::mat4 get_orthographic_projection(float aspect_ratio, float size,
                                                 float z_near, float z_far);
 
-glm::mat4 SAMUI_API get_perspective_projection(float aspect_ratio, float fov,
+glm::mat4 get_perspective_projection(float aspect_ratio, float fov,
                                                float z_near, float z_far);
 }  // namespace CameraUtils
 

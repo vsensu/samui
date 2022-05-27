@@ -26,5 +26,18 @@
             "command": "xmake build -y  -P . -w graphics",
             "dependsOn": ["config build type(x64)"]
         },
+
+        {
+            "label": "build samui editor(x86)",
+            "type": "shell",
+            "command": "xmake build -y  -P . -w samui-editor",
+            "dependsOn": ["config build type(x86)"]
+        },
+        {
+            "label": "build samui editor(x64)",
+            "type": "shell",
+            "command": "xmake build -y  -P . -w samui-editor",
+            "dependsOn": ["config build type(x64)"]
+        },
     ]
 }
