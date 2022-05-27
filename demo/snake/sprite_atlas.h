@@ -5,7 +5,8 @@
 #include <filesystem>
 #include <memory>
 
-#include <samui.h>
+#include <engine/rendering/subtexture2d.h>
+#include <engine/graphics/renderer/texture_create.h>
 // clang-format on
 
 template <typename IDType>
@@ -18,14 +19,14 @@ class SpriteAtlas
     }
 
     explicit SpriteAtlas(const std::filesystem::path& path)
-        : sprite_sheet_(samui::Texture2D::Create(path))
+        : sprite_sheet_(samui::texture2d::create(path))
     {
     }
 
     void add_sprite(IDType id, const glm::vec2& uv, const glm::vec2& cell_size,
                     const glm::vec2& sprite_size = {1, 1})
     {
-        sprites_[id] = samui::SubTexture2D::CreateFromCoords(
+        sprites_[id] = samui::SubTexture2D::create_from_coords(
             sprite_sheet_, uv, cell_size, sprite_size);
     }
 

@@ -2,13 +2,11 @@ target("graphics")
     set_kind("binary")
     set_languages("c99", "cxx20")
     add_includedirs("$(projectdir)/src")
-    -- add_includedirs("$(projectdir)/src/engine")
     if is_plat("windows") then
         add_defines("SAMUI_PLATFORM_WINDOWS")
     end
     add_files("*.cpp")
     add_packages("spdlog", "glm", "glfw")
-    -- add_deps("samui-log", "samui-assert", "samui-profiler", "samui-core", "samui-console")
     add_deps("imgui", "samui-log", "samui-profiler", "samui-core", "samui-rendering", "samui-graphics")
     after_build(function (target)
         -- local target_dir = target:targetdir()

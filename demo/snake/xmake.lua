@@ -1,16 +1,13 @@
 target("snake")
     set_kind("binary")
     set_languages("c99", "cxx20")
-    add_defines("ENTT_API_IMPORT")
     add_includedirs("$(projectdir)/src")
-    add_includedirs("$(projectdir)/src/engine")
-    add_includedirs("$(projectdir)/src/deps/entt-3.8.1/single_include")
-    add_includedirs("$(projectdir)/src/deps/glad/include")
-    add_includedirs("$(projectdir)/src/deps/imgui-docking")
+    if is_plat("windows") then
+        add_defines("SAMUI_PLATFORM_WINDOWS")
+    end
     add_files("*.cpp")
-    add_packages("spdlog", "glfw", "glm", "asio")
-    add_deps("engine", "glad", "imgui")
-    -- add_links("user32", "gdi32", "shell32")
+    add_packages("spdlog", "glm", "glfw")
+    add_deps("imgui", "samui-log", "samui-profiler", "samui-core", "samui-rendering", "samui-graphics")
     after_build(function (target)
         local target_dir = target:targetdir()
         if not os.isdir(target_dir) then

@@ -14,7 +14,8 @@ if is_plat("windows") then
 end
 
 -- include project sources
-includes("deps", "src", "test", "demo", "templates")
+includes("deps", "src", "test", "demo")
+-- includes("templates")
 
 task("ie")
     on_run("scripts/tasks/init_env")

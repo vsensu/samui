@@ -32,7 +32,7 @@ add_requires("yaml-cpp 0.6.3")
 
 target("samui-editor")
     set_kind("binary")
-    set_languages("c99", "c++20")
+    set_languages("c99", "cxx20")
     -- add_defines("ENTT_API_IMPORT")
     if is_plat("windows") then
         add_defines("SAMUI_PLATFORM_WINDOWS")

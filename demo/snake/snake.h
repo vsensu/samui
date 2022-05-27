@@ -7,9 +7,19 @@
 #include <random>
 #include <memory>
 
-#include <samui.h>
-
+#include <engine/log/log.h>
+#include <engine/profiler/instrumentor.h>
+#include <engine/core/minimal.h>
+#include <engine/core/events/key_event.h>
+#include <engine/graphics/graphics_application.h>
+#include <engine/graphics/renderer/renderer2d.h>
+#include <engine/graphics/renderer/render_command.h>
+#include <imgui/imgui.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+#include "sprite_atlas.h"
 // clang-format on
 
 constexpr float tile_size = 32.f;
@@ -106,16 +116,16 @@ class Game2DLayer : public samui::Layer
   public:
     Game2DLayer() : Layer("Example") {}
 
-    virtual void OnAttach() override
+    virtual void on_attach() override
     {
         SAMUI_PROFILE_FUNCTION();
         // samui::RenderCommand::SetDepthTestEnable(false);
-        samui::RenderCommand::SetCullFaceEnable(true);
-        samui::RenderCommand::SetBlendEnable(true);
-        samui::RenderCommand::SetBlendFunc(
+        samui::RenderCommand::set_cull_face_enable(true);
+        samui::RenderCommand::set_blend_enable(true);
+        samui::RenderCommand::set_blend_func(
             samui::BlendFactor::Src_Alpha,
             samui::BlendFactor::One_Minus_Src_Alpha);
-        samui::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
+        samui::RenderCommand::set_clear_color({0.1f, 0.1f, 0.1f, 1});
 
         sprite_atlas_ = std::make_shared<SpriteAtlas<SnakeSpriteType>>(
             "assets/textures/snake.png");
@@ -150,9 +160,9 @@ class Game2DLayer : public samui::Layer
         gen_food();
     }
 
-    virtual void OnDetach() override { SAMUI_PROFILE_FUNCTION(); }
+    virtual void on_detach() override { SAMUI_PROFILE_FUNCTION(); }
 
-    virtual void OnUpdate(const samui::Timestep& deltaTime)
+    virtual void on_update(const samui::Timestep& deltaTime)
     {
         SAMUI_PROFILE_FUNCTION();
 
@@ -246,21 +256,24 @@ class Game2DLayer : public samui::Layer
             }
         }
 
-        samui::Renderer2D::ResetStats();
+        samui::Renderer2D::reset_stats();
         {
             SAMUI_PROFILE_SCOPE("Render Prepare");
-            samui::RenderCommand::Clear();
+            samui::RenderCommand::clear();
         }
 
         {
             SAMUI_PROFILE_SCOPE("Render Draw(CPU)");
-            samui::RenderCommand::Clear();
-            const auto& window = samui::Application::instance().get_window();
-            auto        window_width = static_cast<float>(window.GetWidth());
-            auto        window_height = static_cast<float>(window.GetHeight());
+            samui::RenderCommand::clear();
+            std::shared_ptr<samui::GraphicsApplication> app =
+                std::dynamic_pointer_cast<samui::GraphicsApplication>(
+                    samui::Engine::instance().app());
+            const auto& window = app->get_window();
+            auto        window_width = static_cast<float>(window.get_width());
+            auto        window_height = static_cast<float>(window.get_height());
             glm::mat4   projection =
                 glm::ortho(0.f, window_width, 0.f, window_height, -1.f, 1.f);
-            samui::Renderer2D::BeginScene(projection);
+            samui::Renderer2D::begin_scene(projection);
             for (int row = 0; row < rows; ++row)
             {
                 for (int col = 0; col < cols; ++col)
@@ -273,7 +286,7 @@ class Game2DLayer : public samui::Layer
                     //     sprite_atlas_->get_sprite(SnakeSpriteType::GRASS));
 
                     // draw battle ground
-                    samui::Renderer2D::DrawQuad(
+                    samui::Renderer2D::draw_quad(
                         {col * tile_size + tile_size,
                          window_height - row * tile_size - tile_size, 0.f},
                         {tile_size, tile_size},
@@ -282,7 +295,7 @@ class Game2DLayer : public samui::Layer
                     // draw food
                     if (food_level[row][col] != SnakeSpriteType::NONE)
                     {
-                        samui::Renderer2D::DrawQuad(
+                        samui::Renderer2D::draw_quad(
                             {col * tile_size + tile_size,
                              window_height - row * tile_size - tile_size, 0.f},
                             {tile_size, tile_size},
@@ -294,7 +307,7 @@ class Game2DLayer : public samui::Layer
             for (auto& snake : snake_)
             {
                 auto sprite = i == 0 ? snake_head_sprite_ : snake_body_sprite_;
-                samui::Renderer2D::DrawQuad(
+                samui::Renderer2D::draw_quad(
                     {snake->col * tile_size + tile_size,
                      window_height - snake->row * tile_size - tile_size, 0.f},
                     {tile_size, tile_size}, sprite);
@@ -303,25 +316,25 @@ class Game2DLayer : public samui::Layer
 
             if (game_state_ == GameState::Win)
             {
-                samui::Renderer2D::DrawQuad(
+                samui::Renderer2D::draw_quad(
                     {tile_size, window_height - tile_size, 0.f},
                     {tile_size * cols, tile_size * rows},
                     sprite_atlas_->get_sprite(SnakeSpriteType::WIN));
             }
             else if (game_state_ == GameState::Lose)
             {
-                samui::Renderer2D::DrawQuad(
+                samui::Renderer2D::draw_quad(
                     {tile_size, window_height - tile_size, 0.f},
                     {tile_size * cols, tile_size * rows},
                     sprite_atlas_->get_sprite(SnakeSpriteType::LOSE));
             }
-            samui::Renderer2D::EndScene();
+            samui::Renderer2D::end_scene();
         }
     }
 
     virtual void OnImGuiRender()
     {
-        auto stats = samui::Renderer2D::GetStats();
+        auto stats = samui::Renderer2D::get_stats();
         ImGui::Begin("Stats");
         ImGui::Text("Renderer2D Stats:");
         ImGui::Text("Draw Calls: %d", stats.draw_calls);
@@ -331,15 +344,15 @@ class Game2DLayer : public samui::Layer
 
     virtual void OnEvent(samui::Event& event)
     {
-        if (event.GetEventType() == samui::EventType::KeyReleased)
+        if (event.get_event_type() == samui::EventType::KeyReleased)
         {
             auto keyReleasedEvent = static_cast<samui::KeyPressedEvent&>(event);
-            auto keyCode = keyReleasedEvent.GetKeyCode();
+            auto keyCode = keyReleasedEvent.get_key_code();
             if (keyCode == SAMUI_KEY_F2)
             {
                 static bool wireframe = false;
                 wireframe = !wireframe;
-                samui::RenderCommand::SetPolygonMode(
+                samui::RenderCommand::set_polygon_mode(
                     wireframe ? samui::PolygonMode::Wireframe
                               : samui::PolygonMode::Fill);
             }
@@ -462,8 +475,8 @@ class Game2DLayer : public samui::Layer
 
   private:
     std::shared_ptr<SpriteAtlas<SnakeSpriteType>> sprite_atlas_;
-    std::shared_ptr<samui::SubTexture2D>               snake_head_sprite_;
-    std::shared_ptr<samui::SubTexture2D>               snake_body_sprite_;
+    std::shared_ptr<samui::SubTexture2D>          snake_head_sprite_;
+    std::shared_ptr<samui::SubTexture2D>          snake_body_sprite_;
     std::list<std::shared_ptr<SnakeNode>>         snake_;
     Direction          move_direction_{Direction::RIGHT};
     Direction          next_move_direction_{move_direction_};
