@@ -30,3 +30,11 @@ target("samui-graphics")
     end
     add_packages("spdlog", "glm", "glfw")
     add_deps("glad", "stb_image", "imgui", "samui-log", "samui-profiler", "samui-core", "samui-rendering")
+    after_build(function (target)
+        local target_dir = path.join(target:targetdir(), "engine")
+        if not os.isdir(target_dir) then
+            os.mkdir(target_dir)
+        end
+        print("[build] copy engine assets ...")
+        os.cp("$(projectdir)/src/engine/assets/", target_dir)
+    end)
