@@ -4,6 +4,7 @@
 #include <engine/entrypoint.h>
 #include <engine/graphics/renderer/renderer2d.h>
 #include <engine/graphics/renderer/render_command.h>
+#include <engine/graphics/renderer/texture_create.h>
 #include <imgui/imgui.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -12,6 +13,10 @@
 class GameLayer : public samui::Layer
 {
   public:
+    GameLayer() 
+    {
+      texture_ = samui::texture2d::create("assets/textures/Checkerboard.png");
+    }
     virtual void on_attach() override { SAMUI_INFO("game layer attach"); }
 
     virtual void on_update(const samui::Timestep& deltaTime) override
@@ -23,6 +28,7 @@ class GameLayer : public samui::Layer
         samui::Renderer2D::begin_scene(projection);
         samui::Renderer2D::draw_quad({32.f, 32.f}, {32.f, 32.f},
                                      {1.0f, 0.0f, 0.0f, 1.0f});
+        samui::Renderer2D::draw_quad({200.f, 200.f}, {128.f, 128.f}, texture_);
         samui::Renderer2D::end_scene();
     }
 
@@ -37,6 +43,9 @@ class GameLayer : public samui::Layer
 
         ImGui::ShowDemoWindow();
     }
+
+  private:
+    std::shared_ptr<samui::Texture2D> texture_;
 };
 
 class Demo : public samui::GraphicsApplication

@@ -120,6 +120,7 @@ class Game2DLayer : public samui::Layer
     {
         SAMUI_PROFILE_FUNCTION();
         // samui::RenderCommand::SetDepthTestEnable(false);
+        samui::RenderCommand::set_flip_vertically_on_load(true);
         samui::RenderCommand::set_cull_face_enable(true);
         samui::RenderCommand::set_blend_enable(true);
         samui::RenderCommand::set_blend_func(
@@ -332,7 +333,7 @@ class Game2DLayer : public samui::Layer
         }
     }
 
-    virtual void OnImGuiRender()
+    virtual void on_imgui_render() override
     {
         auto stats = samui::Renderer2D::get_stats();
         ImGui::Begin("Stats");
@@ -342,7 +343,7 @@ class Game2DLayer : public samui::Layer
         ImGui::End();
     }
 
-    virtual void OnEvent(samui::Event& event)
+    virtual void on_event(samui::Event& event) override
     {
         if (event.get_event_type() == samui::EventType::KeyReleased)
         {
@@ -357,7 +358,7 @@ class Game2DLayer : public samui::Layer
                               : samui::PolygonMode::Fill);
             }
 
-            else if (keyCode == SAMUI_KEY_UP)
+            else if (keyCode == SAMUI_KEY_UP || keyCode == SAMUI_KEY_W)
             {
                 if (move_direction_ == Direction::UP)
                 {
@@ -370,7 +371,7 @@ class Game2DLayer : public samui::Layer
                     force_move();
                 }
             }
-            else if (keyCode == SAMUI_KEY_DOWN)
+            else if (keyCode == SAMUI_KEY_DOWN || keyCode == SAMUI_KEY_S)
             {
                 if (move_direction_ == Direction::DOWN)
                 {
@@ -383,7 +384,7 @@ class Game2DLayer : public samui::Layer
                     force_move();
                 }
             }
-            else if (keyCode == SAMUI_KEY_LEFT)
+            else if (keyCode == SAMUI_KEY_LEFT || keyCode == SAMUI_KEY_A)
             {
                 if (move_direction_ == Direction::LEFT)
                 {
@@ -396,7 +397,7 @@ class Game2DLayer : public samui::Layer
                     force_move();
                 }
             }
-            else if (keyCode == SAMUI_KEY_RIGHT)
+            else if (keyCode == SAMUI_KEY_RIGHT || keyCode == SAMUI_KEY_D)
             {
                 if (move_direction_ == Direction::RIGHT)
                 {
