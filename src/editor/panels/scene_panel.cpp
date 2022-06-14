@@ -46,6 +46,17 @@ void ScenePanel::OnUpdate(const Timestep& deltaTime)
 void ScenePanel::RenderScene()
 {
     SAMUI_PROFILE_FUNCTION();
+    // Resize
+    if (const auto& spec = frame_buffer_->get_specification();
+        viewport_size_.x > 0.0f &&
+        viewport_size_.y > 0.0f &&  // zero sized framebuffer is invalid
+        (spec.width != viewport_size_.x || spec.height != viewport_size_.y))
+    {
+        frame_buffer_->resize((uint32_t)viewport_size_.x,
+                              (uint32_t)viewport_size_.y);
+        editor_camera_.SetViewportSize(viewport_size_.x, viewport_size_.y);
+    }
+
     frame_buffer_->bind();
     RenderCommand::clear();
     frame_buffer_->clear_attachment(1, static_cast<uint32_t>(entt::null));
@@ -122,31 +133,32 @@ void ScenePanel::OnImGuiRender()
             Engine::instance().app());
     app->get_imgui_layer()->block_events(!viewport_focused_ &&
                                          !viewport_hovered_);
-    const auto&   viewport_size = ImGui::GetContentRegionAvail();
-    static ImVec2 last_viewport_size_;
-    if (viewport_size.x > 0 && viewport_size.y > 0)
-    {
-        if (viewport_size.x != last_viewport_size_.x ||
-            viewport_size.y != last_viewport_size_.y)
-        {
-            frame_buffer_->resize(viewport_size.x, viewport_size.y);
-            //   camera_controller_.OnResize(viewport_size.x, viewport_size.y);
-            //   if (main_camera_ != entt::null) {
-            //     auto& camera_comp =
-            //         active_scene_->GetComponent<CameraComponent>(main_camera_);
-            //     if (!camera_comp.fixed_aspect_ratio) {
-            //       camera_comp.aspect_ratio = viewport_size.x /
-            //       viewport_size.y;
-            //     }
-            //   }
-            // main_camera_.OnResize();
-            editor_camera_.SetViewportSize(viewport_size.x, viewport_size.y);
-        }
-    }
-    last_viewport_size_ = viewport_size;
+    viewport_size_ = ImGui::GetContentRegionAvail();
+    // static ImVec2 last_viewport_size_;
+    // if (viewport_size.x > 0 && viewport_size.y > 0)
+    // {
+    //     if (viewport_size.x != last_viewport_size_.x ||
+    //         viewport_size.y != last_viewport_size_.y)
+    //     {
+    //         frame_buffer_->resize(viewport_size.x, viewport_size.y);
+    //         //   camera_controller_.OnResize(viewport_size.x,
+    //         viewport_size.y);
+    //         //   if (main_camera_ != entt::null) {
+    //         //     auto& camera_comp =
+    //         // active_scene_->GetComponent<CameraComponent>(main_camera_);
+    //         //     if (!camera_comp.fixed_aspect_ratio) {
+    //         //       camera_comp.aspect_ratio = viewport_size.x /
+    //         //       viewport_size.y;
+    //         //     }
+    //         //   }
+    //         // main_camera_.OnResize();
+    //         editor_camera_.SetViewportSize(viewport_size.x, viewport_size.y);
+    //     }
+    // }
+    // last_viewport_size_ = viewport_size;
     uint32_t texture_id = frame_buffer_->get_color_attachment_render_id();
     // flip y
-    ImGui::Image((ImTextureID)texture_id, viewport_size, {0.f, 1.f},
+    ImGui::Image((ImTextureID)texture_id, viewport_size_, {0.f, 1.f},
                  {1.f, 0.f});
 
     if (ImGui::BeginDragDropTarget())
