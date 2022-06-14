@@ -39,5 +39,18 @@
             "command": "xmake build -y  -P . -w samui-editor",
             "dependsOn": ["config build type(x64)"]
         },
+
+        {
+            "label": "build snake(x86)",
+            "type": "shell",
+            "command": "xmake build -y  -P . -w snake",
+            "dependsOn": ["config build type(x86)"]
+        },
+        {
+            "label": "build snake(x64)",
+            "type": "shell",
+            "command": "xmake build -y  -P . -w snake",
+            "dependsOn": ["config build type(x64)"]
+        }
     ]
 }

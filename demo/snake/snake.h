@@ -24,7 +24,7 @@
 
 constexpr float tile_size = 32.f;
 constexpr int   rows = 6;
-constexpr int   cols = 6;
+constexpr int   cols = 10;
 
 enum class GameState
 {
@@ -66,48 +66,15 @@ enum class SnakeSpriteType
     LOSE,
 };
 
-std::array<std::array<SnakeSpriteType, cols>, rows> level = {
-    SnakeSpriteType::GRASS_TOP_LEFT_CORNOR,
-    SnakeSpriteType::GRASS_TOP_EDGE,
-    SnakeSpriteType::GRASS_TOP_EDGE,
-    SnakeSpriteType::GRASS_TOP_EDGE,
-    SnakeSpriteType::GRASS_TOP_EDGE,
-    SnakeSpriteType::GRASS_TOP_RIGHT_CORNOR,
+const char* level_str =
+    "          "
+    "          "
+    "          "
+    "          "
+    "          "
+    "          ";
 
-    SnakeSpriteType::GRASS_LEFT_EDGE,
-    SnakeSpriteType::GRASS,
-    SnakeSpriteType::GRASS,
-    SnakeSpriteType::GRASS,
-    SnakeSpriteType::GRASS,
-    SnakeSpriteType::GRASS_RIGHT_EDGE,
-
-    SnakeSpriteType::GRASS_LEFT_EDGE,
-    SnakeSpriteType::GRASS,
-    SnakeSpriteType::GRASS,
-    SnakeSpriteType::GRASS,
-    SnakeSpriteType::GRASS,
-    SnakeSpriteType::GRASS_RIGHT_EDGE,
-
-    SnakeSpriteType::GRASS_LEFT_EDGE,
-    SnakeSpriteType::GRASS,
-    SnakeSpriteType::GRASS,
-    SnakeSpriteType::GRASS,
-    SnakeSpriteType::GRASS,
-    SnakeSpriteType::GRASS_RIGHT_EDGE,
-
-    SnakeSpriteType::GRASS_LEFT_EDGE,
-    SnakeSpriteType::GRASS,
-    SnakeSpriteType::GRASS,
-    SnakeSpriteType::GRASS,
-    SnakeSpriteType::GRASS,
-    SnakeSpriteType::GRASS_RIGHT_EDGE,
-
-    SnakeSpriteType::GRASS_BOTTOM_LEFT_CORNOR,
-    SnakeSpriteType::GRASS_BOTTOM_EDGE,
-    SnakeSpriteType::GRASS_BOTTOM_EDGE,
-    SnakeSpriteType::GRASS_BOTTOM_EDGE,
-    SnakeSpriteType::GRASS_BOTTOM_EDGE,
-    SnakeSpriteType::GRASS_BOTTOM_RIGHT_CORNOR};
+std::array<std::array<SnakeSpriteType, cols>, rows> level;
 
 decltype(level) food_level;
 
@@ -156,6 +123,21 @@ class Game2DLayer : public samui::Layer
 
         snake_head_sprite_ = sprite_atlas_->get_sprite(SnakeSpriteType::HEAD);
         snake_body_sprite_ = sprite_atlas_->get_sprite(SnakeSpriteType::BODY);
+
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                if (level_str[i * cols + j] == ' ')
+                {
+                    level[i][j] = SnakeSpriteType::GRASS;
+                }
+                else
+                {
+                    level[i][j] = SnakeSpriteType::NONE;
+                }
+            }
+        }
 
         snake_.push_back(std::make_shared<SnakeNode>(0, 5));
         gen_food();
@@ -212,9 +194,6 @@ class Game2DLayer : public samui::Layer
                     new_row = rows - 1;
                 }
 
-                auto tail = snake_.back();
-                snake_.pop_back();
-
                 // death check
                 bool dead = false;
                 for (const auto& snake : snake_)
@@ -234,6 +213,8 @@ class Game2DLayer : public samui::Layer
                 // grow check
                 if (food_level[new_row][new_col] == SnakeSpriteType::NONE)
                 {
+                    // not grow
+                    snake_.pop_back();
                     snake_.push_front(
                         std::make_shared<SnakeNode>(new_row, new_col));
                 }
@@ -245,8 +226,6 @@ class Game2DLayer : public samui::Layer
                     // grow up
                     snake_.push_front(
                         std::make_shared<SnakeNode>(new_row, new_col));
-                    // add tail
-                    snake_.push_back(tail);
 
                     // gen new food
                     if (!gen_food())

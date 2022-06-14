@@ -14,7 +14,7 @@
             "cwd": "${workspaceFolder}/build/windows/x86/debug/",
             "environment": [],
             "console": "externalTerminal",
-            "preLaunchTask": "build graphics demo(x86)",
+            "preLaunchTask": "build graphics demo(x86)"
         },
         {
             "name": "graphics demo(x64)",
@@ -26,7 +26,7 @@
             "cwd": "${workspaceFolder}/build/windows/x64/debug/",
             "environment": [],
             "console": "externalTerminal",
-            "preLaunchTask": "build graphics demo(x64)",
+            "preLaunchTask": "build graphics demo(x64)"
         },
 
         {
@@ -39,7 +39,7 @@
             "cwd": "${workspaceFolder}/build/windows/x86/debug/",
             "environment": [],
             "console": "externalTerminal",
-            "preLaunchTask": "build samui editor(x86)",
+            "preLaunchTask": "build samui editor(x86)"
         },
         {
             "name": "samui editor(x64)",
@@ -51,7 +51,32 @@
             "cwd": "${workspaceFolder}/build/windows/x64/debug/",
             "environment": [],
             "console": "externalTerminal",
-            "preLaunchTask": "build samui editor(x64)",
+            "preLaunchTask": "build samui editor(x64)"
+        },
+
+        {
+            "name": "snake(x86)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/windows/x86/debug/snake.exe",
+            "args": [],
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}/build/windows/x86/debug/",
+            "environment": [],
+            "console": "externalTerminal",
+            "preLaunchTask": "build snake(x86)"
+        },
+        {
+            "name": "snake(x64)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/windows/x64/debug/snake.exe",
+            "args": [],
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}/build/windows/x64/debug/",
+            "environment": [],
+            "console": "externalTerminal",
+            "preLaunchTask": "build snake(x64)"
         }
     ]
 }
