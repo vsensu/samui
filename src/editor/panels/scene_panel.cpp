@@ -75,14 +75,13 @@ void ScenePanel::RenderScene()
     {
         auto& transform = group.get<TransformComponent>(entity);
         auto& sprite = group.get<SpriteRendererComponent>(entity);
-        // Renderer2D::draw_sprite(transform.transform(), sprite, entity);
-        Renderer2D::draw_quad(transform.transform(), sprite.color, static_cast<entity_t>(entity));
+        Renderer2D::draw_quad(transform.transform(), sprite.texture,
+                              sprite.tiling_factor, sprite.color,
+                              static_cast<entity_t>(entity));
     }
 
     Renderer2D::end_scene();
     // }
-
-    // Renderer2D::EndScene();
 
     auto [mx, my] = ImGui::GetMousePos();
     mx -= viewport_bounds_[0].x;
@@ -121,8 +120,8 @@ void ScenePanel::OnImGuiRender()
     std::shared_ptr<GraphicsApplication> app =
         std::dynamic_pointer_cast<GraphicsApplication>(
             Engine::instance().app());
-    app->get_imgui_layer()->block_events(
-        !viewport_focused_ && !viewport_hovered_);
+    app->get_imgui_layer()->block_events(!viewport_focused_ &&
+                                         !viewport_hovered_);
     const auto&   viewport_size = ImGui::GetContentRegionAvail();
     static ImVec2 last_viewport_size_;
     if (viewport_size.x > 0 && viewport_size.y > 0)

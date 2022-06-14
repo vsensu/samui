@@ -317,7 +317,7 @@ void SceneHierarchyPanel::DrawProperties(Entity entity)
             }
             else
             {
-                ImGui::Image((ImTextureID)1, ImVec2(128, 128), {0, 1}, {1, 0});
+                ImGui::Image((ImTextureID)0, ImVec2(128, 128), {0, 1}, {1, 0});
             }
 
             if (ImGui::BeginDragDropTarget())
