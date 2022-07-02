@@ -24,6 +24,14 @@ function xmenv(name)
     return data
 end
 
+function get_version_str(version)
+    local str = version.major .. "." .. version.minor .. "." .. version.patch
+    if version.alpha ~= 0 then
+        str = str .. "-alpha"
+    end
+    return str
+end
+
 function makesdk(conf)
     -- 生成各个版本
     -- 拷贝头文件
@@ -40,7 +48,7 @@ function makesdk(conf)
                 local xmake_config_cmd = "xmake f -p " .. plat .. " -a " .. arch .. " -m " .. mode
                 os.exec(xmake_config_cmd)
 
-                local xmake_build_cmd = "xmake -r engine"
+                local xmake_build_cmd = "xmake -r samui-engine"
                 os.exec(xmake_build_cmd)
                 print(xmake_config_cmd .. " rebuild finished!")
             end
@@ -50,7 +58,7 @@ function makesdk(conf)
     io.writefile(config_path, json.encode(conf))
 
     os.execv("python ", {"scripts/tasks/make_sdk.py", config_path})
-    os.cp("$(projectdir)/scripts", "$(env SAMUI)")
+    os.cp("$(projectdir)/scripts", path.join(conf.build_dir, "scripts"))
 end
 
 function main(...)
@@ -62,7 +70,13 @@ function main(...)
     local project_dir = "$(projectdir)"
     local build_dir = ""
 
-    local target = project.target("engine")
+    local target = project.target("samui-engine")
+    local version = {
+        major = 0,
+        minor = 0,
+        patch = 0,
+        alpha = 0
+    }
     if target then
         -- 获取目标名
         print(target:name())
@@ -82,12 +96,25 @@ function main(...)
         -- 获取目标依赖
         print(target:get("deps"))
 
-        build_dir = path.join(target:targetdir())
+        version.major = target:values("samui.version.major")
+        version.minor = target:values("samui.version.minor")
+        version.patch = target:values("samui.version.patch")
+        version.alpha = target:values("samui.version.alpha")
+
+        print("major:" .. version.major)
+        print("minor:" .. version.minor)
+        print("patch:" .. version.patch)
+        print("alpha:" .. version.alpha)
+
+        -- build_dir = path.join(target:targetdir())
+        build_dir = path.join(xmenv("$(projectdir)"), "build/sdk/", get_version_str(version))
+        print("sdk build dir:" .. build_dir)
     end
 
     sdk_config = {
+        version = version,
         project_dir = xmenv("$(projectdir)"),
-        -- build_dir = build_dir,
+        build_dir = build_dir,
         sdk_dir = xmenv("$(env SAMUI)"),
         
         platforms = {

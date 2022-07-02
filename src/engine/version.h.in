@@ -1,0 +1,6 @@
+#pragma once
+
+${define SAMUI_MAJOR_VERSION}
+${define SAMUI_MINOR_VERSION}
+${define SAMUI_PATCH_VERSION}
+${define ALPHA_BUILD}

@@ -14,12 +14,13 @@ with open(config_path, 'r') as f:
     sdk_config = json.load(f)
 
 project_dir = sdk_config["project_dir"] 
+build_dir = sdk_config["build_dir"]
 platforms = sdk_config["platforms"]
 archs = sdk_config["archs"]
 modes = sdk_config["modes"]
 
 source_dir = os.path.join(project_dir, "src")
-target_dir = os.path.join(project_dir, "build", "sdk")
+target_dir = build_dir
 assets_dir = os.path.join(project_dir, "src", "engine", "assets")
 templates_dir = os.path.join(project_dir, "templates")
 

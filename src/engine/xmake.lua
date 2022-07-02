@@ -42,6 +42,20 @@
 
 target("samui-engine")
     set_kind("phony")
+    local major = 0
+    local minor = 1
+    local patch = 0
+    local alpha = 1
+    set_values("samui.version.major", major)
+    set_values("samui.version.minor", minor)
+    set_values("samui.version.patch", patch)
+    set_values("samui.version.alpha", alpha)
+    set_configvar("SAMUI_MAJOR_VERSION", major)
+    set_configvar("SAMUI_MINOR_VERSION", minor)
+    set_configvar("SAMUI_PATCH_VERSION", patch)
+    set_configvar("ALPHA_BUILD", alpha)
+    set_configdir("./core/")
+    add_configfiles("version.h.in")
     add_deps("samui-log", "samui-assert", "samui-profiler", "samui-core", "samui-console", "samui-rendering", "samui-graphics")
 
 includes("log", "assert", "profiler", "core", "console", "rendering", "graphics")
