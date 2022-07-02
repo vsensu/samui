@@ -22,6 +22,7 @@ void EditorLayer::on_attach()
     SAMUI_PROFILE_FUNCTION();
     RenderCommand::set_clear_color({0.1f, 0.1f, 0.1f, 1});
     RenderCommand::set_flip_vertically_on_load(true);
+    RenderCommand::set_depth_test_enable(true);
     camera_controller_.set_zoom_level(5.f);
 
     active_scene_ = std::make_shared<Scene>();
