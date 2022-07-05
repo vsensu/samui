@@ -13,22 +13,40 @@
 class GameLayer : public samui::Layer
 {
   public:
-    GameLayer() 
+    GameLayer()
     {
-      texture_ = samui::texture2d::create("assets/textures/Checkerboard.png");
+        texture_ = samui::texture2d::create("assets/textures/Checkerboard.png");
     }
-    virtual void on_attach() override { SAMUI_INFO("game layer attach"); }
+    virtual void on_attach() override
+    {
+        SAMUI_INFO("game layer attach");
+        samui::RenderCommand::set_flip_vertically_on_load(true);
+        samui::RenderCommand::set_cull_face_enable(true);
+        samui::RenderCommand::set_blend_func(
+            samui::BlendFactor::Src_Alpha,
+            samui::BlendFactor::One_Minus_Src_Alpha);
+        samui::RenderCommand::set_clear_color({0.1f, 0.1f, 0.1f, 1});
+    }
 
     virtual void on_update(const samui::Timestep& deltaTime) override
     {
         samui::RenderCommand::clear();
         samui::Renderer2D::reset_stats();
 
-        glm::mat4 projection = glm::ortho(0.f, 1280.f, 720.f, 0.f, -1.f, 1.f);
+        glm::mat4 projection = glm::ortho(0.f, 1280.f, -720.f, 0.f, -1.f, 1.f);
         samui::Renderer2D::begin_scene(projection);
-        samui::Renderer2D::draw_quad({32.f, 32.f}, {32.f, 32.f},
+
+        samui::RenderCommand::set_depth_test_enable(true);
+        samui::RenderCommand::set_blend_enable(false);
+        samui::Renderer2D::draw_quad({32.f, -32.f}, {64.f, 64.f},
                                      {1.0f, 0.0f, 0.0f, 1.0f});
-        samui::Renderer2D::draw_quad({200.f, 200.f}, {128.f, 128.f}, texture_);
+        samui::Renderer2D::draw_quad({200.f, -200.f}, {128.f, 128.f}, texture_);
+
+        samui::RenderCommand::set_depth_test_enable(false);
+        samui::RenderCommand::set_blend_enable(true);
+        samui::Renderer2D::draw_quad({48.f, -48.f}, {64.f, 64.f},
+                                     {0.0f, 1.0f, 0.0f, 0.3f});
+
         samui::Renderer2D::end_scene();
     }
 
