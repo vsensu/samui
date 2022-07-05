@@ -45,6 +45,9 @@ class SAMUI_RENDERER_API RenderCommand
 
     static void set_blend_func(BlendFactor src_factor, BlendFactor dest_factor);
 
+    static void set_blend_func_separate(BlendFactor src_rgb, BlendFactor dst_rgb,
+                                 BlendFactor src_alpha, BlendFactor dst_alpha);
+
     static void set_cull_face(CullFaceType cull_face);
 
     static void set_front_face(FaceVertexOrder face_vertex_order);

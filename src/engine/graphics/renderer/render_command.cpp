@@ -67,6 +67,15 @@ void RenderCommand::set_blend_func(BlendFactor src_factor,
     rendering_api_->set_blend_func(src_factor, dest_factor);
 }
 
+void RenderCommand::set_blend_func_separate(BlendFactor src_rgb,
+                                            BlendFactor dst_rgb,
+                                            BlendFactor src_alpha,
+                                            BlendFactor dst_alpha)
+{
+    rendering_api_->set_blend_func_separate(src_rgb, dst_rgb, src_alpha,
+                                            dst_alpha);
+}
+
 void RenderCommand::set_cull_face(CullFaceType cull_face)
 {
     rendering_api_->set_cull_face(cull_face);

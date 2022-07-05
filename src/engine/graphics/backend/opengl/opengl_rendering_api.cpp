@@ -27,7 +27,7 @@ void OpenGLRenderingAPI::init()
 }
 
 void OpenGLRenderingAPI::set_viewport(uint32_t x, uint32_t y, uint32_t width,
-                                     uint32_t height)
+                                      uint32_t height)
 {
     glViewport(x, y, width, height);
 }
@@ -125,19 +125,53 @@ GLenum blend_factor_2_gl(BlendFactor factor)
 {
     switch (factor)
     {
+        case BlendFactor::Zero:
+            return GL_ZERO;
+        case BlendFactor::One:
+            return GL_ONE;
+        case BlendFactor::Src_Color:
+            return GL_SRC_COLOR;
+        case BlendFactor::One_Minus_Src_Color:
+            return GL_ONE_MINUS_SRC_COLOR;
+        case BlendFactor::Dst_Color:
+            return GL_DST_COLOR;
+        case BlendFactor::One_Minus_Dst_Color:
+            return GL_ONE_MINUS_DST_COLOR;
         case BlendFactor::Src_Alpha:
             return GL_SRC_ALPHA;
         case BlendFactor::One_Minus_Src_Alpha:
             return GL_ONE_MINUS_SRC_ALPHA;
+        case BlendFactor::Dst_Alpha:
+            return GL_DST_ALPHA;
+        case BlendFactor::One_Minus_Dst_Alpha:
+            return GL_ONE_MINUS_DST_ALPHA;
+        case BlendFactor::Constant_Color:
+            return GL_CONSTANT_COLOR;
+        case BlendFactor::One_Minus_Constant_Color:
+            return GL_ONE_MINUS_CONSTANT_COLOR;
+        case BlendFactor::Constant_Alpha:
+            return GL_CONSTANT_ALPHA;
+        case BlendFactor::One_Minus_Constant_Alpha:
+            return GL_ONE_MINUS_CONSTANT_ALPHA;
     }
 
     return GL_ZERO;
 }
 
 void OpenGLRenderingAPI::set_blend_func(BlendFactor src_factor,
-                                       BlendFactor dest_factor)
+                                        BlendFactor dest_factor)
 {
     glBlendFunc(blend_factor_2_gl(src_factor), blend_factor_2_gl(dest_factor));
+}
+
+void OpenGLRenderingAPI::set_blend_func_separate(BlendFactor src_rgb,
+                                                 BlendFactor dst_rgb,
+                                                 BlendFactor src_alpha,
+                                                 BlendFactor dst_alpha)
+{
+    glBlendFuncSeparate(blend_factor_2_gl(src_rgb), blend_factor_2_gl(dst_rgb),
+                        blend_factor_2_gl(src_alpha),
+                        blend_factor_2_gl(dst_alpha));
 }
 
 void OpenGLRenderingAPI::set_cull_face(CullFaceType cull_face)

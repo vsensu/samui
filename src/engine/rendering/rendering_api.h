@@ -32,8 +32,20 @@ enum class SAMUI_RENDERING_API PolygonMode
 
 enum class SAMUI_RENDERING_API BlendFactor
 {
+    Zero,
+    One,
+    Src_Color,
+    One_Minus_Src_Color,
+    Dst_Color,
+    One_Minus_Dst_Color,
     Src_Alpha,
     One_Minus_Src_Alpha,
+    Dst_Alpha,
+    One_Minus_Dst_Alpha,
+    Constant_Color,
+    One_Minus_Constant_Color,
+    Constant_Alpha,
+    One_Minus_Constant_Alpha
 };
 
 enum class SAMUI_RENDERING_API DepthFunc
@@ -66,6 +78,10 @@ class SAMUI_RENDERING_API RenderingAPI
     virtual void set_blend_enable(bool enable) = 0;
     virtual void set_blend_func(BlendFactor src_factor,
                                 BlendFactor dest_factor) = 0;
+    virtual void set_blend_func_separate(BlendFactor src_rgb,
+                                         BlendFactor dst_rgb,
+                                         BlendFactor src_alpha,
+                                         BlendFactor dst_alpha) = 0;
     virtual void set_cull_face(CullFaceType cull_face) = 0;
     virtual void set_front_face(FaceVertexOrder face_vertex_order) = 0;
     virtual void set_polygon_mode(PolygonMode polygon_mode) = 0;

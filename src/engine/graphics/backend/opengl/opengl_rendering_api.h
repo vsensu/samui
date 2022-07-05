@@ -28,6 +28,10 @@ class SAMUI_OPENGL_API OpenGLRenderingAPI : public RenderingAPI
     virtual void set_blend_enable(bool enable) override;
     virtual void set_blend_func(BlendFactor src_factor,
                                 BlendFactor dest_factor) override;
+    virtual void set_blend_func_separate(BlendFactor src_rgb,
+                                         BlendFactor dst_rgb,
+                                         BlendFactor src_alpha,
+                                         BlendFactor dst_alpha) override;
     virtual void set_cull_face(CullFaceType cull_face) override;
     virtual void set_front_face(FaceVertexOrder face_vertex_order) override;
     virtual void set_polygon_mode(PolygonMode polygon_mode) override;
