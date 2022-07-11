@@ -15,7 +15,7 @@ end
 
 -- include project sources
 includes("deps", "src", "test", "demo")
--- includes("templates")
+includes("templates")
 
 task("ie")
     on_run("scripts/tasks/init_env")
