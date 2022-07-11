@@ -15,18 +15,15 @@ class GameLayer : public samui::Layer
   public:
     GameLayer()
     {
-        texture_ = samui::texture2d::create("assets/textures/Checkerboard.png");
-    }
-    virtual void on_attach() override
-    {
-        SAMUI_INFO("game layer attach");
         samui::RenderCommand::set_flip_vertically_on_load(true);
         samui::RenderCommand::set_cull_face_enable(true);
         samui::RenderCommand::set_blend_func(
             samui::BlendFactor::Src_Alpha,
             samui::BlendFactor::One_Minus_Src_Alpha);
         samui::RenderCommand::set_clear_color({0.1f, 0.1f, 0.1f, 1});
+        texture_ = samui::texture2d::create("assets/textures/Checkerboard.png");
     }
+    virtual void on_attach() override { SAMUI_INFO("game layer attach"); }
 
     virtual void on_update(const samui::Timestep& deltaTime) override
     {
