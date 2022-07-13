@@ -9,6 +9,12 @@ set_languages("c99", "cxx20")
 
 add_rules("mode.debug", "mode.release", "mode.minsizerel")
 
+-- disable ccache
+set_policy("build.ccache", false)
+-- or xmake f --ccache=n
+-- or xmake f --policies=build.ccache:n
+-- ref: https://xmake.io/#/zh-cn/manual/project_target?id=buildccache
+
 if is_plat("windows") then
     add_defines("SAMUI_PLATFORM_WINDOWS")
 end
