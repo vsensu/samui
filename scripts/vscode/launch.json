@@ -13,7 +13,7 @@
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}/build/windows/x86/debug/",
             "environment": [],
-            "console": "externalTerminal",
+            "console": "integratedTerminal",
             "preLaunchTask": "build graphics demo(x86)"
         },
         {
@@ -25,7 +25,7 @@
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}/build/windows/x64/debug/",
             "environment": [],
-            "console": "externalTerminal",
+            "console": "integratedTerminal",
             "preLaunchTask": "build graphics demo(x64)"
         },
 
@@ -38,7 +38,7 @@
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}/build/windows/x86/debug/",
             "environment": [],
-            "console": "externalTerminal",
+            "console": "integratedTerminal",
             "preLaunchTask": "build samui editor(x86)"
         },
         {
@@ -50,7 +50,7 @@
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}/build/windows/x64/debug/",
             "environment": [],
-            "console": "externalTerminal",
+            "console": "integratedTerminal",
             "preLaunchTask": "build samui editor(x64)"
         },
 
@@ -63,7 +63,7 @@
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}/build/windows/x86/debug/",
             "environment": [],
-            "console": "externalTerminal",
+            "console": "integratedTerminal",
             "preLaunchTask": "build snake(x86)"
         },
         {
@@ -75,7 +75,7 @@
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}/build/windows/x64/debug/",
             "environment": [],
-            "console": "externalTerminal",
+            "console": "integratedTerminal",
             "preLaunchTask": "build snake(x64)"
         }
     ]
