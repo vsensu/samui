@@ -3,6 +3,8 @@
 // clang-format off
 #include <memory>
 #include <filesystem>
+#include <list>
+#include <unordered_map>
 
 // #include <samui.h>
 #include <engine/core/minimal.h>
@@ -12,6 +14,7 @@
 #include <panels/scene_hierarchy_panel.h>
 #include <panels/content_browser.h>
 #include <panels/scene_panel.h>
+#include "panels/sprite_atlas_panel.h"
 // #include "editor_camera.h"
 // clang-format on
 
@@ -19,7 +22,7 @@ namespace samui
 {
 class EditorLayer : public Layer
 {
-  public:
+public:
     EditorLayer();
 
     virtual void on_attach() override;
@@ -35,13 +38,17 @@ class EditorLayer : public Layer
 
     Entity GetSelectedEntity();
 
-  private:
+    void register_panel();
+
+private:
     void OnImGuiFullScreenDocking();
 
     bool OnKeyPressed(KeyPressedEvent& event);
     bool OnMouseButtonPressed(MouseButtonPressedEvent& event);
 
-  private:
+    void open_panel();
+
+private:
     OrthographicCameraController camera_controller_;
 
     std::shared_ptr<Scene> active_scene_;
@@ -54,6 +61,14 @@ class EditorLayer : public Layer
     std::shared_ptr<SceneHierarchyPanel> scene_hierarchy_panel_;
     std::shared_ptr<ContentBrowser>      content_browser_;
     std::shared_ptr<ScenePanel>          scene_panel_;
+
+    struct PanelData
+    {
+        bool visible;
+    };
+
+    std::unordered_map<std::string, std::shared_ptr<Panel>> panels_;
+    std::unordered_map<std::string, PanelData> panels_data_;
 };
 
 }  // namespace samui

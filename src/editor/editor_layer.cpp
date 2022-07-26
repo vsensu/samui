@@ -31,6 +31,8 @@ void EditorLayer::on_attach()
         std::make_shared<SceneHierarchyPanel>(active_scene_);
     content_browser_ = std::make_shared<ContentBrowser>();
     scene_panel_ = std::make_shared<ScenePanel>(active_scene_, this);
+
+    panels_[SpriteAtlasPanel::key()] = std::make_shared<SpriteAtlasPanel>();
 }
 
 void EditorLayer::on_detach() { SAMUI_PROFILE_FUNCTION(); }
@@ -53,6 +55,16 @@ void EditorLayer::on_imgui_render()
     OnImGuiFullScreenDocking();
 
     scene_panel_->OnImGuiRender();
+    for (auto& panel : panels_)
+    {
+        bool &visible = panels_data_[panel.first].visible;
+        if (visible)
+        {
+            ImGui::Begin(panel.second->name().c_str(), &visible);
+            panel.second->on_imgui_render();
+            ImGui::End();
+        }
+    }
 
     // settings pannel begine
     auto stats = Renderer2D::get_stats();
@@ -187,6 +199,15 @@ void EditorLayer::OnImGuiFullScreenDocking()
             if (ImGui::MenuItem("Exit"))
             {
                 Engine::instance().app()->close();
+            }
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("Panel"))
+        {
+            if (ImGui::MenuItem("Sprite Atlas Panel"))
+            {
+                panels_data_[SpriteAtlasPanel::key()].visible = true;
             }
             ImGui::EndMenu();
         }
