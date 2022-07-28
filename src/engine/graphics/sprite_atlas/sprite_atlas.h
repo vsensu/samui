@@ -4,20 +4,22 @@
 #include <unordered_map>
 #include <filesystem>
 #include <memory>
+#include <string_view>
 
 #include <rendering/subtexture2d.h>
 
-#include "../graphics_module.h"
 #include "../renderer/texture_create.h"
+
+#include "../graphics_module.h"
 // clang-format on
 
 namespace samui
 {
 
+using sprite_id_t = std::string_view;
 class SAMUI_GRAPHICS_API SpriteAtlas
 {
 public:
-    using sprite_id_t = uint32_t;
     explicit SpriteAtlas(std::shared_ptr<samui::Texture2D> sprite_sheet);
 
     explicit SpriteAtlas(const std::filesystem::path& path);

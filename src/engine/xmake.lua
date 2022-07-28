@@ -56,6 +56,6 @@ target("samui-engine")
     set_configvar("ALPHA_BUILD", alpha)
     set_configdir("./core/")
     add_configfiles("version.h.in")
-    add_deps("samui-log", "samui-assert", "samui-profiler", "samui-core", "samui-console", "samui-rendering", "samui-graphics")
+    add_deps("samui-basic", "samui-log", "samui-assert", "samui-profiler", "samui-core", "samui-console", "samui-rendering", "samui-graphics")
 
-includes("log", "assert", "profiler", "core", "console", "rendering", "graphics")
+includes("basic", "log", "assert", "profiler", "core", "console", "rendering", "graphics", "collision", "2d")

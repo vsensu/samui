@@ -25,7 +25,6 @@ target("samui-graphics")
     add_files("imgui_layer/**.cpp")
     add_files("ImGuizmo/**.cpp")
     add_files("utils/**.cpp")
-    add_files("tile_map/**.cpp")
     if is_plat("windows") then 
         add_links("Comdlg32")
     end
