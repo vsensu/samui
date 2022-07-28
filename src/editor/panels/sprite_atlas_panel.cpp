@@ -1,11 +1,44 @@
 // clang-format off
 #include "sprite_atlas_panel.h"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 #include <engine/log/log.h>
+#include <engine/profiler/instrumentor.h>
+#include <engine/graphics/renderer/buffer_create.h>
+#include <engine/graphics/renderer/renderer2d.h>
+#include <engine/core/engine.h>
+#include <engine/graphics/graphics_application.h>
+#include <engine/graphics/imgui_layer/imgui_layer.h>
+#include <engine/graphics/renderer/render_command.h>
 // clang-format on
 
 namespace samui
 {
+
+void SpriteAtlasPanel::on_update(const Timestep& deltaTime)
+{
+    RenderCommand::clear();
+    Renderer2D::reset_stats();
+
+    glm::mat4 projection = glm::ortho(0.f, 1280.f, -720.f, 0.f, -1.f, 1.f);
+    Renderer2D::begin_scene(projection);
+
+    RenderCommand::set_depth_test_enable(true);
+    RenderCommand::set_blend_enable(false);
+    Renderer2D::draw_quad({32.f, -32.f}, {64.f, 64.f},
+                          {1.0f, 0.0f, 0.0f, 1.0f});
+
+    RenderCommand::set_depth_test_enable(false);
+    RenderCommand::set_blend_enable(true);
+    Renderer2D::draw_quad({48.f, -48.f}, {64.f, 64.f},
+                          {0.0f, 1.0f, 0.0f, 0.3f});
+
+    Renderer2D::end_scene();
+
+    tile_map_render.render();
+}
 
 void SpriteAtlasPanel::on_imgui_render()
 {
@@ -14,6 +47,11 @@ void SpriteAtlasPanel::on_imgui_render()
     static bool             opt_enable_grid = true;
     static bool             opt_enable_context_menu = true;
     static bool             adding_line = false;
+
+    uint32_t texture_id =
+        tile_map_render.frame_buffer()->get_color_attachment_render_id();
+    // flip uv.y
+    ImGui::Image((ImTextureID)texture_id, {256, 256}, {0.f, 1.f}, {1.f, 0.f});
 
     ImGui::Checkbox("Enable grid", &opt_enable_grid);
     ImGui::Checkbox("Enable context menu", &opt_enable_context_menu);

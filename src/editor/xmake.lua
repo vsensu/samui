@@ -43,7 +43,7 @@ target("samui-editor")
     add_files("**.cpp")
     add_packages("spdlog", "glm", "glfw", "yaml-cpp")
     -- add_deps("samui-log", "samui-assert", "samui-profiler", "samui-core", "samui-console")
-    add_deps("imgui", "samui-log", "samui-profiler", "samui-core", "samui-rendering", "samui-graphics")
+    add_deps("imgui", "samui-log", "samui-profiler", "samui-core", "samui-rendering", "samui-graphics", "samui-2d")
     after_build(function (target)
         local target_dir = path.join(target:targetdir(), "editor")
         if not os.isdir(target_dir) then

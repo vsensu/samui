@@ -46,6 +46,14 @@ void EditorLayer::on_update(const Timestep& deltaTime)
     active_scene_->on_update(deltaTime);
     scene_panel_->OnUpdate(deltaTime);
 
+    for(auto& [key, panel]: panels_)
+    {
+        if(panels_data_[key].visible)
+        {
+            panel->on_update(deltaTime);
+        }
+    }
+
     // RenderCommand::Clear();
     scene_panel_->RenderScene();
 }
