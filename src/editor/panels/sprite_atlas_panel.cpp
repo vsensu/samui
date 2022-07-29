@@ -17,27 +17,21 @@
 namespace samui
 {
 
+void SpriteAtlasPanel::on_open()
+{
+    tile_map = std::make_shared<TileMap>();
+    tile_map_render = std::make_shared<TileMapRender>(tile_map);
+    tile_map->set_chunk({0, 0}, std::make_shared<TileChunk>());
+    tile_map->set_chunk({-1, 0}, std::make_shared<TileChunk>());
+    tile_map->set_tile(0.f, 0.f, 1);
+    tile_map->set_tile(66.0f, 66.0f, 1);
+    tile_map->set_tile(2, 2, 1);
+    tile_map->set_tile(-1, 1, 2);
+}
+
 void SpriteAtlasPanel::on_update(const Timestep& deltaTime)
 {
-    RenderCommand::clear();
-    Renderer2D::reset_stats();
-
-    glm::mat4 projection = glm::ortho(0.f, 1280.f, -720.f, 0.f, -1.f, 1.f);
-    Renderer2D::begin_scene(projection);
-
-    RenderCommand::set_depth_test_enable(true);
-    RenderCommand::set_blend_enable(false);
-    Renderer2D::draw_quad({32.f, -32.f}, {64.f, 64.f},
-                          {1.0f, 0.0f, 0.0f, 1.0f});
-
-    RenderCommand::set_depth_test_enable(false);
-    RenderCommand::set_blend_enable(true);
-    Renderer2D::draw_quad({48.f, -48.f}, {64.f, 64.f},
-                          {0.0f, 1.0f, 0.0f, 0.3f});
-
-    Renderer2D::end_scene();
-
-    tile_map_render.render();
+    tile_map_render->render();
 }
 
 void SpriteAtlasPanel::on_imgui_render()
@@ -49,7 +43,7 @@ void SpriteAtlasPanel::on_imgui_render()
     static bool             adding_line = false;
 
     uint32_t texture_id =
-        tile_map_render.frame_buffer()->get_color_attachment_render_id();
+        tile_map_render->frame_buffer()->get_color_attachment_render_id();
     // flip uv.y
     ImGui::Image((ImTextureID)texture_id, {256, 256}, {0.f, 1.f}, {1.f, 0.f});
 

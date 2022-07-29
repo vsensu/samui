@@ -16,7 +16,7 @@ class Panel
 {
 public:
     Panel() { panel_count_++; }
-    ~Panel() { panel_count_--; }
+    virtual ~Panel() { panel_count_--; }
     uint8_t      panel_count() const { return panel_count_; }
 
     virtual void on_open() {}

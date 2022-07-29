@@ -58,6 +58,7 @@ void ScenePanel::RenderScene()
     }
 
     frame_buffer_->bind();
+    RenderCommand::set_clear_color({0.1f, 0.1f, 0.1f, 1});
     RenderCommand::clear();
     frame_buffer_->clear_attachment(1, static_cast<uint32_t>(entt::null));
 

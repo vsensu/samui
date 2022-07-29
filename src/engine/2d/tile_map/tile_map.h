@@ -24,6 +24,7 @@ class SAMUI_2D_API TileSet
 {
 public:
     void register_tile(tile_id_t id, sprite_id_t sprite_id);
+    sprite_id_t get_sprite_id(tile_id_t id) const;
 
 private:
     // tile sprite
@@ -38,11 +39,12 @@ using chunk_index_t = std::tuple<i32, i32>;
 class SAMUI_2D_API TileChunk
 {
 public:
-    constexpr static u8 kChunkSize{16};
+    constexpr static i32 kChunkSize{16};
+
+    int tiles[kChunkSize][kChunkSize];
 
 private:
-    chunk_index_t chunk_index_;
-    int           tiles_[kChunkSize][kChunkSize];
+    chunk_index_t chunk_index;
 };
 
 class SAMUI_2D_API TileMap
@@ -50,25 +52,35 @@ class SAMUI_2D_API TileMap
 public:
     void set_chunk(chunk_index_t              chunk_index,
                    std::shared_ptr<TileChunk> tile_chunk);
+    void set_tile(float x, float y, tile_id_t tile_id);
+    void set_tile(int norm_x, int norm_y, tile_id_t tile_id);
+    const std::unordered_map<chunk_index_t, std::shared_ptr<TileChunk>,
+                             HashTuple>&
+    chunks() const
+    {
+        return chunks_;
+    }
+
+    std::shared_ptr<TileSet> tile_set() const { return tile_set_; }
+    i32 tile_size() const { return tile_size_; }
 
 private:
     std::unordered_map<chunk_index_t, std::shared_ptr<TileChunk>, HashTuple>
                              chunks_;
     std::shared_ptr<TileSet> tile_set_;
+    i32                      tile_size_{64};
 };
 
 class SAMUI_2D_API TileMapRender
 {
 public:
-    TileMapRender();
-    TileMapRender(int tile_pixel_size, std::shared_ptr<TileMap> tile_map);
-    void on_viewport_resize(u32 width, u32 height);
+    TileMapRender(std::shared_ptr<TileMap> tile_map);
     void render();
+    void on_viewport_resize(u32 width, u32 height);
 
     std::shared_ptr<FrameBuffer> frame_buffer() const { return frame_buffer_; }
 
 private:
-    int                          tile_pixel_size_;
     std::shared_ptr<TileMap>     tile_map_;
     std::shared_ptr<FrameBuffer> frame_buffer_;
 };

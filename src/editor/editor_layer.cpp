@@ -33,6 +33,7 @@ void EditorLayer::on_attach()
     scene_panel_ = std::make_shared<ScenePanel>(active_scene_, this);
 
     panels_[SpriteAtlasPanel::key()] = std::make_shared<SpriteAtlasPanel>();
+    panels_[SpriteAtlasPanel::key()]->on_open();
 }
 
 void EditorLayer::on_detach() { SAMUI_PROFILE_FUNCTION(); }
