@@ -1,6 +1,8 @@
 // clang-format off
 #include "sprite_atlas_panel.h"
 
+#include <format>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -19,7 +21,11 @@ namespace samui
 
 void SpriteAtlasPanel::on_open()
 {
+    auto tile_set = std::make_shared<TileSet>();
+    tile_set->register_tile(1, "red");
+    tile_set->register_tile(2, "blue");
     tile_map = std::make_shared<TileMap>();
+    tile_map->set_tile_set(tile_set);
     tile_map_render = std::make_shared<TileMapRender>(tile_map);
     tile_map->set_chunk({0, 0}, std::make_shared<TileChunk>());
     tile_map->set_chunk({-1, 0}, std::make_shared<TileChunk>());
@@ -42,16 +48,23 @@ void SpriteAtlasPanel::on_imgui_render()
     static bool             opt_enable_context_menu = true;
     static bool             adding_line = false;
 
-    uint32_t texture_id =
-        tile_map_render->frame_buffer()->get_color_attachment_render_id();
     // flip uv.y
-    ImGui::Image((ImTextureID)texture_id, {256, 256}, {0.f, 1.f}, {1.f, 0.f});
+    // ImGui::Image((ImTextureID)texture_id, {256, 256}, {0.f, 1.f}, {1.f,
+    // 0.f});
 
     ImGui::Checkbox("Enable grid", &opt_enable_grid);
     ImGui::Checkbox("Enable context menu", &opt_enable_context_menu);
     ImGui::Text(
         "Mouse Left: drag to add lines,\nMouse Right: drag to scroll, "
         "click for context menu.");
+
+    static int tile_id = 0;
+    ImGui::RadioButton("remove", &tile_id, 0);
+    for (const auto& tile_pair : tile_map->tile_set()->tiles_sprite_id())
+    {
+        ImGui::RadioButton(std::format("{}", tile_pair.second).c_str(),
+                           &tile_id, tile_pair.first);
+    }
 
     // Typically you would use a BeginChild()/EndChild() pair to benefit
     // from a clipping region + own scrolling. Here we demonstrate that this
@@ -78,11 +91,21 @@ void SpriteAtlasPanel::on_imgui_render()
     ImVec2 canvas_p1 =
         ImVec2(canvas_p0.x + canvas_sz.x, canvas_p0.y + canvas_sz.y);
 
+    tile_map_render->on_viewport_resize(canvas_sz.x, canvas_sz.y);
+
     // Draw border and background color
     ImGuiIO&    io = ImGui::GetIO();
     ImDrawList* draw_list = ImGui::GetWindowDrawList();
     draw_list->AddRectFilled(canvas_p0, canvas_p1, IM_COL32(50, 50, 50, 255));
     draw_list->AddRect(canvas_p0, canvas_p1, IM_COL32(255, 255, 255, 255));
+
+    uint32_t texture_id =
+        tile_map_render->frame_buffer()->get_color_attachment_render_id();
+    // draw tilemap
+    draw_list->AddImage((ImTextureID)texture_id,
+                        {canvas_p0.x + 0, canvas_p0.y + 0},
+                        {canvas_p0.x + canvas_sz.x, canvas_p0.y + canvas_sz.y},
+                        {0.f, 1.f}, {1.f, 0.f});
 
     // This will catch our interactions
     ImGui::InvisibleButton(
@@ -109,6 +132,27 @@ void SpriteAtlasPanel::on_imgui_render()
         if (!ImGui::IsMouseDown(ImGuiMouseButton_Left)) adding_line = false;
     }
 
+    if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && is_hovered)
+    {
+        float world_x = io.MousePos.x - canvas_p0.x - scrolling.x;
+        float world_y =
+            canvas_sz.y - (io.MousePos.y - canvas_p0.y) + scrolling.y;
+
+        auto [chunk_index, tile_index_x, tile_index_y] =
+            TileMap::world_to_chunk(world_x, world_y, tile_map->tile_size());
+        if (tile_map->is_chunk_loaded(chunk_index))
+        {
+            tile_map->set_tile(world_x, world_y, tile_id);
+        }
+        else
+        {
+            tile_map->set_chunk(chunk_index, std::make_shared<TileChunk>());
+            tile_map->set_tile(world_x, world_y, tile_id);
+        }
+
+        SAMUI_ENGINE_INFO("{}, {}", world_x, world_y);
+    }
+
     // Pan (we use a zero mouse threshold when there's no context menu)
     // You may decide to make that threshold dynamic based on whether the
     // mouse is hovering something etc.
@@ -119,6 +163,7 @@ void SpriteAtlasPanel::on_imgui_render()
     {
         scrolling.x += io.MouseDelta.x;
         scrolling.y += io.MouseDelta.y;
+        tile_map_render->move_origin(io.MouseDelta.x, io.MouseDelta.y);
     }
 
     // Context menu (under default mouse threshold)
@@ -149,20 +194,27 @@ void SpriteAtlasPanel::on_imgui_render()
         const float GRID_STEP = 64.0f;
         for (float x = fmodf(scrolling.x, GRID_STEP); x < canvas_sz.x;
              x += GRID_STEP)
+        {
             draw_list->AddLine(ImVec2(canvas_p0.x + x, canvas_p0.y),
                                ImVec2(canvas_p0.x + x, canvas_p1.y),
                                IM_COL32(200, 200, 200, 40));
-        for (float y = fmodf(scrolling.y, GRID_STEP); y < canvas_sz.y;
-             y += GRID_STEP)
+        }
+
+        for (float y = canvas_sz.y + fmodf(scrolling.y, GRID_STEP); y > 0;
+             y -= GRID_STEP)
+        {
             draw_list->AddLine(ImVec2(canvas_p0.x, canvas_p0.y + y),
                                ImVec2(canvas_p1.x, canvas_p0.y + y),
                                IM_COL32(200, 200, 200, 40));
+        }
     }
-    for (int n = 0; n < points.Size; n += 2)
-        draw_list->AddLine(
-            ImVec2(origin.x + points[n].x, origin.y + points[n].y),
-            ImVec2(origin.x + points[n + 1].x, origin.y + points[n + 1].y),
-            IM_COL32(255, 255, 0, 255), 2.0f);
+    // for (int n = 0; n < points.Size; n += 2)
+    // {
+    //     draw_list->AddLine(
+    //         ImVec2(origin.x + points[n].x, origin.y + points[n].y),
+    //         ImVec2(origin.x + points[n + 1].x, origin.y + points[n + 1].y),
+    //         IM_COL32(255, 255, 0, 255), 2.0f);
+    // }
     draw_list->PopClipRect();
 }
 }  // namespace samui

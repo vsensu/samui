@@ -23,8 +23,12 @@ using tile_id_t = u32;
 class SAMUI_2D_API TileSet
 {
 public:
-    void register_tile(tile_id_t id, sprite_id_t sprite_id);
+    void        register_tile(tile_id_t id, sprite_id_t sprite_id);
     sprite_id_t get_sprite_id(tile_id_t id) const;
+    const std::unordered_map<tile_id_t, sprite_id_t>& tiles_sprite_id() const
+    {
+        return tiles_sprite_id_;
+    }
 
 private:
     // tile sprite
@@ -50,6 +54,10 @@ private:
 class SAMUI_2D_API TileMap
 {
 public:
+    void set_tile_set(std::shared_ptr<TileSet> tile_set)
+    {
+        tile_set_ = tile_set;
+    }
     void set_chunk(chunk_index_t              chunk_index,
                    std::shared_ptr<TileChunk> tile_chunk);
     void set_tile(float x, float y, tile_id_t tile_id);
@@ -62,7 +70,14 @@ public:
     }
 
     std::shared_ptr<TileSet> tile_set() const { return tile_set_; }
-    i32 tile_size() const { return tile_size_; }
+    i32                      tile_size() const { return tile_size_; }
+    bool                     is_chunk_loaded(chunk_index_t chunk_index) const
+    {
+        return chunks_.find(chunk_index) != chunks_.end();
+    }
+
+    static std::tuple<chunk_index_t, int, int> world_to_chunk(float x, float y,
+                                                              int tile_size);
 
 private:
     std::unordered_map<chunk_index_t, std::shared_ptr<TileChunk>, HashTuple>
@@ -79,8 +94,12 @@ public:
     void on_viewport_resize(u32 width, u32 height);
 
     std::shared_ptr<FrameBuffer> frame_buffer() const { return frame_buffer_; }
+    void                         move_origin(float delta_x, float delta_y);
+    const glm::vec2&             origin() const { return origin_; }
 
 private:
+    glm::vec2                    origin_{0.f, 0.f};
+    glm::vec2                    start_origin_{0.f, 0.f};
     std::shared_ptr<TileMap>     tile_map_;
     std::shared_ptr<FrameBuffer> frame_buffer_;
 };
