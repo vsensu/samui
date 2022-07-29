@@ -21,9 +21,14 @@ namespace samui
 
 void TileMapPanel::on_open()
 {
+    tile_sprite_atlas =
+        std::make_shared<SpriteAtlas>("assets/textures/snake.png");
+    tile_sprite_atlas->add_sprite("win", {17, 12}, {128, 128});
+    tile_sprite_atlas->add_sprite("lose", {18, 12}, {128, 128});
     auto tile_set = std::make_shared<TileSet>();
-    tile_set->register_tile(1, "red");
-    tile_set->register_tile(2, "blue");
+    tile_set->register_tile("win");
+    tile_set->register_tile("lose");
+    tile_set->set_sprite_atlas(tile_sprite_atlas);
     tile_map = std::make_shared<TileMap>();
     tile_map->set_tile_set(tile_set);
     tile_map_render = std::make_shared<TileMapRender>(tile_map);
@@ -48,6 +53,11 @@ void TileMapPanel::on_imgui_render()
     static bool             opt_enable_context_menu = true;
     static bool             adding_line = false;
 
+    if (ImGui::Button("Add Tile"))
+    {
+        tile_map->tile_set()->register_tile("new_tile");
+    }
+
     ImGui::Checkbox("Enable grid", &opt_enable_grid);
     ImGui::Checkbox("Enable context menu", &opt_enable_context_menu);
     ImGui::Text(
@@ -58,8 +68,20 @@ void TileMapPanel::on_imgui_render()
     ImGui::RadioButton("remove", &tile_id, 0);
     for (const auto& tile_pair : tile_map->tile_set()->tiles_sprite_id())
     {
-        ImGui::RadioButton(std::format("{}", tile_pair.second).c_str(),
-                           &tile_id, tile_pair.first);
+        ImGui::RadioButton(
+            std::format("{}-{}", tile_pair.first, tile_pair.second).c_str(),
+            &tile_id, tile_pair.first);
+        auto tile_sprite =
+            tile_map->tile_set()->get_tile_sprite(tile_pair.first);
+        if (tile_sprite != nullptr)
+        {
+            ImGui::SameLine();
+            const auto& tex_coords = tile_sprite->get_tex_coords();
+            ImGui::Image(
+                (ImTextureID)tile_sprite->get_texture()->get_texture_id(),
+                {64, 64}, {tex_coords[0].x, tex_coords[2].y},
+                {tex_coords[2].x, tex_coords[0].y});
+        }
     }
 
     // Typically you would use a BeginChild()/EndChild() pair to benefit

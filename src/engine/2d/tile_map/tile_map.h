@@ -23,12 +23,17 @@ using tile_id_t = u32;
 class SAMUI_2D_API TileSet
 {
 public:
-    void        register_tile(tile_id_t id, sprite_id_t sprite_id);
+    tile_id_t   register_tile(sprite_id_t sprite_id);
     sprite_id_t get_sprite_id(tile_id_t id) const;
     const std::unordered_map<tile_id_t, sprite_id_t>& tiles_sprite_id() const
     {
         return tiles_sprite_id_;
     }
+    void set_sprite_atlas(std::shared_ptr<SpriteAtlas> sprite_atlas)
+    {
+        sprite_atlas_ = sprite_atlas;
+    }
+    std::shared_ptr<samui::SubTexture2D> get_tile_sprite(tile_id_t id) const;
 
 private:
     // tile sprite
@@ -36,6 +41,7 @@ private:
     std::shared_ptr<SpriteAtlas>                     sprite_atlas_;
     std::unordered_map<tile_id_t, sprite_id_t>       tiles_sprite_id_;
     std::unordered_map<tile_id_t, CollisionSettings> tiles_collision_;
+    tile_id_t                                        next_tile_id_ = 1;
 };
 
 using chunk_index_t = std::tuple<i32, i32>;

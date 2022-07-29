@@ -11,15 +11,28 @@
 namespace samui
 {
 
-void TileSet::register_tile(tile_id_t id, sprite_id_t sprite_id)
+tile_id_t TileSet::register_tile(sprite_id_t sprite_id)
 {
+    tile_id_t id = next_tile_id_;
     tiles_sprite_id_[id] = sprite_id;
     tiles_collision_[id] = CollisionPresets::NoCollision;
+    return next_tile_id_++;
 }
 
 sprite_id_t TileSet::get_sprite_id(tile_id_t id) const
 {
     return tiles_sprite_id_.at(id);
+}
+
+std::shared_ptr<samui::SubTexture2D> TileSet::get_tile_sprite(
+    tile_id_t id) const
+{
+    if (auto sprite_id_find = tiles_sprite_id_.find(id);
+        sprite_id_find != tiles_sprite_id_.end())
+    {
+        return sprite_atlas_->get_sprite(sprite_id_find->second);
+    }
+    return nullptr;
 }
 
 void TileMap::set_chunk(chunk_index_t              chunk_index,
@@ -56,7 +69,8 @@ void TileMap::set_tile(int norm_x, int norm_y, tile_id_t tile_id)
     }
 }
 
-std::tuple<chunk_index_t, int, int> TileMap::world_to_chunk(float x, float y, int tile_size)
+std::tuple<chunk_index_t, int, int> TileMap::world_to_chunk(float x, float y,
+                                                            int tile_size)
 {
     int norm_x = std::floor(x / tile_size);
     int norm_y = std::floor(y / tile_size);
@@ -122,19 +136,21 @@ void TileMapRender::render()
                         (std::get<1>(chunk_index) * TileChunk::kChunkSize + j) *
                                 tile_map_->tile_size() +
                             tile_map_->tile_size() * 0.5f};
-                    if (tile_id == 2)
+                    auto sprite =
+                        tile_map_->tile_set()->get_tile_sprite(tile_id);
+                    if (sprite != nullptr)
                     {
                         Renderer2D::draw_quad(
                             origin_ + pos,
                             {tile_map_->tile_size(), tile_map_->tile_size()},
-                            {0.0f, 0.0f, 0.8f, 0.5f});
+                            sprite);
                     }
                     else
                     {
                         Renderer2D::draw_quad(
                             origin_ + pos,
                             {tile_map_->tile_size(), tile_map_->tile_size()},
-                            {0.8f, 0.0f, 0.0f, 0.5f});
+                            {0.8f, 0.f, 0.f, 0.5f});
                     }
                 }
             }
