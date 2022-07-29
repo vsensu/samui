@@ -8,6 +8,8 @@
 
 #include "scene/components.h"
 #include "scene/serialization.h"
+#include "panels/sprite_atlas_panel.h"
+#include "panels/tile_map_panel.h"
 // clang-format on
 
 namespace samui
@@ -34,6 +36,8 @@ void EditorLayer::on_attach()
 
     panels_[SpriteAtlasPanel::key()] = std::make_shared<SpriteAtlasPanel>();
     panels_[SpriteAtlasPanel::key()]->on_open();
+    panels_[TileMapPanel::key()] = std::make_shared<TileMapPanel>();
+    panels_[TileMapPanel::key()]->on_open();
 }
 
 void EditorLayer::on_detach() { SAMUI_PROFILE_FUNCTION(); }
@@ -47,9 +51,9 @@ void EditorLayer::on_update(const Timestep& deltaTime)
     active_scene_->on_update(deltaTime);
     scene_panel_->OnUpdate(deltaTime);
 
-    for(auto& [key, panel]: panels_)
+    for (auto& [key, panel] : panels_)
     {
-        if(panels_data_[key].visible)
+        if (panels_data_[key].visible)
         {
             panel->on_update(deltaTime);
         }
@@ -66,7 +70,7 @@ void EditorLayer::on_imgui_render()
     scene_panel_->OnImGuiRender();
     for (auto& panel : panels_)
     {
-        bool &visible = panels_data_[panel.first].visible;
+        bool& visible = panels_data_[panel.first].visible;
         if (visible)
         {
             ImGui::Begin(panel.second->name().c_str(), &visible);
@@ -214,10 +218,14 @@ void EditorLayer::OnImGuiFullScreenDocking()
 
         if (ImGui::BeginMenu("Panel"))
         {
-            if (ImGui::MenuItem("Sprite Atlas Panel"))
+            for (auto& [key, panel] : panels_)
             {
-                panels_data_[SpriteAtlasPanel::key()].visible = true;
+                if (ImGui::MenuItem(panel->name().c_str()))
+                {
+                    panels_data_[key].visible = true;
+                }
             }
+
             ImGui::EndMenu();
         }
 

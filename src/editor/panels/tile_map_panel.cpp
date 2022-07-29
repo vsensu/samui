@@ -1,5 +1,5 @@
 // clang-format off
-#include "sprite_atlas_panel.h"
+#include "tile_map_panel.h"
 
 #include <format>
 
@@ -19,15 +19,28 @@
 namespace samui
 {
 
-void SpriteAtlasPanel::on_open()
+void TileMapPanel::on_open()
 {
+    auto tile_set = std::make_shared<TileSet>();
+    tile_set->register_tile(1, "red");
+    tile_set->register_tile(2, "blue");
+    tile_map = std::make_shared<TileMap>();
+    tile_map->set_tile_set(tile_set);
+    tile_map_render = std::make_shared<TileMapRender>(tile_map);
+    tile_map->set_chunk({0, 0}, std::make_shared<TileChunk>());
+    tile_map->set_chunk({-1, 0}, std::make_shared<TileChunk>());
+    tile_map->set_tile(0.f, 0.f, 1);
+    tile_map->set_tile(66.0f, 66.0f, 1);
+    tile_map->set_tile(2, 2, 1);
+    tile_map->set_tile(-1, 1, 2);
 }
 
-void SpriteAtlasPanel::on_update(const Timestep& deltaTime)
+void TileMapPanel::on_update(const Timestep& deltaTime)
 {
+    tile_map_render->render();
 }
 
-void SpriteAtlasPanel::on_imgui_render()
+void TileMapPanel::on_imgui_render()
 {
     static ImVector<ImVec2> points;
     static ImVec2           scrolling(0.0f, 0.0f);
@@ -35,15 +48,19 @@ void SpriteAtlasPanel::on_imgui_render()
     static bool             opt_enable_context_menu = true;
     static bool             adding_line = false;
 
-    // flip uv.y
-    // ImGui::Image((ImTextureID)texture_id, {256, 256}, {0.f, 1.f}, {1.f,
-    // 0.f});
-
     ImGui::Checkbox("Enable grid", &opt_enable_grid);
     ImGui::Checkbox("Enable context menu", &opt_enable_context_menu);
     ImGui::Text(
         "Mouse Left: drag to add lines,\nMouse Right: drag to scroll, "
         "click for context menu.");
+
+    static int tile_id = 0;
+    ImGui::RadioButton("remove", &tile_id, 0);
+    for (const auto& tile_pair : tile_map->tile_set()->tiles_sprite_id())
+    {
+        ImGui::RadioButton(std::format("{}", tile_pair.second).c_str(),
+                           &tile_id, tile_pair.first);
+    }
 
     // Typically you would use a BeginChild()/EndChild() pair to benefit
     // from a clipping region + own scrolling. Here we demonstrate that this
@@ -70,10 +87,21 @@ void SpriteAtlasPanel::on_imgui_render()
     ImVec2 canvas_p1 =
         ImVec2(canvas_p0.x + canvas_sz.x, canvas_p0.y + canvas_sz.y);
 
-    // Draw border and background color
+    tile_map_render->on_viewport_resize(canvas_sz.x, canvas_sz.y);
+
+    // Draw background color
     ImGuiIO&    io = ImGui::GetIO();
     ImDrawList* draw_list = ImGui::GetWindowDrawList();
     draw_list->AddRectFilled(canvas_p0, canvas_p1, IM_COL32(50, 50, 50, 255));
+
+    // draw tilemap
+    uint32_t texture_id =
+        tile_map_render->frame_buffer()->get_color_attachment_render_id();
+    draw_list->AddImage((ImTextureID)texture_id,
+                        {canvas_p0.x + 0, canvas_p0.y + 0},
+                        {canvas_p0.x + canvas_sz.x, canvas_p0.y + canvas_sz.y},
+                        {0.f, 1.f}, {1.f, 0.f});
+    // draw border
     draw_list->AddRect(canvas_p0, canvas_p1, IM_COL32(255, 255, 255, 255));
 
     // This will catch our interactions
@@ -101,6 +129,27 @@ void SpriteAtlasPanel::on_imgui_render()
         if (!ImGui::IsMouseDown(ImGuiMouseButton_Left)) adding_line = false;
     }
 
+    if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && is_hovered)
+    {
+        float world_x = io.MousePos.x - canvas_p0.x - scrolling.x;
+        float world_y =
+            canvas_sz.y - (io.MousePos.y - canvas_p0.y) + scrolling.y;
+
+        auto [chunk_index, tile_index_x, tile_index_y] =
+            TileMap::world_to_chunk(world_x, world_y, tile_map->tile_size());
+        if (tile_map->is_chunk_loaded(chunk_index))
+        {
+            tile_map->set_tile(world_x, world_y, tile_id);
+        }
+        else
+        {
+            tile_map->set_chunk(chunk_index, std::make_shared<TileChunk>());
+            tile_map->set_tile(world_x, world_y, tile_id);
+        }
+
+        SAMUI_ENGINE_INFO("{}, {}", world_x, world_y);
+    }
+
     // Pan (we use a zero mouse threshold when there's no context menu)
     // You may decide to make that threshold dynamic based on whether the
     // mouse is hovering something etc.
@@ -111,6 +160,7 @@ void SpriteAtlasPanel::on_imgui_render()
     {
         scrolling.x += io.MouseDelta.x;
         scrolling.y += io.MouseDelta.y;
+        tile_map_render->move_origin(io.MouseDelta.x, io.MouseDelta.y);
     }
 
     // Context menu (under default mouse threshold)
@@ -154,13 +204,6 @@ void SpriteAtlasPanel::on_imgui_render()
                                ImVec2(canvas_p1.x, canvas_p0.y + y),
                                IM_COL32(200, 200, 200, 40));
         }
-    }
-    for (int n = 0; n < points.Size; n += 2)
-    {
-        draw_list->AddLine(
-            ImVec2(origin.x + points[n].x, origin.y + points[n].y),
-            ImVec2(origin.x + points[n + 1].x, origin.y + points[n + 1].y),
-            IM_COL32(255, 255, 0, 255), 2.0f);
     }
     draw_list->PopClipRect();
 }
