@@ -34,6 +34,10 @@ public:
         sprite_atlas_ = sprite_atlas;
     }
     std::shared_ptr<samui::SubTexture2D> get_tile_sprite(tile_id_t id) const;
+    std::shared_ptr<SpriteAtlas> sprite_atlas() const
+    {
+        return sprite_atlas_;
+    }
 
 private:
     // tile sprite

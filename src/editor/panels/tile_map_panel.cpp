@@ -53,9 +53,48 @@ void TileMapPanel::on_imgui_render()
     static bool             opt_enable_context_menu = true;
     static bool             adding_line = false;
 
+    auto sprite_sheet = tile_map->tile_set()->sprite_atlas()->sprite_sheet();
+    glm::vec2 sprite_sz = {static_cast<float>(sprite_sheet->get_width()),
+                           static_cast<float>(sprite_sheet->get_height())};
+    float     sprite_scale = 256 / sprite_sz.y;
+    ImVec2    canvas_sz_sprite = {sprite_sz.x * sprite_scale, 256};
+    ImGui::BeginChild("sprite", canvas_sz_sprite);
+    static int  sprite_coord_x = 0;
+    static int  sprite_coord_y = 0;
+    static int  sprite_size_x = 128;
+    static int  sprite_size_y = 128;
+    ImDrawList* draw_list_sprite = ImGui::GetWindowDrawList();
+    ImVec2      canvas_p0_sprite = ImGui::GetCursorScreenPos();
+    draw_list_sprite->AddImage((ImTextureID)sprite_sheet->get_texture_id(),
+                               {canvas_p0_sprite.x + 0, canvas_p0_sprite.y + 0},
+                               {canvas_p0_sprite.x + canvas_sz_sprite.x,
+                                canvas_p0_sprite.y + canvas_sz_sprite.y},
+                               {0.f, 1.f}, {1.f, 0.f});
+    glm::vec2 sprite_top_left = {sprite_coord_x * sprite_size_x * sprite_scale,
+                                 sprite_coord_y * sprite_size_y * sprite_scale};
+    draw_list_sprite->AddRect(
+        {canvas_p0_sprite.x + sprite_top_left.x,
+         canvas_p0_sprite.y + canvas_sz_sprite.y - (sprite_top_left.y)},
+        {canvas_p0_sprite.x + sprite_top_left.x + sprite_size_x * sprite_scale,
+         canvas_p0_sprite.y + canvas_sz_sprite.y -
+             (sprite_top_left.y + sprite_size_y * sprite_scale)},
+        IM_COL32(255, 255, 0, 255));
+
+    ImGui::EndChild();
+
+    ImGui::InputInt("sprite x", &sprite_coord_x);
+    ImGui::InputInt("sprite y", &sprite_coord_y);
+    ImGui::InputInt("sprite size x", &sprite_size_x);
+    ImGui::InputInt("sprite size y", &sprite_size_y);
+
     if (ImGui::Button("Add Tile"))
     {
-        tile_map->tile_set()->register_tile("new_tile");
+        auto sprite_id = std::format(
+            "{}_new_tile", tile_map->tile_set()->tiles_sprite_id().size() + 1);
+        tile_map->tile_set()->sprite_atlas()->add_sprite(
+            sprite_id, {sprite_coord_x, sprite_coord_y},
+            {sprite_size_x, sprite_size_y});
+        tile_map->tile_set()->register_tile(sprite_id);
     }
 
     ImGui::Checkbox("Enable grid", &opt_enable_grid);
