@@ -58,13 +58,33 @@ void TileMapPanel::on_imgui_render()
                            static_cast<float>(sprite_sheet->get_height())};
     float     sprite_scale = 256 / sprite_sz.y;
     ImVec2    canvas_sz_sprite = {sprite_sz.x * sprite_scale, 256};
-    ImGui::BeginChild("sprite", canvas_sz_sprite);
-    static int  sprite_coord_x = 0;
-    static int  sprite_coord_y = 0;
-    static int  sprite_size_x = 128;
-    static int  sprite_size_y = 128;
+    // ImGui::BeginChild("sprite", canvas_sz_sprite);
+    ImVec2 canvas_p0_sprite = ImGui::GetCursorScreenPos();
+    ImGui::InvisibleButton(
+        "sprite canvas", canvas_sz_sprite,
+        ImGuiButtonFlags_MouseButtonLeft | ImGuiButtonFlags_MouseButtonRight);
+    const bool   is_hovered_sprite = ImGui::IsItemHovered();  // Hovered
+    ImGuiIO&     io = ImGui::GetIO();
+    const ImVec2 mouse_pos_in_canvas_sprite(io.MousePos.x - canvas_p0_sprite.x,
+                                            io.MousePos.y - canvas_p0_sprite.y);
+
+    static int sprite_coord_x = 0;
+    static int sprite_coord_y = 0;
+    static int sprite_size_x = 128;
+    static int sprite_size_y = 128;
+
+    if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && is_hovered_sprite)
+    {
+        glm::vec2 pos2d = {
+            mouse_pos_in_canvas_sprite.x / sprite_scale,
+            (canvas_sz_sprite.y - mouse_pos_in_canvas_sprite.y) / sprite_scale};
+        sprite_coord_x = pos2d.x / sprite_size_x;
+        sprite_coord_y = pos2d.y / sprite_size_y;
+        SAMUI_ENGINE_INFO("2d {},{}", pos2d.x, pos2d.y);
+    }
+
     ImDrawList* draw_list_sprite = ImGui::GetWindowDrawList();
-    ImVec2      canvas_p0_sprite = ImGui::GetCursorScreenPos();
+
     draw_list_sprite->AddImage((ImTextureID)sprite_sheet->get_texture_id(),
                                {canvas_p0_sprite.x + 0, canvas_p0_sprite.y + 0},
                                {canvas_p0_sprite.x + canvas_sz_sprite.x,
@@ -80,7 +100,7 @@ void TileMapPanel::on_imgui_render()
              (sprite_top_left.y + sprite_size_y * sprite_scale)},
         IM_COL32(255, 255, 0, 255));
 
-    ImGui::EndChild();
+    // ImGui::EndChild();
 
     ImGui::InputInt("sprite x", &sprite_coord_x);
     ImGui::InputInt("sprite y", &sprite_coord_y);
@@ -151,7 +171,6 @@ void TileMapPanel::on_imgui_render()
     tile_map_render->on_viewport_resize(canvas_sz.x, canvas_sz.y);
 
     // Draw background color
-    ImGuiIO&    io = ImGui::GetIO();
     ImDrawList* draw_list = ImGui::GetWindowDrawList();
     draw_list->AddRectFilled(canvas_p0, canvas_p1, IM_COL32(50, 50, 50, 255));
 
