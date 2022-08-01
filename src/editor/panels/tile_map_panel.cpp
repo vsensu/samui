@@ -102,11 +102,17 @@ void TileMapPanel::on_imgui_render()
 
     // ImGui::EndChild();
 
-    ImGui::InputInt("sprite x", &sprite_coord_x);
-    ImGui::InputInt("sprite y", &sprite_coord_y);
-    ImGui::InputInt("sprite size x", &sprite_size_x);
-    ImGui::InputInt("sprite size y", &sprite_size_y);
-
+    ImGui::SameLine();
+    ImGui::BeginGroup();
+    ImGui::Columns(2);
+    ImGui::DragInt("sprite x", &sprite_coord_x);
+    ImGui::NextColumn();
+    ImGui::DragInt("sprite y", &sprite_coord_y);
+    ImGui::NextColumn();
+    ImGui::DragInt("sprite size x", &sprite_size_x);
+    ImGui::NextColumn();
+    ImGui::DragInt("sprite size y", &sprite_size_y);
+    ImGui::Columns(1);
     if (ImGui::Button("Add Tile"))
     {
         auto sprite_id = std::format(
@@ -117,31 +123,67 @@ void TileMapPanel::on_imgui_render()
         tile_map->tile_set()->register_tile(sprite_id);
     }
 
-    ImGui::Checkbox("Enable grid", &opt_enable_grid);
-    ImGui::Checkbox("Enable context menu", &opt_enable_context_menu);
-    ImGui::Text(
-        "Mouse Left: drag to add lines,\nMouse Right: drag to scroll, "
-        "click for context menu.");
-
     static int tile_id = 0;
+    // ImGui::RadioButton("remove", &tile_id, 0);
+    // for (const auto& tile_pair : tile_map->tile_set()->tiles_sprite_id())
+    // {
+    //     ImGui::RadioButton(
+    //         std::format("{}-{}", tile_pair.first, tile_pair.second).c_str(),
+    //         &tile_id, tile_pair.first);
+    //     auto tile_sprite =
+    //         tile_map->tile_set()->get_tile_sprite(tile_pair.first);
+    //     if (tile_sprite != nullptr)
+    //     {
+    //         ImGui::SameLine();
+    //         const auto& tex_coords = tile_sprite->get_tex_coords();
+    //         ImGui::Image(
+    //             (ImTextureID)tile_sprite->get_texture()->get_texture_id(),
+    //             {64, 64}, {tex_coords[0].x, tex_coords[2].y},
+    //             {tex_coords[2].x, tex_coords[0].y});
+    //     }
+    // }
+
+    ImGuiStyle& style = ImGui::GetStyle();
+    ImVec2      button_sz(32, 32);
+    int         buttons_count = 20;
+    float       window_visible_x2 =
+        ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
     ImGui::RadioButton("remove", &tile_id, 0);
+    auto border_color = style.Colors[ImGuiCol_Border];
     for (const auto& tile_pair : tile_map->tile_set()->tiles_sprite_id())
     {
-        ImGui::RadioButton(
-            std::format("{}-{}", tile_pair.first, tile_pair.second).c_str(),
-            &tile_id, tile_pair.first);
+        ImGui::PushID(tile_pair.first);
         auto tile_sprite =
             tile_map->tile_set()->get_tile_sprite(tile_pair.first);
-        if (tile_sprite != nullptr)
+        const auto& tex_coords = tile_sprite->get_tex_coords();
+        auto        texture_id =
+            (ImTextureID)tile_sprite->get_texture()->get_texture_id();
+        // auto padding = tile_pair.first == tile_id ? 1 : -1;
+        style.Colors[ImGuiCol_Border] = tile_pair.first == tile_id
+                                            ? ImVec4{1.0f, 0.0f, 0.0f, 1.0f}
+                                            : ImVec4{0, 0, 0, 0};
+        auto bg_color = tile_pair.first == tile_id ? ImVec4{1, 1, 0, 1}
+                                                   : ImVec4{0, 0, 0, 0};
+        auto tint_color = tile_pair.first == tile_id ? ImVec4{1, 1, 1, 1}
+                                                     : ImVec4{1, 1, 1, 0.4};
+        if (ImGui::ImageButton(texture_id, button_sz,
+                               {tex_coords[0].x, tex_coords[2].y},
+                               {tex_coords[2].x, tex_coords[0].y}, -1,
+                               bg_color, tint_color))
         {
-            ImGui::SameLine();
-            const auto& tex_coords = tile_sprite->get_tex_coords();
-            ImGui::Image(
-                (ImTextureID)tile_sprite->get_texture()->get_texture_id(),
-                {64, 64}, {tex_coords[0].x, tex_coords[2].y},
-                {tex_coords[2].x, tex_coords[0].y});
+            tile_id = tile_pair.first;
         }
+        float last_button_x2 = ImGui::GetItemRectMax().x;
+        float next_button_x2 =
+            last_button_x2 + style.ItemSpacing.x +
+            button_sz.x;  // Expected position if next button was on same line
+        if (next_button_x2 < window_visible_x2) ImGui::SameLine();
+        ImGui::PopID();
     }
+    style.Colors[ImGuiCol_Border] = border_color;
+    ImGui::EndGroup();
+
+    ImGui::Checkbox("Enable grid", &opt_enable_grid);
 
     // Typically you would use a BeginChild()/EndChild() pair to benefit
     // from a clipping region + own scrolling. Here we demonstrate that this
