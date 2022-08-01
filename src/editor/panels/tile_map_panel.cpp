@@ -47,11 +47,9 @@ void TileMapPanel::on_update(const Timestep& deltaTime)
 
 void TileMapPanel::on_imgui_render()
 {
-    static ImVector<ImVec2> points;
-    static ImVec2           scrolling(0.0f, 0.0f);
-    static bool             opt_enable_grid = true;
-    static bool             opt_enable_context_menu = true;
-    static bool             adding_line = false;
+    static ImVec2 scrolling(0.0f, 0.0f);
+    static bool   opt_enable_grid = true;
+    static bool   opt_enable_context_menu = true;
 
     auto sprite_sheet = tile_map->tile_set()->sprite_atlas()->sprite_sheet();
     glm::vec2 sprite_sz = {static_cast<float>(sprite_sheet->get_width()),
@@ -166,10 +164,9 @@ void TileMapPanel::on_imgui_render()
                                                    : ImVec4{0, 0, 0, 0};
         auto tint_color = tile_pair.first == tile_id ? ImVec4{1, 1, 1, 1}
                                                      : ImVec4{1, 1, 1, 0.4};
-        if (ImGui::ImageButton(texture_id, button_sz,
-                               {tex_coords[0].x, tex_coords[2].y},
-                               {tex_coords[2].x, tex_coords[0].y}, -1,
-                               bg_color, tint_color))
+        if (ImGui::ImageButton(
+                texture_id, button_sz, {tex_coords[0].x, tex_coords[2].y},
+                {tex_coords[2].x, tex_coords[0].y}, -1, bg_color, tint_color))
         {
             tile_id = tile_pair.first;
         }
@@ -184,6 +181,12 @@ void TileMapPanel::on_imgui_render()
     ImGui::EndGroup();
 
     ImGui::Checkbox("Enable grid", &opt_enable_grid);
+    ImGui::SameLine();
+    static int fill_mode = 0;
+    ImGui::RadioButton("Fill Mode:Click", &fill_mode, 0);
+    ImGui::RadioButton("Fill Mode:Drag", &fill_mode, 1);
+    ImGui::RadioButton("Fill Mode:Rect Fill", &fill_mode, 2);
+    ImGui::RadioButton("Fill Mode:Rect Frame", &fill_mode, 3);
 
     // Typically you would use a BeginChild()/EndChild() pair to benefit
     // from a clipping region + own scrolling. Here we demonstrate that this
@@ -237,39 +240,160 @@ void TileMapPanel::on_imgui_render()
     const ImVec2 mouse_pos_in_canvas(io.MousePos.x - origin.x,
                                      io.MousePos.y - origin.y);
 
-    // Add first and second point
-    if (is_hovered && !adding_line &&
-        ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+    // fill tile
+    static glm::vec2 first_fill_pos{};
+    static bool      left_mouse_down = false;
+    if (fill_mode == 0)
     {
-        points.push_back(mouse_pos_in_canvas);
-        points.push_back(mouse_pos_in_canvas);
-        adding_line = true;
-    }
-    if (adding_line)
-    {
-        points.back() = mouse_pos_in_canvas;
-        if (!ImGui::IsMouseDown(ImGuiMouseButton_Left)) adding_line = false;
-    }
-
-    if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && is_hovered)
-    {
-        float world_x = io.MousePos.x - canvas_p0.x - scrolling.x;
-        float world_y =
-            canvas_sz.y - (io.MousePos.y - canvas_p0.y) + scrolling.y;
-
-        auto [chunk_index, tile_index_x, tile_index_y] =
-            TileMap::world_to_chunk(world_x, world_y, tile_map->tile_size());
-        if (tile_map->is_chunk_loaded(chunk_index))
+        if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && is_hovered)
         {
-            tile_map->set_tile(world_x, world_y, tile_id);
-        }
-        else
-        {
-            tile_map->set_chunk(chunk_index, std::make_shared<TileChunk>());
-            tile_map->set_tile(world_x, world_y, tile_id);
-        }
+            float world_x = io.MousePos.x - canvas_p0.x - scrolling.x;
+            float world_y =
+                canvas_sz.y - (io.MousePos.y - canvas_p0.y) + scrolling.y;
 
-        SAMUI_ENGINE_INFO("{}, {}", world_x, world_y);
+            auto [chunk_index, tile_index_x, tile_index_y] =
+                TileMap::world_to_chunk(world_x, world_y,
+                                        tile_map->tile_size());
+            if (tile_map->is_chunk_loaded(chunk_index))
+            {
+                tile_map->set_tile(world_x, world_y, tile_id);
+            }
+            else
+            {
+                tile_map->set_chunk(chunk_index, std::make_shared<TileChunk>());
+                tile_map->set_tile(world_x, world_y, tile_id);
+            }
+
+            SAMUI_ENGINE_INFO("{}, {}", world_x, world_y);
+        }
+    }
+    else if (fill_mode == 1)
+    {
+        if (is_active && ImGui::IsMouseDragging(ImGuiMouseButton_Left))
+        {
+            float world_x = io.MousePos.x - canvas_p0.x - scrolling.x;
+            float world_y =
+                canvas_sz.y - (io.MousePos.y - canvas_p0.y) + scrolling.y;
+
+            auto [chunk_index, tile_index_x, tile_index_y] =
+                TileMap::world_to_chunk(world_x, world_y,
+                                        tile_map->tile_size());
+            if (tile_map->is_chunk_loaded(chunk_index))
+            {
+                tile_map->set_tile(world_x, world_y, tile_id);
+            }
+            else
+            {
+                tile_map->set_chunk(chunk_index, std::make_shared<TileChunk>());
+                tile_map->set_tile(world_x, world_y, tile_id);
+            }
+
+            SAMUI_ENGINE_INFO("{}, {}", world_x, world_y);
+        }
+    }
+    else if (fill_mode == 2)
+    {
+        if (is_hovered)
+        {
+            if (ImGui::IsMouseDown(ImGuiMouseButton_Left))
+            {
+                if (!left_mouse_down)
+                {
+                    left_mouse_down = true;
+                    first_fill_pos = {mouse_pos_in_canvas.x,
+                                      canvas_sz.y -
+                                          (io.MousePos.y - canvas_p0.y) +
+                                          scrolling.y};
+                }
+                else
+                {
+                }
+            }
+            else if (left_mouse_down)
+            {
+                left_mouse_down = false;
+                glm::vec2 pos = {
+                    mouse_pos_in_canvas.x,
+                    canvas_sz.y - (io.MousePos.y - canvas_p0.y) + scrolling.y};
+                float min_x = std::min(first_fill_pos.x, pos.x);
+                float max_x = std::max(first_fill_pos.x, pos.x);
+                float min_y = std::min(first_fill_pos.y, pos.y);
+                float max_y = std::max(first_fill_pos.y, pos.y);
+                for (float world_x = min_x; world_x <= max_x; ++world_x)
+                {
+                    for (float world_y = min_y; world_y <= max_y; ++world_y)
+                    {
+                        auto [chunk_index, tile_index_x, tile_index_y] =
+                            TileMap::world_to_chunk(world_x, world_y,
+                                                    tile_map->tile_size());
+                        if (tile_map->is_chunk_loaded(chunk_index))
+                        {
+                            tile_map->set_tile(world_x, world_y, tile_id);
+                        }
+                        else
+                        {
+                            tile_map->set_chunk(chunk_index,
+                                                std::make_shared<TileChunk>());
+                            tile_map->set_tile(world_x, world_y, tile_id);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    else if (fill_mode == 3)
+    {
+        if (is_hovered)
+        {
+            if (ImGui::IsMouseDown(ImGuiMouseButton_Left))
+            {
+                if (!left_mouse_down)
+                {
+                    left_mouse_down = true;
+                    first_fill_pos = {mouse_pos_in_canvas.x,
+                                      canvas_sz.y -
+                                          (io.MousePos.y - canvas_p0.y) +
+                                          scrolling.y};
+                }
+                else
+                {
+                }
+            }
+            else if (left_mouse_down)
+            {
+                left_mouse_down = false;
+                glm::vec2 pos = {
+                    mouse_pos_in_canvas.x,
+                    canvas_sz.y - (io.MousePos.y - canvas_p0.y) + scrolling.y};
+                float min_x = std::min(first_fill_pos.x, pos.x);
+                float max_x = std::max(first_fill_pos.x, pos.x);
+                float min_y = std::min(first_fill_pos.y, pos.y);
+                float max_y = std::max(first_fill_pos.y, pos.y);
+                for (float world_x = min_x; world_x <= max_x; ++world_x)
+                {
+                    for (float world_y = min_y; world_y <= max_y; ++world_y)
+                    {
+                        if (world_x != min_x && world_x != max_x &&
+                            world_y != min_y && world_y != max_y)
+                            continue;
+                            
+                        auto [chunk_index, tile_index_x, tile_index_y] =
+                            TileMap::world_to_chunk(world_x, world_y,
+                                                    tile_map->tile_size());
+                        if (tile_map->is_chunk_loaded(chunk_index))
+                        {
+                            tile_map->set_tile(world_x, world_y, tile_id);
+                        }
+                        else
+                        {
+                            tile_map->set_chunk(chunk_index,
+                                                std::make_shared<TileChunk>());
+                            tile_map->set_tile(world_x, world_y, tile_id);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     // Pan (we use a zero mouse threshold when there's no context menu)
@@ -293,15 +417,11 @@ void TileMapPanel::on_imgui_render()
         ImGui::OpenPopupOnItemClick("context");
     if (ImGui::BeginPopup("context"))
     {
-        if (adding_line) points.resize(points.size() - 2);
-        adding_line = false;
-        if (ImGui::MenuItem("Remove one", NULL, false, points.Size > 0))
+        if (ImGui::MenuItem("Remove one", NULL, false, true))
         {
-            points.resize(points.size() - 2);
         }
-        if (ImGui::MenuItem("Remove all", NULL, false, points.Size > 0))
+        if (ImGui::MenuItem("Remove all", NULL, false, true))
         {
-            points.clear();
         }
         ImGui::EndPopup();
     }
