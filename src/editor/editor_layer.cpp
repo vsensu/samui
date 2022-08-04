@@ -194,6 +194,12 @@ void EditorLayer::OnImGuiFullScreenDocking()
             // finer window depth/z control. ImGui::MenuItem("Fullscreen", NULL,
             // &opt_fullscreen);
 
+            if (ImGui::MenuItem("New Project", "Ctrl+P"))
+            {
+                project_path_ = DialogUtils::open_folder("C:\\");
+                SAMUI_ENGINE_INFO("{}", project_path_);
+            }
+
             if (ImGui::MenuItem("New", "Ctrl+N"))
             {
                 NewScene();

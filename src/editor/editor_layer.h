@@ -68,7 +68,8 @@ private:
     };
 
     std::unordered_map<std::string, std::shared_ptr<Panel>> panels_;
-    std::unordered_map<std::string, PanelData> panels_data_;
+    std::unordered_map<std::string, PanelData>              panels_data_;
+    std::string                                             project_path_;
 };
 
 }  // namespace samui

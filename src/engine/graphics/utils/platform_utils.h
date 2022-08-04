@@ -15,6 +15,8 @@ namespace DialogUtils
 std::string SAMUI_GRAPHICS_API open_file(const char* filter);
 
 std::string SAMUI_GRAPHICS_API save_file(const char* filter);
+
+std::string SAMUI_GRAPHICS_API open_folder(const std::string &path);
 }  // namespace DialogUtils
 
 }  // namespace samui
