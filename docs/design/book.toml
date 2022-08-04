@@ -1,0 +1,6 @@
+[book]
+authors = ["vsensu"]
+language = "en"
+multilingual = false
+src = "src"
+title = "design"
