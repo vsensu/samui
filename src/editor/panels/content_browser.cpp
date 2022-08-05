@@ -1,6 +1,9 @@
 // clang-format off
 #include "content_browser.h"
 
+#include <algorithm>
+#include <execution>
+
 #include <engine/graphics/renderer/renderer2d.h>
 #include <engine/graphics/renderer/render_command.h>
 #include <engine/graphics/renderer/texture_create.h>
@@ -9,24 +12,42 @@
 
 namespace samui
 {
+std::size_t replace_all(std::string& inout, std::string_view what, std::string_view with)
+{
+    std::size_t count{};
+    for (std::string::size_type pos{};
+         inout.npos != (pos = inout.find(what.data(), pos, what.length()));
+         pos += with.length(), ++count) {
+        inout.replace(pos, what.length(), with.data(), with.length());
+    }
+    return count;
+}
+ 
+std::size_t remove_all(std::string& inout, std::string_view what) {
+    return replace_all(inout, what, "");
+}
+
 const std::filesystem::path kAssetPath = "assets";
-ContentBrowser::ContentBrowser() : path_(kAssetPath)
+ContentBrowser::ContentBrowser() : path_(root_)
 {
     folder_icon_ =
         samui::texture2d::create("editor/assets/textures/folder.png");
     file_icon_ = samui::texture2d::create("editor/assets/textures/file.png");
 }
 
-void ContentBrowser::OnImGuiRender()
+void ContentBrowser::on_imgui_render()
 {
-    ImGui::Begin("Content Browser");
-    if (path_ != kAssetPath)
+    static std::string hovered_path = "";
+    if (path_ != root_)
     {
         if (ImGui::Button(".."))
         {
             path_ = path_.parent_path();
         }
     }
+    hovered_path = "";
+    ImGui::BeginChild("assets view",
+                      ImVec2(0, -ImGui::GetFrameHeightWithSpacing()));
 
     static float padding = 16.f;
     static float thumbnail_size = 128.f;
@@ -41,7 +62,7 @@ void ContentBrowser::OnImGuiRender()
 
     ImGui::Columns(column_count, 0, false);
 
-    if (std::filesystem::exists(path_))
+    if (!path_.empty() && std::filesystem::exists(path_))
     {
         for (const auto& dir_entry : std::filesystem::directory_iterator(path_))
         {
@@ -64,11 +85,17 @@ void ContentBrowser::OnImGuiRender()
                 ImGui::EndDragDropSource();
             }
             ImGui::PopStyleColor();
-            if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
+            if (ImGui::IsItemHovered())
             {
-                if (dir_entry.is_directory())
+                auto abs_path = dir_entry.path().string();
+                remove_all(abs_path, std::filesystem::absolute(root_).string());
+                hovered_path = abs_path;
+                if (ImGui::IsMouseDoubleClicked(0))
                 {
-                    path_ /= path;
+                    if (dir_entry.is_directory())
+                    {
+                        path_ /= path;
+                    }
                 }
             }
             ImGui::TextWrapped(path.string().c_str());
@@ -78,7 +105,17 @@ void ContentBrowser::OnImGuiRender()
     }
 
     ImGui::Columns(1);
-    ImGui::End();
+    ImGui::EndChild();
+
+    ImGui::Separator();
+    ImGui::SameLine();
+    ImGui::Text(hovered_path.c_str());
+}
+
+void ContentBrowser::set_root(const std::filesystem::path& path)
+{
+    root_ = path;
+    path_ = root_;
 }
 
 }  // namespace samui

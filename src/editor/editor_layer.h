@@ -59,7 +59,6 @@ private:
     Entity second_camera_{entt::null};
 
     std::shared_ptr<SceneHierarchyPanel> scene_hierarchy_panel_;
-    std::shared_ptr<ContentBrowser>      content_browser_;
     std::shared_ptr<ScenePanel>          scene_panel_;
 
     struct PanelData

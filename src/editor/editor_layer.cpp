@@ -31,13 +31,17 @@ void EditorLayer::on_attach()
 
     scene_hierarchy_panel_ =
         std::make_shared<SceneHierarchyPanel>(active_scene_);
-    content_browser_ = std::make_shared<ContentBrowser>();
     scene_panel_ = std::make_shared<ScenePanel>(active_scene_, this);
 
+    panels_[ContentBrowser::key()] = std::make_shared<ContentBrowser>();
     panels_[SpriteAtlasPanel::key()] = std::make_shared<SpriteAtlasPanel>();
-    panels_[SpriteAtlasPanel::key()]->on_open();
     panels_[TileMapPanel::key()] = std::make_shared<TileMapPanel>();
-    panels_[TileMapPanel::key()]->on_open();
+
+    for(auto& [key, panel] : panels_)
+    {
+        panel->on_open();
+    }
+    panels_data_[ContentBrowser::key()].visible = true;
 }
 
 void EditorLayer::on_detach() { SAMUI_PROFILE_FUNCTION(); }
@@ -113,8 +117,6 @@ void EditorLayer::on_imgui_render()
     // scene hierarchy pannel begin
     scene_hierarchy_panel_->OnImGuiRender();
     // scene hierarchy pannel end
-
-    content_browser_->OnImGuiRender();
 }
 
 void EditorLayer::on_event(Event& event)
@@ -198,6 +200,7 @@ void EditorLayer::OnImGuiFullScreenDocking()
             {
                 project_path_ = DialogUtils::open_folder("C:\\");
                 SAMUI_ENGINE_INFO("{}", project_path_);
+                std::dynamic_pointer_cast<ContentBrowser>(panels_[ContentBrowser::key()])->set_root(project_path_);
             }
 
             if (ImGui::MenuItem("New", "Ctrl+N"))
