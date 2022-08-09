@@ -19,6 +19,13 @@ if is_plat("windows") then
     add_defines("SAMUI_PLATFORM_WINDOWS")
 end
 
+-- code encoding
+if is_plat("windows") then
+    add_cxflags("/source-charset:utf-8", "/execution-charset:utf-8", {force = true})
+else
+    add_cxflags("-fexec-charset=UTF-8", "-fextended-identifiers", "-finput-charset=UTF-8", {force = true})
+end
+
 -- include project sources
 includes("deps", "src", "test", "demo")
 includes("templates")

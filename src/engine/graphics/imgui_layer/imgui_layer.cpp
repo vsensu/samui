@@ -36,10 +36,25 @@ void ImGuiLayer::on_attach()
     // Keyboard Controls io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; //
     // Enable Gamepad Controls
 
-    io.Fonts->AddFontFromFileTTF(
-        "engine/assets/fonts/OpenSans/OpenSans-Bold.ttf", 18.f);
+    // io.Fonts->AddFontFromFileTTF(
+    //     "engine/assets/fonts/OpenSans/OpenSans-Bold.ttf", 18.f);
+
+    // io.FontDefault = io.Fonts->AddFontFromFileTTF(
+    //     "engine/assets/fonts/OpenSans/OpenSans-Regular.ttf", 18.f);
+
+    ImFontConfig cfg;
+    cfg.OversampleH = 1;
+    static ImFontGlyphRangesBuilder range;
+    range.Clear();
+    static ImVector<ImWchar> gr;
+    gr.clear();
+    range.AddRanges(io.Fonts->GetGlyphRangesChineseFull());
+    // range.AddRanges(ImGui::GetIO().Fonts->GetGlyphRangesJapanese());
+    range.BuildRanges(&gr);
+    io.Fonts->AddFontFromFileTTF("engine/assets/fonts/msyh/msyhbd.ttc", 18.f,
+                                 &cfg, gr.Data);
     io.FontDefault = io.Fonts->AddFontFromFileTTF(
-        "engine/assets/fonts/OpenSans/OpenSans-Regular.ttf", 18.f);
+        "engine/assets/fonts/msyh/msyh.ttc", 18.f, &cfg, gr.Data);
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
@@ -196,9 +211,10 @@ void ImGuiLayer::set_dark_theme_colors()
     colors[ImGuiCol_TextSelectedBg] = ImVec4(0.20f, 0.22f, 0.23f, 1.00f);
     colors[ImGuiCol_DragDropTarget] = ImVec4(0.33f, 0.67f, 0.86f, 1.00f);
     // colors[ImGuiCol_NavHighlight] = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
-    // colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.00f, 0.00f, 0.00f, 0.70f);
-    // colors[ImGuiCol_NavWindowingDimBg] = ImVec4(1.00f, 0.00f, 0.00f, 0.20f);
-    // colors[ImGuiCol_ModalWindowDimBg] = ImVec4(1.00f, 0.00f, 0.00f, 0.35f);
+    // colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.00f, 0.00f, 0.00f,
+    // 0.70f); colors[ImGuiCol_NavWindowingDimBg] = ImVec4(1.00f, 0.00f, 0.00f,
+    // 0.20f); colors[ImGuiCol_ModalWindowDimBg] = ImVec4(1.00f, 0.00f, 0.00f,
+    // 0.35f);
 
     ImGuiStyle& style = ImGui::GetStyle();
     style.WindowPadding = ImVec2(8.00f, 8.00f);

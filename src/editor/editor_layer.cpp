@@ -89,6 +89,7 @@ void EditorLayer::on_imgui_render()
     ImGui::Text("Renderer2D Stats:");
     ImGui::Text("Draw Calls: %d", stats.draw_calls);
     ImGui::Text("Quads: %d", stats.quad_count);
+    ImGui::Text("中文测试：你好，Dear-ImGui。");
     ImGui::Separator();
 
     auto cameras =
