@@ -3,6 +3,8 @@
 
 #include <algorithm>
 #include <execution>
+#include <locale>
+#include <codecvt>
 
 #include <engine/graphics/renderer/renderer2d.h>
 #include <engine/graphics/renderer/render_command.h>
@@ -12,6 +14,22 @@
 
 namespace samui
 {
+std::wstring s2ws(const std::string& str)
+{
+    using convert_typeX = std::codecvt_utf8<wchar_t>;
+    std::wstring_convert<convert_typeX, wchar_t> converterX;
+
+    return converterX.from_bytes(str);
+}
+
+std::string ws2s(const std::wstring& wstr)
+{
+    using convert_typeX = std::codecvt_utf8<wchar_t>;
+    std::wstring_convert<convert_typeX, wchar_t> converterX;
+
+    return converterX.to_bytes(wstr);
+}
+
 std::size_t replace_all(std::string& inout, std::string_view what, std::string_view with)
 {
     std::size_t count{};
@@ -27,6 +45,21 @@ std::size_t remove_all(std::string& inout, std::string_view what) {
     return replace_all(inout, what, "");
 }
 
+std::size_t replace_all(std::wstring& inout, std::wstring_view what, std::wstring_view with)
+{
+    std::size_t count{};
+    for (std::wstring::size_type pos{};
+         inout.npos != (pos = inout.find(what.data(), pos, what.length()));
+         pos += with.length(), ++count) {
+        inout.replace(pos, what.length(), with.data(), with.length());
+    }
+    return count;
+}
+ 
+std::size_t remove_all(std::wstring& inout, std::wstring_view what) {
+    return replace_all(inout, what, L"");
+}
+
 const std::filesystem::path kAssetPath = "assets";
 ContentBrowser::ContentBrowser() : path_(root_)
 {
@@ -37,7 +70,7 @@ ContentBrowser::ContentBrowser() : path_(root_)
 
 void ContentBrowser::on_imgui_render()
 {
-    static std::string hovered_path = "";
+    static std::wstring hovered_path = L"";
     if (path_ != root_)
     {
         if (ImGui::Button(".."))
@@ -45,7 +78,7 @@ void ContentBrowser::on_imgui_render()
             path_ = path_.parent_path();
         }
     }
-    hovered_path = "";
+    hovered_path = L"";
     ImGui::BeginChild("assets view",
                       ImVec2(0, -ImGui::GetFrameHeightWithSpacing()));
 
@@ -87,8 +120,8 @@ void ContentBrowser::on_imgui_render()
             ImGui::PopStyleColor();
             if (ImGui::IsItemHovered())
             {
-                auto abs_path = dir_entry.path().string();
-                remove_all(abs_path, std::filesystem::absolute(root_).string());
+                auto abs_path = dir_entry.path().wstring();
+                remove_all(abs_path, std::filesystem::absolute(root_).wstring());
                 hovered_path = abs_path;
                 if (ImGui::IsMouseDoubleClicked(0))
                 {
@@ -98,7 +131,7 @@ void ContentBrowser::on_imgui_render()
                     }
                 }
             }
-            ImGui::TextWrapped(path.string().c_str());
+            ImGui::TextWrapped(ws2s(path.wstring()).c_str());
             ImGui::NextColumn();
             ImGui::PopID();
         }
@@ -109,7 +142,7 @@ void ContentBrowser::on_imgui_render()
 
     ImGui::Separator();
     ImGui::SameLine();
-    ImGui::Text(hovered_path.c_str());
+    ImGui::Text(ws2s(hovered_path).c_str());
 }
 
 void ContentBrowser::set_root(const std::filesystem::path& path)
