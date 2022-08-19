@@ -29,7 +29,16 @@ public:
                     const glm::vec2& sprite_size = {1, 1});
 
     std::shared_ptr<samui::SubTexture2D> get_sprite(sprite_id_t id) const;
-    std::shared_ptr<samui::Texture2D> sprite_sheet() const { return sprite_sheet_; }
+    std::shared_ptr<samui::SubTexture2D> get_sprite(
+        const glm::vec2& uv, const glm::vec2& cell_size,
+        const glm::vec2& sprite_size = {1, 1}) const;
+
+    std::shared_ptr<samui::Texture2D> sprite_sheet() const
+    {
+        return sprite_sheet_;
+    }
+
+    void serialize();
 
 private:
     std::shared_ptr<samui::Texture2D> sprite_sheet_;

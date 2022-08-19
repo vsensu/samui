@@ -16,8 +16,7 @@ void SpriteAtlas::add_sprite(sprite_id_t id, const glm::vec2& uv,
                              const glm::vec2& cell_size,
                              const glm::vec2& sprite_size)
 {
-    sprites_[id] = samui::SubTexture2D::create_from_coords(
-        sprite_sheet_, uv, cell_size, sprite_size);
+    sprites_[id] = get_sprite(uv, cell_size, sprite_size);
 }
 
 std::shared_ptr<samui::SubTexture2D> SpriteAtlas::get_sprite(
@@ -30,4 +29,17 @@ std::shared_ptr<samui::SubTexture2D> SpriteAtlas::get_sprite(
     }
     return nullptr;
 }
+
+std::shared_ptr<samui::SubTexture2D> SpriteAtlas::get_sprite(
+    const glm::vec2& uv, const glm::vec2& cell_size,
+    const glm::vec2& sprite_size) const
+{
+    return samui::SubTexture2D::create_from_coords(sprite_sheet_, uv, cell_size,
+                                                   sprite_size);
+}
+
+void SpriteAtlas::serialize()
+{
+}
+
 }  // namespace samui
