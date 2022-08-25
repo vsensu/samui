@@ -68,17 +68,10 @@ namespace samui
 
 namespace Serialization
 {
-YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec3& v)
+template<typename T>
+YAML::Emitter& operator<<(YAML::Emitter& out, const T& v)
 {
-    out << YAML::Flow;
-    out << YAML::BeginSeq << v.x << v.y << v.z << YAML::EndSeq;
-    return out;
-}
-
-YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec4& v)
-{
-    out << YAML::Flow;
-    out << YAML::BeginSeq << v.x << v.y << v.z << v.w << YAML::EndSeq;
+    out << YAML::convert<T>::encode(v);
     return out;
 }
 
