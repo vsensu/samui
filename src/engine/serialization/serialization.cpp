@@ -3,11 +3,9 @@
 namespace samui::serialization
 {
 
-std::string write_header(YAML::Emitter& out)
+YAML::Emitter& write_header(YAML::Emitter& out, const Header &value)
 {
-    // write version
-    out << YAML::Key << "version" << YAML::Value << "1.0";
-    return out.c_str();
+    return out << value;
 }
 
 }
