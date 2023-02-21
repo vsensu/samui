@@ -1,1 +1,1 @@
-includes("snake", "console", "graphics")
+includes("snake", "console", "graphics", "rendering")
