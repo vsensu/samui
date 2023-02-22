@@ -37,12 +37,10 @@ struct Texture
 class Mesh
 {
 public:
-    /*  网格数据  */
     std::vector<Vertex>       vertices;
     std::vector<unsigned int> indices;
     std::vector<Texture>      textures;
 
-    /*  函数  */
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
          std::vector<Texture> textures)
     {
@@ -60,7 +58,6 @@ public:
         for (unsigned int i = 0; i < textures.size(); i++)
         {
             textures[i].texture->bind(i);
-            // 获取纹理序号（diffuse_textureN 中的 N）
             std::string number;
             std::string name = textures[i].type;
             if (name == "texture_diffuse")
@@ -76,10 +73,8 @@ public:
     }
 
 private:
-    /*  渲染数据  */
     std::shared_ptr<samui::VertexArray> va_;
 
-    /*  函数  */
     void setupMesh()
     {
         auto vb = samui::vertex_buffer::create(
@@ -99,25 +94,22 @@ private:
 class Model
 {
 public:
-    /*  函数   */
-    Model(std::string path) { loadModel(path); }
+    Model(std::filesystem::path path) { loadModel(path); }
     void Draw(std::shared_ptr<samui::Shader> shader)
     {
         for (unsigned int i = 0; i < meshes.size(); i++) meshes[i].Draw(shader);
     }
 
 private:
-    /*  模型数据  */
     std::vector<Mesh>    meshes;
     std::string          directory;
     std::vector<Texture> textures_loaded;
 
-    /*  函数   */
-    void loadModel(std::string path)
+    void loadModel(std::filesystem::path path)
     {
         Assimp::Importer import;
-        const aiScene*   scene =
-            import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+        const aiScene*   scene = import.ReadFile(
+            path.string(), aiProcess_Triangulate | aiProcess_FlipUVs);
 
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE ||
             !scene->mRootNode)
@@ -125,20 +117,18 @@ private:
             SAMUI_ERROR("ERROR::ASSIMP::{}", import.GetErrorString());
             return;
         }
-        directory = path.substr(0, path.find_last_of('/'));
+        directory = path.parent_path().string();
 
         processNode(scene->mRootNode, scene);
     }
 
     void processNode(aiNode* node, const aiScene* scene)
     {
-        // 处理节点所有的网格（如果有的话）
         for (unsigned int i = 0; i < node->mNumMeshes; i++)
         {
             aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
             meshes.push_back(processMesh(mesh, scene));
         }
-        // 接下来对它的子节点重复这一过程
         for (unsigned int i = 0; i < node->mNumChildren; i++)
         {
             processNode(node->mChildren[i], scene);
@@ -153,8 +143,7 @@ private:
 
         for (unsigned int i = 0; i < mesh->mNumVertices; i++)
         {
-            Vertex vertex;
-            // 处理顶点位置、法线和纹理坐标
+            Vertex    vertex;
             glm::vec3 vector;
             vector.x = mesh->mVertices[i].x;
             vector.y = mesh->mVertices[i].y;
@@ -169,7 +158,7 @@ private:
                 vertex.normal = vector;
             }
 
-            if (mesh->mTextureCoords[0])  // 网格是否有纹理坐标？
+            if (mesh->mTextureCoords[0])
             {
                 glm::vec2 vec;
                 vec.x = mesh->mTextureCoords[0][i].x;
@@ -182,7 +171,6 @@ private:
             vertices.push_back(vertex);
         }
 
-        // 处理索引
         for (unsigned int i = 0; i < mesh->mNumFaces; i++)
         {
             aiFace face = mesh->mFaces[i];
@@ -190,7 +178,6 @@ private:
                 indices.push_back(face.mIndices[j]);
         }
 
-        // 处理材质
         if (mesh->mMaterialIndex >= 0)
         {
             aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
@@ -212,7 +199,7 @@ private:
                                               std::string   typeName)
     {
         std::vector<Texture> textures;
-        auto tex_count = mat->GetTextureCount(type);
+        auto                 tex_count = mat->GetTextureCount(type);
         for (unsigned int i = 0; i < tex_count; i++)
         {
             aiString str;
@@ -229,16 +216,16 @@ private:
                 }
             }
             if (!skip)
-            {  // 如果纹理还没有被加载，则加载它
+            {
                 Texture texture;
-                // texture.id = TextureFromFile(str.C_Str(), directory);
-                auto tex_path = std::filesystem::path(directory).append(str.C_Str());
+                auto    tex_path =
+                    std::filesystem::path(directory).append(str.C_Str());
                 SAMUI_INFO("texture:{}", tex_path.string());
                 texture.texture = samui::texture2d::create(tex_path);
                 texture.type = typeName;
                 texture.path = str.C_Str();
                 textures.push_back(texture);
-                textures_loaded.push_back(texture);  // 添加到已加载的纹理中
+                textures_loaded.push_back(texture);
             }
         }
         return textures;
