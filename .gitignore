@@ -42,3 +42,5 @@ build/
 
 # xmake vistual studio
 vsxmake*
+
+!**/assets/**/*.obj
