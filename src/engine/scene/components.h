@@ -9,18 +9,20 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <rendering/texture.h>
+
+#include "scene_module.h"
 // clang-format on
 
 namespace samui
 {
-void foo_components();
+void SAMUI_SCENE_API foo_components();
 
-struct NameComponent
+struct SAMUI_SCENE_API NameComponent
 {
     std::string name;
 };
 
-struct TransformComponent
+struct SAMUI_SCENE_API TransformComponent
 {
     glm::vec3 translation{glm::zero<glm::vec3>()};
     glm::vec3 rotation{glm::zero<glm::vec3>()};
@@ -35,14 +37,14 @@ struct TransformComponent
     }
 };
 
-struct SpriteRendererComponent
+struct SAMUI_SCENE_API SpriteRendererComponent
 {
     glm::vec4                  color{1.0f, 1.0f, 1.0f, 1.0f};
     std::shared_ptr<Texture2D> texture{0};
     float                      tiling_factor{1.0f};
 };
 
-struct CameraComponent
+struct SAMUI_SCENE_API CameraComponent
 {
     enum class ProjectionType
     {
@@ -67,10 +69,10 @@ struct CameraComponent
 
 namespace CameraUtils
 {
-glm::mat4 get_orthographic_projection(float aspect_ratio, float size,
+glm::mat4 SAMUI_SCENE_API get_orthographic_projection(float aspect_ratio, float size,
                                                 float z_near, float z_far);
 
-glm::mat4 get_perspective_projection(float aspect_ratio, float fov,
+glm::mat4 SAMUI_SCENE_API get_perspective_projection(float aspect_ratio, float fov,
                                                float z_near, float z_far);
 }  // namespace CameraUtils
 

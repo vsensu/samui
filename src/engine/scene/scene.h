@@ -5,21 +5,30 @@
 
 #include <entt/entt.hpp>
 
-#include <engine/log/log.h>
-#include <engine/assert/assert.h>
-#include <engine/core/minimal.h>
+#include <log/log.h>
+#include <assert/assert.h>
+
+#include "scene_module.h"
+#include "components.h"
 // clang-format on
 
 namespace samui
 {
 using Entity = entt::entity;
-class Scene
+class SAMUI_SCENE_API Scene
 {
-  public:
+public:
     Scene();
 
-    Entity create_entity(const std::string& name = "Entity");
-    void   destroy_entity(Entity entity);
+    Entity create_entity(const std::string& name = "Entity")
+    {
+        auto entity = registry_.create();
+        add_component<NameComponent>(entity, name);
+        add_component<TransformComponent>(entity);
+        return entity;
+    }
+
+    void destroy_entity(Entity entity);
 
     template <typename T, typename... Args>
     T& add_component(Entity entity, Args&&... args)
@@ -53,9 +62,7 @@ class Scene
 
     entt::registry& registry() { return registry_; }
 
-    void on_update(const Timestep& deltaTime);
-
-  private:
+private:
     entt::registry registry_;
 };
 

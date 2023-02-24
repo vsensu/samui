@@ -6,13 +6,13 @@
 // #include <samui.h>
 
 #include <engine/core/minimal.h>
+#include <engine/scene/scene.h>
 #include <engine/rendering/frame_buffer.h>
 #include <engine/graphics/renderer/render_command.h>
 #include <imgui/imgui.h>
 #include <engine/graphics/ImGuizmo/ImGuizmo.h>
 
 #include "../editor_camera.h"
-#include "../scene/scene.h"
 // clang-format on
 
 namespace samui

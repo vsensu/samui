@@ -52,7 +52,7 @@ void EditorLayer::on_update(const Timestep& deltaTime)
     Renderer2D::reset_stats();
 
     // update scene logic
-    active_scene_->on_update(deltaTime);
+    // active_scene_->on_update(deltaTime);
     scene_panel_->OnUpdate(deltaTime);
 
     for (auto& [key, panel] : panels_)

@@ -4,7 +4,7 @@
 #include <memory>
 
 // #include <samui.h>
-#include "../scene/scene.h"
+#include <engine/scene/scene.h>
 // clan-format on
 
 namespace samui {

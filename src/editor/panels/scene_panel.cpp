@@ -2,14 +2,14 @@
 #include "scene_panel.h"
 
 #include <engine/profiler/instrumentor.h>
+#include <engine/core/engine.h>
+#include <engine/scene/components.h>
 #include <engine/graphics/renderer/buffer_create.h>
 #include <engine/graphics/renderer/renderer2d.h>
-#include <engine/core/engine.h>
 #include <engine/graphics/graphics_application.h>
 #include <engine/graphics/imgui_layer/imgui_layer.h>
 
 #include <editor_layer.h>
-#include "../scene/components.h"
 // clang-format on
 
 namespace samui

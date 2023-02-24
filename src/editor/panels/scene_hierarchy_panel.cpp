@@ -5,9 +5,9 @@
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
 
+#include <engine/scene/components.h>
 #include <engine/graphics/renderer/texture_create.h>
 
-#include "../scene/components.h"
 // clang-format on
 
 namespace samui
